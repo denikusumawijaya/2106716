@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring — by Deni</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --bg: #0b1121; --bg2: #111827; --card: rgba(17,24,39,0.85);
+  --fg: #e2e8f0; --muted: #64748b; --accent: #10b981;
+  --accent2: #f59e0b; --danger: #ef4444; --border: rgba(100,116,139,0.2);
+  --glass: rgba(16,185,129,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--fg); min-height: 100vh; overflow-x: hidden; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Latar belakang animasi */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(16,185,129,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245,158,11,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.03) 0%, transparent 50%);
+}
+.bg-grid::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Transisi halaman */
+.view { display: none; position: relative; z-index: 1; }
+.view.active { display: block; animation: fadeSlideIn 0.4s ease; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Peta node */
+.map-node {
+  width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease;
+  position: relative; border: 3px solid var(--border);
+  background: var(--bg2);
+}
+.map-node.unlocked { border-color: var(--accent); box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+.map-node.unlocked:hover { transform: scale(1.12); box-shadow: 0 0 30px rgba(16,185,129,0.4); }
+.map-node.completed { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.map-node.completed:hover { transform: scale(1.08); }
+.map-node.locked { opacity: 0.35; cursor: not-allowed; }
+.map-node.current { animation: pulseGlow 2s ease-in-out infinite; }
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+  50% { box-shadow: 0 0 35px rgba(16,185,129,0.6); }
+}
+
+/* Koneksi garis peta */
+.map-line { width: 3px; height: 40px; margin: 0 auto; background: var(--border); transition: background 0.5s; }
+.map-line.done { background: var(--accent); }
+.map-branch-line { height: 3px; width: 60px; background: var(--border); transition: background 0.5s; }
+.map-branch-line.done { background: var(--accent); }
+
+/* Lesson node di peta detail */
+.lesson-node {
+  width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.3s; border: 2px solid var(--border); background: var(--bg2);
+}
+.lesson-node.theory { border-radius: 50%; }
+.lesson-node.exercise { border-radius: 16px; }
+.lesson-node.unlocked { border-color: var(--accent); }
+.lesson-node.unlocked:hover { transform: scale(1.15); box-shadow: 0 0 20px rgba(16,185,129,0.3); }
+.lesson-node.completed { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.lesson-node.locked { opacity: 0.3; cursor: not-allowed; }
+.lesson-connector { width: 2px; height: 24px; margin: 0 auto; background: var(--border); }
+.lesson-connector.done { background: var(--accent); }
+
+/* Tombol */
+.btn-primary {
+  background: var(--accent); color: var(--bg); font-weight: 600; padding: 14px 32px; border-radius: 14px;
+  border: none; cursor: pointer; font-size: 1rem; font-family: inherit; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { filter: brightness(1.15); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.3); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; filter: none; }
+.btn-secondary {
+  background: transparent; color: var(--accent); font-weight: 600; padding: 12px 24px; border-radius: 14px;
+  border: 2px solid var(--accent); cursor: pointer; font-size: 0.9rem; font-family: inherit; transition: all 0.2s;
+}
+.btn-secondary:hover { background: rgba(16,185,129,0.1); }
+
+/* Opsi exercise */
+.opt-card {
+  padding: 16px 20px; border: 2px solid var(--border); border-radius: 14px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); min-height: 52px; display: flex; align-items: center; gap: 12px;
+}
+.opt-card:hover { border-color: rgba(16,185,129,0.4); background: var(--glass); }
+.opt-card.selected { border-color: var(--accent); background: rgba(16,185,129,0.12); }
+.opt-card.correct { border-color: #10b981; background: rgba(16,185,129,0.15); }
+.opt-card.wrong { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+.opt-card.disabled { pointer-events: none; opacity: 0.7; }
+
+/* Input exercise */
+.ex-input {
+  background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 14px 18px;
+  color: var(--fg); font-size: 1rem; font-family: inherit; width: 100%; outline: none; transition: border-color 0.2s;
+}
+.ex-input:focus { border-color: var(--accent); }
+.ex-input.correct { border-color: #10b981; }
+.ex-input.wrong { border-color: #ef4444; }
+
+/* Code block */
+.code-block {
+  background: #0d1117; border: 1px solid rgba(100,116,139,0.2); border-radius: 12px;
+  padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+  line-height: 1.7; overflow-x: auto; white-space: pre;
+}
+
+/* Progress bar */
+.prog-bar { height: 6px; border-radius: 3px; background: rgba(100,116,139,0.2); overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.5s ease; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+  padding: 14px 28px; border-radius: 14px; font-weight: 600; z-index: 999;
+  transition: transform 0.4s ease; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: #10b981; color: #0b1121; }
+.toast.error { background: #ef4444; color: white; }
+.toast.info { background: #f59e0b; color: #0b1121; }
+
+/* XP popup */
+.xp-popup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+  background: var(--bg2); border: 2px solid var(--accent2); border-radius: 24px;
+  padding: 40px 60px; z-index: 100; text-align: center;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.xp-popup.show { transform: translate(-50%,-50%) scale(1); }
+
+/* Celebration particles */
+.confetti { position: fixed; top: -10px; z-index: 99; pointer-events: none; animation: confettiFall 2s ease-out forwards; }
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Match exercise */
+.match-item {
+  padding: 12px 18px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); text-align: center; user-select: none;
+}
+.match-item:hover { border-color: rgba(16,185,129,0.4); }
+.match-item.active { border-color: var(--accent); background: rgba(16,185,129,0.12); box-shadow: 0 0 15px rgba(16,185,129,0.2); }
+.match-item.matched { border-color: #10b981; background: rgba(16,185,129,0.15); opacity: 0.6; pointer-events: none; }
+.match-item.wrong-match { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+
+/* Order exercise */
+.order-item {
+  padding: 14px 20px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); user-select: none;
+}
+.order-item:hover { border-color: rgba(16,185,129,0.4); }
+.order-item.ordered { border-color: var(--accent2); background: rgba(245,158,11,0.1); opacity: 0.5; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 3px; }
+
+/* Responsif */
+@media (max-width: 640px) {
+  .map-node { width: 56px; height: 56px; font-size: 1rem; }
+  .lesson-node { width: 48px; height: 48px; font-size: 0.75rem; }
+}
+
+/* Animasi masuk */
+.stagger-in > * { opacity: 0; transform: translateY(15px); animation: staggerFade 0.4s ease forwards; }
+.stagger-in > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-in > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-in > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-in > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-in > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-in > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-in > *:nth-child(10) { animation-delay: 0.5s; }
+@keyframes staggerFade { to { opacity: 1; transform: translateY(0); } }
+
+/* Feedback benar/salah */
+.feedback-bar {
+  padding: 18px 24px; border-radius: 14px; font-weight: 600; display: flex; align-items: center; gap: 12px;
+  animation: fadeSlideIn 0.3s ease;
+}
+.feedback-bar.correct-fb { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #10b981; }
+.feedback-bar.wrong-fb { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+
+/* Terjemahan bahasa Indonesia di bawah teks utama */
+.id-lang { display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 2px; line-height: 1.4; }
+
+/* Khusus label di node peta/lesson: tidak wrap, indo di bawah inggris */
+.node-title { text-align: center; white-space: nowrap; }
+.node-title .id-lang { display: block; white-space: nowrap; margin-top: 2px; }
+
+/* Modal Rules */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 30px; max-width: 450px; width: 90%; position: relative;
+  animation: scaleIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<!-- Rules Modal -->
+<div id="rulesModal" class="modal-overlay">
+  <div class="modal-box">
+    <button onclick="closeRules()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+    <h3 class="text-xl font-bold mb-5 text-amber-400">
+      <i class="fa-solid fa-gavel mr-2"></i>Class Rules <span class="id-lang" style="display:inline; color:#f59e0b;">Aturan Kelas</span>
+    </h3>
+    <ul class="space-y-4 text-slate-300">
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-comments text-emerald-400"></i></span>
+        <div>
+          <strong>Take turns speaking</strong>
+          <span class="id-lang">Berbicara secara bergantian</span>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-video text-amber-400"></i></span>
+        <div>
+          <strong>Turn on camera & microphone when required</strong>
+          <span class="id-lang">Menyalakan kamera & microphone jika diperlukan</span>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-hand text-violet-400"></i></span>
+        <div>
+          <strong>Ask for permission to leave the class</strong>
+          <span class="id-lang">Meminta izin jika ingin meninggalkan kelas</span>
+        </div>
+      </li>
+    </ul>
+    <div class="mt-6 text-right">
+      <button onclick="closeRules()" class="btn-primary">Got it! <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Mengerti!</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- XP Popup -->
+<div id="xpPopup" class="xp-popup">
+  <div class="text-5xl font-bold text-amber-400 mb-2">+<span id="xpAmount">10</span> XP</div>
+  <div class="text-lg text-slate-400">Correct answer! <span class="id-lang">Jawaban benar!</span></div>
+</div>
+
+<!-- ========== MAP VIEW ========== -->
+<div id="mapView" class="view active">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+          <i class="fa-solid fa-square-root-variable text-emerald-400"></i>
+        </div>
+        <div>
+          <div class="font-bold text-lg leading-tight">Math Tutoring</div>
+          <div class="text-xs text-slate-500">by Deni</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-5">
+        <button onclick="openRules()" class="text-xs text-slate-500 hover:text-amber-400 transition flex items-center gap-1 border border-transparent hover:border-amber-400/30 rounded-lg px-2 py-1" title="Class Rules">
+          <i class="fa-solid fa-gavel"></i> Rules
+        </button>
+        <button onclick="resetProgress()" class="text-xs text-slate-500 hover:text-red-400 transition flex items-center gap-1 border border-transparent hover:border-red-400/30 rounded-lg px-2 py-1" title="Reset Semua Progress">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <div class="flex items-center gap-2 text-amber-400 font-semibold">
+          <i class="fa-solid fa-bolt"></i><span id="headerXP">0</span> XP
+        </div>
+        <div class="flex items-center gap-2 text-orange-400 font-semibold">
+          <i class="fa-solid fa-fire"></i><span id="headerStreak">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-20">
+    <div class="text-center mb-10">
+		<h1 class="text-2xl md:text-3xl font-extrabold mb-3 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent leading-tight">
+		  Konsep dan Teknik Pembagian
+		  <span class="id-lang" style="display:block; color:#94a3b8; margin-top: 4px; font-size: 1.25rem;">Division Concepts and Techniques</span>
+		</h1>
+            <div class="text-slate-400 mx-auto text-center" style="max-width: 90%;">
+        <div style="white-space: nowrap;">Selesaikan setiap peta untuk membuka peta berikutnya. Kumpulkan XP dan bangun streak belajarmu!</div>
+        <div class="id-lang" style="white-space: nowrap;">Complete each map to unlock the next. Collect XP and build your learning streak!</div>
+      </div>
+    </div>
+
+    <!-- Progress keseluruhan -->
+    <div class="max-w-md mx-auto mb-10">
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-slate-400">Progress Keseluruhan <span class="id-lang" style="display:inline; color:#64748b;">Overall Progress</span></span>
+        <span class="text-emerald-400 font-semibold" id="totalProgress">0%</span>
+      </div>
+      <div class="prog-bar">
+        <div class="prog-fill" id="totalProgFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Peta nodes akan dirender oleh JS -->
+    <div id="mapContainer" class="flex flex-col items-center gap-0"></div>
+  </main>
+</div>
+
+<!-- ========== PETA VIEW (detail lesson) ========== -->
+<div id="petaView" class="view">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+      <button onclick="showMap()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+        <i class="fa-solid fa-arrow-left text-slate-400"></i>
+      </button>
+      <div>
+        <div class="font-bold text-lg" id="petaTitle"></div>
+        <div class="text-xs text-slate-500" id="petaSubtitle"></div>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-2xl mx-auto px-4 pt-8 pb-20">
+    <div id="lessonContainer" class="flex flex-col items-center"></div>
+  </main>
+</div>
+
+<!-- ========== LESSON VIEW ========== -->
+<div id="lessonView" class="view">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+      <button onclick="closeLesson()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+        <i class="fa-solid fa-xmark text-slate-400"></i>
+      </button>
+      <div class="flex-1">
+        <div class="prog-bar">
+          <div class="prog-fill" id="lessonProgFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="text-sm text-slate-400 font-mono" id="lessonCounter">1/10</div>
+    </div>
+  </header>
+  <main class="max-w-2xl mx-auto px-4 pt-6 pb-20" id="lessonContent"></main>
+</div>
+
+<script>
+// ============================================================
+// DATA KURSUS — Seluruh konten pembelajaran
+// ============================================================
+const COURSE = {
+  title: "Konsep dan Teknik Pembagian <span class='id-lang'>Division Concepts and Techniques</span>",
+  maps: [
+    // ==================== SECTION 1 ====================
+    {
+      id:1, title:"Spiral Review Warm-up <span class='id-lang'>Pemanasan Review</span>", icon:"fa-rotate", color:"#10b981", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Strategi Perkalian & Pembagian Dasar <span class='id-lang'>Multiplication & Basic Division</span>",
+         body:`<p>Sebelum kita masuk ke pembagian panjang, mari kita asah otak kita! Kita ingat dulu perkalian cepat dan pembagian dasar. <span class='id-lang'>Before we dive into long division, let's warm up! We'll review quick multiplication and basic division.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2"><i class="fa-solid fa-cube mr-2"></i>Contoh Cepat <span class='id-lang'>Quick Examples</span></div>
+           <p class="text-sm text-slate-300">\\( 25 \\times 4 = 100 \\). <span class='id-lang'>\\( 25 \\times 4 = 100 \\).</span></p>
+           <p class="text-sm text-slate-300">\\( 56 \\div 8 = 7 \\). <span class='id-lang'>\\( 56 \\div 8 = 7 \\).</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Berapakah hasil dari \\( 25 \\times 4 \\)? <span class='id-lang'>What is \\( 25 \\times 4 \\)?</span>",
+         o:["90 <span class='id-lang'>90</span>","100 <span class='id-lang'>100</span>","105 <span class='id-lang'>105</span>","75 <span class='id-lang'>75</span>"],
+         a:1,
+         h:"Angka 25 dikali 4 sama dengan 100. <span class='id-lang'>25 times 4 is 100.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitunglah \\( 12 \\times 5 \\). <span class='id-lang'>Calculate \\( 12 \\times 5 \\).</span>",
+         a:"60",
+         h:"\\( 10 \\times 5 = 50 \\), \\( 2 \\times 5 = 10 \\). \\( 50 + 10 = 60 \\). <span class='id-lang'>50 + 10 = 60.</span>"},
+        {type:"E",etype:"mc",
+         q:"Jika ada 56 apel dibagi ke 8 orang, berapa masing-masing dapat? <span class='id-lang'>If 56 apples are divided among 8 people, how many does each get?</span>",
+         o:["6 <span class='id-lang'>6</span>","7 <span class='id-lang'>7</span>","8 <span class='id-lang'>8</span>","9 <span class='id-lang'>9</span>"],
+         a:1,
+         h:"\\( 56 \\div 8 = 7 \\). <span class='id-lang'>\\( 56 \\div 8 = 7 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Pembagian sebagai Invers Perkalian <span class='id-lang'>Division as Inverse of Multiplication</span>",
+         body:`<p>Pembagian adalah kebalikan (invers) dari perkalian. Jika \\( 9 \\times 9 = 81 \\), maka \\( 81 \\div 9 = 9 \\). <span class='id-lang'>Division is the inverse of multiplication. If \\( 9 \\times 9 = 81 \\), then \\( 81 \\div 9 = 9 \\).</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Validasi Hasil <span class='id-lang'>Validating Results</span></div>
+           <p class="text-sm text-slate-300">Kita bisa cek jawaban pembagian dengan mengalikan hasil bagi dengan pembaginya. <span class='id-lang'>We can check division answers by multiplying the quotient by the divisor.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Jika \\( 81 \\div 9 = x \\), tentukan nilai \\( x \\). <span class='id-lang'>Find the value of \\( x \\).</span>",
+         a:"9",
+         h:"\\( 9 \\times 9 = 81 \\), maka \\( x = 9 \\). <span class='id-lang'>\\( x = 9 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Hasil bagi dari \\( 100 \\div 4 \\) adalah... <span class='id-lang'>The quotient of \\( 100 \\div 4 \\) is...</span>",
+         o:["20 <span class='id-lang'>20</span>","25 <span class='id-lang'>25</span>","30 <span class='id-lang'>30</span>","40 <span class='id-lang'>40</span>"],
+         a:1,
+         h:"\\( 25 \\times 4 = 100 \\). <span class='id-lang'>\\( 25 \\times 4 = 100 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Pembagian adalah penjumlahan yang diulang. <span class='id-lang'>Division is repeated addition.</span>",
+         a:false,
+         h:"Pembagian adalah pengurangan berulang. <span class='id-lang'>Division is repeated subtraction.</span>"},
+        // 1 Teori
+        {type:"T",title:"Istilah dalam Pembagian <span class='id-lang'>Terms in Division</span>",
+         body:`<p>Mari kita ingat istilah-istilahnya. <span class='id-lang'>Let's recall the terms.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Komponen <span class='id-lang'>Components</span></div>
+           <p class="text-sm text-slate-300">Dividen (yang dibagi) \\( \\div \\) Pembagi (pembagi) = Hasil Bagi. <span class='id-lang'>Dividend \\( \\div \\) Divisor = Quotient.</span></p>
+           <p class="text-sm text-slate-300">Jika ada sisa, disebut Remainder (Sisa). <span class='id-lang'>If there is a leftover, it's called Remainder.</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"mc",
+         q:"Dalam operasi \\( 56 \\div 8 = 7 \\), angka 56 adalah... <span class='id-lang'>In \\( 56 \\div 8 = 7 \\), 56 is the...</span>",
+         o:["Pembagi <span class='id-lang'>Divisor</span>","Hasil Bagi <span class='id-lang'>Quotient</span>","Dividen <span class='id-lang'>Dividend</span>","Sisa <span class='id-lang'>Remainder</span>"],
+         a:2,
+         h:"Angka yang dibagi disebut Dividen. <span class='id-lang'>The number being divided is the Dividend.</span>"},
+        {type:"E",etype:"mc",
+		 q:"Dalam operasi \\( 81 \\div 9 = 9 \\), angka 9 yang berada di tengah (setelah tanda bagi) bertindak sebagai... <span class='id-lang'>In \\( 81 \\div 9 = 9 \\), the middle 9 (after the division sign) acts as the...</span>",
+		 o:["Dividen <span class='id-lang'>Dividend</span>","Pembagi <span class='id-lang'>Divisor</span>","Hasil Bagi <span class='id-lang'>Quotient</span>","Sisa <span class='id-lang'>Remainder</span>"],
+		 a:1,
+		 h:"Angka yang membagi disebut Pembagi. <span class='id-lang'>The number that divides is the Divisor.</span>"},
+        {type:"E",etype:"fb",
+		 q:"Dalam operasi \\( 10 \\div 3 \\), hasil baginya adalah 3. Berapakah sisa (remainder)-nya? <span class='id-lang'>In \\( 10 \\div 3 \\), the quotient is 3. What is the remainder?</span>",
+		 a:"1",
+		 h:"\\( 10 - (3 \\times 3) = 1 \\). <span class='id-lang'>\\( 10 - 9 = 1 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah yang merupakan hasil bagi (quotient) dari \\( 45 \\div 5 \\)? <span class='id-lang'>Which is the quotient?</span>",
+         o:["5 <span class='id-lang'>5</span>","9 <span class='id-lang'>9</span>","40 <span class='id-lang'>40</span>","50 <span class='id-lang'>50</span>"],
+         a:1,
+         h:"\\( 45 \\div 5 = 9 \\). <span class='id-lang'>\\( 45 \\div 5 = 9 \\).</span>"}
+      ]
+    },
+    // ==================== SECTION 2 ====================
+    {
+      id:2, title:"Real-World Connection <span class='id-lang'>Koneksi Dunia Nyata</span>", icon:"fa-lightbulb", color:"#06b6d4", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Distribusi Sumber Daya Proyek <span class='id-lang'>Project Resource Distribution</span>",
+         body:`<p>Bayangkan kamu adalah seorang Manajer Proyek. Kamu punya anggaran 1.500 dolar yang harus dibagi rata untuk 4 departemen. Ini adalah contoh nyata penggunaan pembagian! <span class='id-lang'>Imagine you are a Project Manager. You have a budget of 1,500 dollars to divide equally among 4 departments. This is a real-world example of division!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Pembagian Sumber Daya <span class='id-lang'>Resource Allocation</span></div>
+           <p class="text-sm text-slate-300">Tidak selalu semuanya habis terbagi. Sisa tersebut harus dikelola. <span class='id-lang'>Not everything divides perfectly. The remainder must be managed.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Jika anggaran 1.500 dolar dibagi rata ke 4 departemen, operasi matematika yang sesuai adalah... <span class='id-lang'>If 1,500 dollars is divided among 4 departments, the operation is...</span>",
+         o:["\\( 1500 \\times 4 \\)","\\( 1500 \\div 4 \\)","\\( 1500 + 4 \\)","\\( 1500 - 4 \\)"],
+         a:1,
+         h:"Membagi rata = pembagian. <span class='id-lang'>Dividing equally = division.</span>"},
+        {type:"E",etype:"fb",
+         q:"Ada 13 server yang harus dibagi rata ke 3 ruang server. Berapa server di setiap ruang? (Tulis angka saja) <span class='id-lang'>13 servers divided among 3 rooms. How many per room?</span>",
+         a:"4",
+         h:"\\( 13 \\div 3 = 4 \\) sisa 1. <span class='id-lang'>\\( 13 \\div 3 = 4 \\) remainder 1.</span>"},
+        {type:"E",etype:"mc",
+         q:"Dari soal sebelumnya (13 server, 3 ruang), berapa sisa server yang tidak masuk ruang? <span class='id-lang'>How many servers are left over?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>"],
+         a:1,
+         h:"\\( 13 - (4 \\times 3) = 1 \\). <span class='id-lang'>\\( 13 - 12 = 1 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Konsep Pembagian Bersisa <span class='id-lang'>Concept of Remainder</span>",
+         body:`<p>Dalam perhitungan matematika, pembagian dibagi menjadi dua: pembagian habis (sisa 0) dan pembagian bersisa (sisa > 0). <span class='id-lang'>In math, division has two types: exact division (remainder 0) and division with remainder (remainder > 0).</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">Kunci <span class='id-lang'>Key</span></div>
+           <p class="text-sm text-slate-300">Sisa pembagian tidak boleh lebih besar atau sama dengan pembaginya. <span class='id-lang'>The remainder must be less than the divisor.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"tf",
+         q:"Pembagian habis terjadi ketika sisa bagi adalah 0. <span class='id-lang'>Exact division occurs when the remainder is 0.</span>",
+         a:true,
+         h:"Sisa 0 berarti habis terbagi. <span class='id-lang'>Remainder 0 means exact division.</span>"},
+        {type:"E",etype:"fb",
+         q:"Jika 10 dibagi 3, hasil baginya 3. Berapakah sisanya? <span class='id-lang'>If 10 divided by 3, quotient is 3. What is the remainder?</span>",
+         a:"1",
+         h:"\\( 10 - (3 \\times 3) = 1 \\). <span class='id-lang'>\\( 10 - 9 = 1 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah yang merupakan pembagian bersisa? <span class='id-lang'>Which is a division with remainder?</span>",
+         o:["\\( 81 \\div 9 \\) <span class='id-lang'>\\( 81 \\div 9 \\)</span>","\\( 56 \\div 8 \\) <span class='id-lang'>\\( 56 \\div 8 \\)</span>","\\( 10 \\div 3 \\) <span class='id-lang'>\\( 10 \\div 3 \\)</span>","\\( 100 \\div 4 \\) <span class='id-lang'>\\( 100 \\div 4 \\)</span>"],
+         a:2,
+         h:"\\( 10 \\div 3 = 3 \\) sisa 1. <span class='id-lang'>\\( 10 \\div 3 = 3 \\) R 1.</span>"},
+        // 1 Teori
+        {type:"T",title:"Validasi dengan Perkalian <span class='id-lang'>Validation using Multiplication</span>",
+         body:`<p>Untuk memvalidasi hasil pembagian, kita bisa menggunakan operasi perkalian sebagai teknik pengecekan mandiri. <span class='id-lang'>To validate division results, we can use multiplication as a self-checking technique.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Rumus Cek <span class='id-lang'>Check Formula</span></div>
+           <p class="text-sm text-slate-300">Dividen = (Hasil Bagi \\( \\times \\) Pembagi) + Sisa. <span class='id-lang'>Dividend = (Quotient \\( \\times \\) Divisor) + Remainder.</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Hasil bagi 7, pembagi 8, sisa 0. Berapakah dividen? <span class='id-lang'>Quotient 7, divisor 8, remainder 0. What is the dividend?</span>",
+         a:"56",
+         h:"\\( (7 \\times 8) + 0 = 56 \\). <span class='id-lang'>\\( (7 \\times 8) + 0 = 56 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Hasil bagi 3, pembagi 3, sisa 1. Berapakah dividen? <span class='id-lang'>Quotient 3, divisor 3, remainder 1. What is the dividend?</span>",
+         o:["9 <span class='id-lang'>9</span>","10 <span class='id-lang'>10</span>","12 <span class='id-lang'>12</span>","7 <span class='id-lang'>7</span>"],
+         a:1,
+         h:"\\( (3 \\times 3) + 1 = 10 \\). <span class='id-lang'>\\( (3 \\times 3) + 1 = 10 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Jika \\( 45 \\div 5 = 9 \\), maka \\( 9 \\times 5 = 45 \\). Pernyataan ini benar. <span class='id-lang'>This statement is true.</span>",
+         a:true,
+         h:"Perkalian adalah kebalikan pembagian. <span class='id-lang'>Multiplication is the inverse of division.</span>"},
+        {type:"E",etype:"fb",
+         q:"Sebuah dividen 25 dibagi 4 menghasilkan sisa 1. Berapakah hasil baginya? <span class='id-lang'>A dividend of 25 divided by 4 leaves remainder 1. What is the quotient?</span>",
+         a:"6",
+         h:"\\( (6 \\times 4) + 1 = 25 \\). Maka hasil bagi = 6. <span class='id-lang'>\\( (6 \\times 4) + 1 = 25 \\).</span>"}
+      ]
+    },
+    // ==================== SECTION 3 ====================
+    {
+      id:3, title:"Review of Prior Knowledge <span class='id-lang'>Review Pengetahuan</span>", icon:"fa-brain", color:"#8b5cf6", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Algoritma D-M-S-B <span class='id-lang'>D-M-S-B Algorithm</span>",
+         body:`<p>Sebelum kita ke pembagian panjang, mari kita ingat langkah 'D-M-S-B' (Divide, Multiply, Subtract, Bring down). Ini adalah algoritma standar kita. <span class='id-lang'>Before long division, let's recall 'D-M-S-B' (Divide, Multiply, Subtract, Bring down). This is our standard algorithm.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+           <div class="text-violet-400 font-semibold mb-2">Langkah-langkah <span class='id-lang'>Steps</span></div>
+           <p class="text-sm text-slate-300">1. <strong>D</strong>ivide (Bagi), 2. <strong>M</strong>ultiply (Kali), 3. <strong>S</strong>ubtract (Kurang), 4. <strong>B</strong>ring down (Turunkan). <span class='id-lang'>1. Divide, 2. Multiply, 3. Subtract, 4. Bring down.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Dalam akronim D-M-S-B, huruf 'M' berarti... <span class='id-lang'>In D-M-S-B, 'M' stands for...</span>",
+         o:["Minus <span class='id-lang'>Minus</span>","Multiply <span class='id-lang'>Multiply</span>","Move <span class='id-lang'>Move</span>","Make <span class='id-lang'>Make</span>"],
+         a:1,
+         h:"M = Multiply (Kali). <span class='id-lang'>M = Multiply.</span>"},
+        {type:"E",etype:"mc",
+         q:"Apa langkah pertama dalam algoritma D-M-S-B? <span class='id-lang'>What is the first step in D-M-S-B?</span>",
+         o:["Subtract <span class='id-lang'>Subtract</span>","Bring down <span class='id-lang'>Bring down</span>","Divide <span class='id-lang'>Divide</span>","Multiply <span class='id-lang'>Multiply</span>"],
+         a:2,
+         h:"D = Divide (Bagi). <span class='id-lang'>D = Divide.</span>"},
+        {type:"E",etype:"tf",
+         q:"Langkah terakhir dalam satu siklus D-M-S-B adalah 'Bring down' (Turunkan). <span class='id-lang'>The last step in a D-M-S-B cycle is 'Bring down'.</span>",
+         a:true,
+         h:"B = Bring down. <span class='id-lang'>B = Bring down.</span>"},
+        // 1 Teori
+        {type:"T",title:"Pengurangan Berulang <span class='id-lang'>Repeated Subtraction</span>",
+         body:`<p>Ingat, pembagian adalah pengurangan berulang, tapi Long Division membuatnya jauh lebih efisien untuk angka besar. <span class='id-lang'>Remember, division is repeated subtraction, but Long Division makes it much more efficient for large numbers.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Konsep <span class='id-lang'>Concept</span></div>
+           <p class="text-sm text-slate-300">\\( 12 \\div 3 = 4 \\) artinya kita bisa mengurangkan 3 dari 12 sebanyak 4 kali. <span class='id-lang'>\\( 12 \\div 3 = 4 \\) means we can subtract 3 from 12 exactly 4 times.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"\\( 15 \\div 5 \\) berarti kita mengurangkan 5 dari 15 sebanyak ___ kali. <span class='id-lang'>\\( 15 \\div 5 \\) means we subtract 5 from 15 ___ times.</span>",
+         a:"3",
+         h:"\\( 15 - 5 - 5 - 5 = 0 \\). Jadi 3 kali. <span class='id-lang'>\\( 15 - 5 - 5 - 5 = 0 \\). So 3 times.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hasil dari \\( 20 \\div 4 \\) adalah... <span class='id-lang'>The result of \\( 20 \\div 4 \\) is...</span>",
+         a:"5",
+         h:"\\( 20 - 4 - 4 - 4 - 4 - 4 = 0 \\). <span class='id-lang'>5 times.</span>"},
+        {type:"E",etype:"mc",
+         q:"Mengapa Long Division lebih baik dari pengurangan berulang untuk angka besar? <span class='id-lang'>Why is Long Division better than repeated subtraction for large numbers?</span>",
+         o:["Lebih cepat dan efisien <span class='id-lang'>Faster and more efficient</span>","Lebih akurat <span class='id-lang'>More accurate</span>","Tidak butuh perkalian <span class='id-lang'>Doesn't need multiplication</span>","Tidak ada sisa <span class='id-lang'>No remainder</span>"],
+         a:0,
+         h:"Long Division memproses angka dalam bagian yang lebih kecil. <span class='id-lang'>It processes numbers in smaller chunks.</span>"},
+        // 1 Teori
+        {type:"T",title:"Kesalahan Umum dalam Pembagian <span class='id-lang'>Common Division Mistakes</span>",
+         body:`<p>Saat melakukan pembagian, pastikan sisa kurang dari pembagi. Jika sisa lebih besar atau sama dengan pembagi, berarti hasil baginya kurang besar. <span class='id-lang'>When dividing, ensure the remainder is less than the divisor. If it's larger or equal, the quotient is too small.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Aturan Emas <span class='id-lang'>Golden Rule</span></div>
+           <p class="text-sm text-slate-300">\\( 0 \\le \\text{Sisa} < \\text{Pembagi} \\). <span class='id-lang'>\\( 0 \\le \\text{Remainder} < \\text{Divisor} \\).</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"mc",
+         q:"Jika pembaginya 4, manakah sisa yang TIDAK mungkin terjadi? <span class='id-lang'>If the divisor is 4, which remainder is IMPOSSIBLE?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","3 <span class='id-lang'>3</span>","4 <span class='id-lang'>4</span>"],
+         a:3,
+         h:"Sisa harus kurang dari pembagi (4). Jika sisa 4, berarti bisa dibagi lagi. <span class='id-lang'>Remainder must be less than 4.</span>"},
+        {type:"E",etype:"tf",
+         q:"Sisa pembagian boleh sama dengan pembaginya. <span class='id-lang'>The remainder can be equal to the divisor.</span>",
+         a:false,
+         h:"Sisa harus kurang dari pembagi! <span class='id-lang'>Remainder must be less than divisor!</span>"},
+        {type:"E",etype:"fb",
+         q:"Dalam pembagian dengan pembagi 8, berapakah nilai sisa maksimum yang mungkin? <span class='id-lang'>With divisor 8, what is the maximum possible remainder?</span>",
+         a:"7",
+         h:"Sisa < Pembagi. Maks sisa = 8 - 1 = 7. <span class='id-lang'>Max remainder = 7.</span>"},
+        {type:"E",etype:"mc",
+         q:"Jika kamu membagi 25 dengan 5, dan sisanya 5, apa yang salah? <span class='id-lang'>If you divide 25 by 5, and get remainder 5, what's wrong?</span>",
+         o:["Tidak ada yang salah <span class='id-lang'>Nothing is wrong</span>","Hasil baginya harus ditambah 1 <span class='id-lang'>Quotient should be increased by 1</span>","Pembaginya salah <span class='id-lang'>Divisor is wrong</span>","Sisa tidak boleh 5 <span class='id-lang'>Remainder cannot be 5</span>"],
+         a:1,
+         h:"Sisa 5 dari pembagi 5 berarti bisa dibagi 1 kali lagi. Hasil bagi kurang 1. <span class='id-lang'>Quotient should be increased by 1.</span>"}
+      ]
+    },
+    // ==================== SECTION 4 ====================
+    {
+      id:4, title:"Problem Introduction <span class='id-lang'>Pengenalan Masalah</span>", icon:"fa-circle-question", color:"#f59e0b", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Pembagian Panjang 3-Digit <span class='id-lang'>3-Digit Long Division</span>",
+         body:`<p>Mari kita lihat soal ini: \\( 547 \\div 4 \\). Kita tidak bisa melakukannya hanya dengan bayangan. Kita gunakan Long Division. <span class='id-lang'>Let's look at this: \\( 547 \\div 4 \\). We can't do it mentally. We use Long Division.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Langkah 1 <span class='id-lang'>Step 1</span></div>
+           <p class="text-sm text-slate-300">5 dibagi 4 adalah 1. Tulis 1 di atas. 1 kali 4 adalah 4. Sisa 1. <span class='id-lang'>5 divided by 4 is 1. 1 times 4 is 4. Remainder 1.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Dalam \\( 547 \\div 4 \\), angka pertama yang kita bagi adalah 5. Hasil bagi pertama adalah... <span class='id-lang'>In \\( 547 \\div 4 \\), the first quotient digit is...</span>",
+         a:"1",
+         h:"\\( 5 \\div 4 = 1 \\) sisa 1. <span class='id-lang'>\\( 5 \\div 4 = 1 \\) R 1.</span>"},
+        {type:"E",etype:"mc",
+         q:"Setelah dapat 1, kita kalikan dengan pembagi (4). Berapa hasilnya? <span class='id-lang'>After getting 1, we multiply by divisor (4). What is the result?</span>",
+         o:["1 <span class='id-lang'>1</span>","4 <span class='id-lang'>4</span>","5 <span class='id-lang'>5</span>","0 <span class='id-lang'>0</span>"],
+         a:1,
+         h:"\\( 1 \\times 4 = 4 \\). <span class='id-lang'>\\( 1 \\times 4 = 4 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Dari langkah sebelumnya (5 dikurangi 4), berapakah sisanya sebelum angka berikutnya diturunkan? <span class='id-lang'>What is the remainder before bringing down the next digit?</span>",
+         a:"1",
+         h:"\\( 5 - 4 = 1 \\). <span class='id-lang'>\\( 5 - 4 = 1 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Menurunkan Angka Berikutnya <span class='id-lang'>Bringing Down the Next Digit</span>",
+         body:`<p>Dari sisa 1, lalu turunkan angka 4 sehingga menjadi 14. Sekarang kita bagi 14 dengan 4. Kita mencari pembagian yang paling mendekati tanpa melebihi angka tersebut. <span class='id-lang'>From remainder 1, bring down 4 to make 14. Now divide 14 by 4. We look for the closest quotient without exceeding the number.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">Langkah 2 <span class='id-lang'>Step 2</span></div>
+           <p class="text-sm text-slate-300">\\( 14 \\div 4 = 3 \\) (karena \\( 3 \\times 4 = 12 \\)). Sisa \\( 14 - 12 = 2 \\). <span class='id-lang'>\\( 14 \\div 4 = 3 \\) (since \\( 3 \\times 4 = 12 \\)). Remainder 2.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Setelah turunkan 4, angkanya menjadi 14. Berapakah hasil bagi dari \\( 14 \\div 4 \\)? <span class='id-lang'>After bringing down 4, we have 14. What is the quotient of \\( 14 \\div 4 \\)?</span>",
+         a:"3",
+         h:"\\( 3 \\times 4 = 12 \\), kurang dari 14. <span class='id-lang'>\\( 3 \\times 4 = 12 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Dalam \\( 14 \\div 4 \\), kita bisa menggunakan angka 4 sebagai hasil bagi karena \\( 4 \\times 4 = 16 \\). <span class='id-lang'>In \\( 14 \\div 4 \\), we can use 4 because \\( 4 \\times 4 = 16 \\).</span>",
+         a:false,
+         h:"16 lebih besar dari 14! Hasil bagi tidak boleh melebihi. <span class='id-lang'>16 is greater than 14! Quotient cannot exceed.</span>"},
+        {type:"E",etype:"mc",
+         q:"Berapakah sisa dari \\( 14 - 12 \\) pada langkah kedua? <span class='id-lang'>What is the remainder of \\( 14 - 12 \\) in step 2?</span>",
+         o:["1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>","4 <span class='id-lang'>4</span>"],
+         a:1,
+         h:"\\( 14 - 12 = 2 \\). <span class='id-lang'>\\( 14 - 12 = 2 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Menyelesaikan Pembagian <span class='id-lang'>Completing the Division</span>",
+         body:`<p>Turunkan angka terakhir (7) ke samping sisa 2, sehingga menjadi 27. Bagi 27 dengan 4. <span class='id-lang'>Bring down the last digit (7) next to remainder 2, making 27. Divide 27 by 4.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+           <div class="text-violet-400 font-semibold mb-2">Langkah Akhir <span class='id-lang'>Final Step</span></div>
+           <p class="text-sm text-slate-300">\\( 27 \\div 4 = 6 \\) (karena \\( 6 \\times 4 = 24 \\)). Sisa \\( 27 - 24 = 3 \\). Hasil akhir: 136 sisa 3. <span class='id-lang'>\\( 27 \\div 4 = 6 \\). Remainder 3. Final answer: 136 R 3.</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"mc",
+         q:"Setelah turunkan 7, angkanya menjadi 27. Berapakah hasil bagi dari \\( 27 \\div 4 \\)? <span class='id-lang'>After bringing down 7, we have 27. What is the quotient of \\( 27 \\div 4 \\)?</span>",
+         o:["5 <span class='id-lang'>5</span>","6 <span class='id-lang'>6</span>","7 <span class='id-lang'>7</span>","8 <span class='id-lang'>8</span>"],
+         a:1,
+         h:"\\( 6 \\times 4 = 24 \\). <span class='id-lang'>\\( 6 \\times 4 = 24 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah sisa akhir dari pembagian \\( 547 \\div 4 \\)? <span class='id-lang'>What is the final remainder of \\( 547 \\div 4 \\)?</span>",
+         a:"3",
+         h:"\\( 27 - 24 = 3 \\). <span class='id-lang'>\\( 27 - 24 = 3 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Hasil akhir dari \\( 547 \\div 4 \\) adalah 136 sisa 3. <span class='id-lang'>The final answer for \\( 547 \\div 4 \\) is 136 R 3.</span>",
+         a:true,
+         h:"Hasil bagi 136, sisa 3. <span class='id-lang'>Quotient 136, remainder 3.</span>"},
+        {type:"E",etype:"fb",
+		 q:"Untuk memvalidasi pembagian \\( 547 \\div 4 \\), kita gunakan rumus \\( (\\text{hasil bagi} \\times 4) + \\text{sisa} = 547 \\). Jika diketahui sisanya adalah 3, berapakah hasil baginya? <span class='id-lang'>If the remainder is 3, what is the quotient?</span>",
+		 a:"136",
+		 h:"\\( 547 - 3 = 544 \\). Lalu \\( 544 \\div 4 = 136 \\). <span class='id-lang'>\\( 544 \\div 4 = 136 \\).</span>"}
+      ]
+    },
+    // ==================== SECTION 5 ====================
+    {
+      id:5, title:"Guided Practice <span class='id-lang'>Latihan Terbimbing</span>", icon:"fa-chalkboard-user", color:"#ec4899", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Langkah demi Langkah: 829 / 3 <span class='id-lang'>Step-by-Step: 829 / 3</span>",
+         body:`<p>Sekarang giliranmu berlatih dengan bimbingan. Mari kita selesaikan \\( 829 \\div 3 \\). <span class='id-lang'>Now it's your turn to practice with guidance. Let's solve \\( 829 \\div 3 \\).</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-pink-500/10 border border-pink-500/20">
+           <div class="text-pink-400 font-semibold mb-2">Langkah Pertama <span class='id-lang'>First Step</span></div>
+           <p class="text-sm text-slate-300">8 dibagi 3 dapat berapa? Kita mencari pembagian yang paling mendekati tanpa melebihi angka tersebut. <span class='id-lang'>8 divided by 3. We look for the closest quotient without exceeding.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Dalam \\( 829 \\div 3 \\), berapakah hasil bagi pertama (dari angka 8)? <span class='id-lang'>What is the first quotient digit (from 8)?</span>",
+         a:"2",
+         h:"\\( 3 \\times 2 = 6 \\), kurang dari 8. \\( 3 \\times 3 = 9 \\), lebih dari 8. <span class='id-lang'>\\( 3 \\times 2 = 6 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Berapakah sisa dari langkah pertama (8 dikurangi hasil kali)? <span class='id-lang'>What is the remainder of the first step?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>"],
+         a:2,
+         h:"\\( 8 - (3 \\times 2) = 8 - 6 = 2 \\). <span class='id-lang'>\\( 8 - 6 = 2 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Turunkan angka 2, sehingga menjadi 22. Berapakah hasil bagi dari \\( 22 \\div 3 \\)? <span class='id-lang'>Bring down 2 to make 22. What is the quotient of \\( 22 \\div 3 \\)?</span>",
+         a:"7",
+         h:"\\( 3 \\times 7 = 21 \\), kurang dari 22. <span class='id-lang'>\\( 3 \\times 7 = 21 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Menyelesaikan 829 / 3 <span class='id-lang'>Completing 829 / 3</span>",
+         body:`<p>Sisa dari 22 adalah 1. Turunkan angka 9 sehingga menjadi 19. Bagi 19 dengan 3. <span class='id-lang'>The remainder from 22 is 1. Bring down 9 to make 19. Divide 19 by 3.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">Langkah Terakhir <span class='id-lang'>Final Step</span></div>
+           <p class="text-sm text-slate-300">\\( 19 \\div 3 = 6 \\) (karena \\( 3 \\times 6 = 18 \\)). Sisa \\( 19 - 18 = 1 \\). <span class='id-lang'>\\( 19 \\div 3 = 6 \\). Remainder 1.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Berapakah hasil bagi dari \\( 19 \\div 3 \\)? <span class='id-lang'>What is the quotient of \\( 19 \\div 3 \\)?</span>",
+         o:["5 <span class='id-lang'>5</span>","6 <span class='id-lang'>6</span>","7 <span class='id-lang'>7</span>","8 <span class='id-lang'>8</span>"],
+         a:1,
+         h:"\\( 3 \\times 6 = 18 \\). <span class='id-lang'>\\( 3 \\times 6 = 18 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah sisa akhir dari pembagian \\( 829 \\div 3 \\)? <span class='id-lang'>What is the final remainder of \\( 829 \\div 3 \\)?</span>",
+         a:"1",
+         h:"\\( 19 - 18 = 1 \\). <span class='id-lang'>\\( 19 - 18 = 1 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Hasil akhir dari \\( 829 \\div 3 \\) adalah 276 sisa 1. <span class='id-lang'>The final answer is 276 R 1.</span>",
+         a:true,
+         h:"Benar. Hasil bagi 276, sisa 1. <span class='id-lang'>True. Quotient 276, remainder 1.</span>"},
+        // 1 Teori
+        {type:"T",title:"Tantangan Baru: 1250 / 6 <span class='id-lang'>New Challenge: 1250 / 6</span>",
+         body:`<p>Mari kita coba angka yang lebih besar: \\( 1250 \\div 6 \\). Kita mulai dari 12. <span class='id-lang'>Let's try a larger number: \\( 1250 \\div 6 \\). We start from 12.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Langkah 1 <span class='id-lang'>Step 1</span></div>
+           <p class="text-sm text-slate-300">\\( 12 \\div 6 = 2 \\). Sisa 0. Lalu turunkan 5. <span class='id-lang'>\\( 12 \\div 6 = 2 \\). Remainder 0. Bring down 5.</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Dalam \\( 1250 \\div 6 \\), setelah 12 dibagi 6, kita turunkan angka 5. Berapakah hasil bagi dari \\( 5 \\div 6 \\)? <span class='id-lang'>Bring down 5. What is the quotient of \\( 5 \\div 6 \\)?</span>",
+         a:"0",
+         h:"5 lebih kecil dari 6, jadi hasil bagi 0. <span class='id-lang'>5 < 6, so quotient is 0.</span>"},
+        {type:"E",etype:"mc",
+         q:"Karena hasil bagi 0, kita turunkan angka berikutnya (0) sehingga menjadi 50. Berapakah hasil bagi \\( 50 \\div 6 \\)? <span class='id-lang'>Bring down 0 to make 50. What is the quotient of \\( 50 \\div 6 \\)?</span>",
+         o:["6 <span class='id-lang'>6</span>","7 <span class='id-lang'>7</span>","8 <span class='id-lang'>8</span>","9 <span class='id-lang'>9</span>"],
+         a:2,
+         h:"\\( 6 \\times 8 = 48 \\), kurang dari 50. <span class='id-lang'>\\( 6 \\times 8 = 48 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah sisa akhir dari \\( 1250 \\div 6 \\)? <span class='id-lang'>What is the final remainder?</span>",
+         a:"2",
+         h:"\\( 50 - 48 = 2 \\). <span class='id-lang'>\\( 50 - 48 = 2 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah pernyataan yang benar tentang \\( 1250 \\div 6 \\)? <span class='id-lang'>Which statement is true about \\( 1250 \\div 6 \\)?</span>",
+         o:["Hasil 208 sisa 2 <span class='id-lang'>208 R 2</span>","Hasil 208 sisa 0 <span class='id-lang'>208 R 0</span>","Hasil 200 sisa 50 <span class='id-lang'>200 R 50</span>","Hasil 250 sisa 0 <span class='id-lang'>250 R 0</span>"],
+         a:0,
+         h:"\\( (208 \\times 6) + 2 = 1250 \\). <span class='id-lang'>\\( (208 \\times 6) + 2 = 1250 \\).</span>"}
+      ]
+    },
+    // ==================== SECTION 6 ====================
+    {
+      id:6, title:"Independent Practice <span class='id-lang'>Latihan Mandiri</span>", icon:"fa-user-graduate", color:"#14b8a6", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Soal Teknis: 942 / 7 <span class='id-lang'>Technical Problem: 942 / 7</span>",
+         body:`<p>Sekarang coba selesaikan tantangan ini secara mandiri. Pertama, soal teknis: \\( 942 \\div 7 \\). <span class='id-lang'>Now try solving this challenge independently. First, a technical problem: \\( 942 \\div 7 \\).</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+           <div class="text-teal-400 font-semibold mb-2">Mulai <span class='id-lang'>Start</span></div>
+           <p class="text-sm text-slate-300">Bagi 9 dengan 7, lalu lanjutkan langkah D-M-S-B sampai habis. <span class='id-lang'>Divide 9 by 7, then continue D-M-S-B steps until finished.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Berapakah hasil bagi pertama dari \\( 942 \\div 7 \\)? <span class='id-lang'>What is the first quotient digit?</span>",
+         a:"1",
+         h:"\\( 9 \\div 7 = 1 \\) sisa 2. <span class='id-lang'>\\( 9 \\div 7 = 1 \\) R 2.</span>"},
+        {type:"E",etype:"mc",
+         q:"Setelah turunkan 4 menjadi 24, berapakah hasil bagi \\( 24 \\div 7 \\)? <span class='id-lang'>After bringing down 4 to make 24, what is the quotient of \\( 24 \\div 7 \\)?</span>",
+         o:["2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>","4 <span class='id-lang'>4</span>","5 <span class='id-lang'>5</span>"],
+         a:1,
+         h:"\\( 7 \\times 3 = 21 \\). <span class='id-lang'>\\( 7 \\times 3 = 21 \\).</span>"},
+        {type:"E",etype:"fb",
+		 q:"Berapakah hasil akhir (hasil bagi dan sisa) dari \\( 942 \\div 7 \\)? (Format: [hasil bagi] sisa [sisa]) <span class='id-lang'>What is the final answer? (Format: [quotient] R [remainder])</span>",
+		 a:"134 sisa 4||134 r 4||134 R 4",
+		 h:"\\( 942 \\div 7 = 134 \\) sisa 4. <span class='id-lang'>\\( 942 \\div 7 = 134 \\) R 4.</span>"},
+        // 1 Teori
+        {type:"T",title:"Soal Cerita: Tugas Coding <span class='id-lang'>Word Problem: Coding Tasks</span>",
+         body:`<p>Kedua, soal cerita: Kamu punya 458 tugas coding yang harus dibagi rata ke 5 programmer. Berapa tugas per orang dan berapa sisa tugas yang harus kamu kerjakan sendiri? <span class='id-lang'>Second, a word problem: You have 458 coding tasks to divide equally among 5 programmers. How many tasks per person and how many are left for you?</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Strategi <span class='id-lang'>Strategy</span></div>
+           <p class="text-sm text-slate-300">Hitung \\( 458 \\div 5 \\). Sisa pembagian adalah tugas yang kamu kerjakan sendiri. <span class='id-lang'>Calculate \\( 458 \\div 5 \\). The remainder is your task.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Dalam \\( 458 \\div 5 \\), berapakah hasil bagi pertama (dari angka 45)? <span class='id-lang'>What is the first quotient digit (from 45)?</span>",
+         a:"9",
+         h:"\\( 45 \\div 5 = 9 \\). <span class='id-lang'>\\( 45 \\div 5 = 9 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Setelah turunkan 8, berapakah hasil bagi dari \\( 8 \\div 5 \\)? <span class='id-lang'>After bringing down 8, what is the quotient of \\( 8 \\div 5 \\)?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>"],
+         a:1,
+         h:"\\( 5 \\times 1 = 5 \\). <span class='id-lang'>\\( 5 \\times 1 = 5 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah sisa tugas yang harus kamu kerjakan sendiri? <span class='id-lang'>How many tasks are left for you?</span>",
+         a:"3",
+         h:"\\( 8 - 5 = 3 \\). Sisa 3 tugas. <span class='id-lang'>\\( 8 - 5 = 3 \\). Remainder 3.</span>"},
+        // 1 Teori
+        {type:"T",title:"Refleksi dan Pengecekan <span class='id-lang'>Reflection and Checking</span>",
+         body:`<p>Setelah selesai, jangan lupa untuk memvalidasi hasil pembagian dengan menggunakan operasi perkalian sebagai teknik pengecekan mandiri. <span class='id-lang'>After finishing, don't forget to validate the result using multiplication as a self-checking technique.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+           <div class="text-red-400 font-semibold mb-2">Cek <span class='id-lang'>Check</span></div>
+           <p class="text-sm text-slate-300">\\( (91 \\times 5) + 3 = 455 + 3 = 458 \\). Perhitungan kita benar! <span class='id-lang'>\\( (91 \\times 5) + 3 = 458 \\). Our calculation is correct!</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Berapakah tugas yang diterima tiap programmer? (Hasil bagi dari 458/5) <span class='id-lang'>How many tasks per programmer? (Quotient)</span>",
+         a:"91",
+         h:"\\( 458 \\div 5 = 91 \\). <span class='id-lang'>\\( 458 \\div 5 = 91 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Jika ada 500 tugas dibagi 5 programmer, berapa tugas per orang? <span class='id-lang'>If 500 tasks divided by 5, how many per person?</span>",
+         o:["10 <span class='id-lang'>10</span>","100 <span class='id-lang'>100</span>","50 <span class='id-lang'>50</span>","105 <span class='id-lang'>105</span>"],
+         a:1,
+         h:"\\( 500 \\div 5 = 100 \\). <span class='id-lang'>\\( 500 \\div 5 = 100 \\).</span>"},
+        {type:"E",etype:"tf",
+         q:"Pengecekan untuk \\( 942 \\div 7 = 134 \\) sisa 4 adalah \\( (134 \\times 7) + 4 \\). Hasilnya 942. <span class='id-lang'>The check is \\( (134 \\times 7) + 4 \\). Result is 942.</span>",
+         a:true,
+         h:"\\( 938 + 4 = 942 \\). Pengecekan benar. <span class='id-lang'>\\( 938 + 4 = 942 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Sebuah dividen 1000 dibagi 8 menghasilkan hasil bagi 125. Berapakah sisanya? <span class='id-lang'>A dividend 1000 divided by 8 gives quotient 125. What is the remainder?</span>",
+         a:"0",
+         h:"\\( 125 \\times 8 = 1000 \\). Sisa 0. <span class='id-lang'>\\( 125 \\times 8 = 1000 \\). Remainder 0.</span>"}
+      ]
+    },
+    // ==================== SECTION 7A ====================
+    {
+      id:"7A", title:"Assessment A <span class='id-lang'>Asesmen A</span>", icon:"fa-clipboard-check", color:"#3b82f6", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitunglah \\( 645 \\div 5 \\) menggunakan metode long division. (Tulis hasil baginya saja) <span class='id-lang'>Calculate the quotient.</span>",
+         a:"129",
+         h:"\\( 645 \\div 5 = 129 \\). <span class='id-lang'>129.</span>"},
+        {type:"E",etype:"fb",
+         q:"Tentukan sisa dari \\( 782 \\div 4 \\). <span class='id-lang'>Find the remainder of \\( 782 \\div 4 \\).</span>",
+         a:"2",
+         h:"\\( 782 \\div 4 = 195 \\) sisa 2. <span class='id-lang'>195 R 2.</span>"},
+        {type:"E",etype:"fb",
+         q:"Sebuah gudang memiliki 936 paket yang harus dimuat ke dalam 8 truk secara merata. Berapa paket per truk? <span class='id-lang'>936 packets into 8 trucks. How many per truck?</span>",
+         a:"117",
+         h:"\\( 936 \\div 8 = 117 \\). <span class='id-lang'>117.</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah \\( 1024 \\div 2 \\)? <span class='id-lang'>What is \\( 1024 \\div 2 \\)?</span>",
+         a:"512",
+         h:"\\( 1024 \\div 2 = 512 \\). <span class='id-lang'>512.</span>"},
+        {type:"E",etype:"mc",
+         q:"Dalam \\( 645 \\div 5 \\), setelah 6 dibagi 5 dapat 1, berapa sisanya? <span class='id-lang'>In \\( 645 \\div 5 \\), after 6/5=1, what is the remainder?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","5 <span class='id-lang'>5</span>"],
+         a:1,
+         h:"\\( 6 - 5 = 1 \\). <span class='id-lang'>\\( 6 - 5 = 1 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Tentukan hasil bagi dari \\( 782 \\div 4 \\). <span class='id-lang'>Find the quotient.</span>",
+         a:"195",
+         h:"\\( 782 \\div 4 = 195 \\). <span class='id-lang'>195.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 936 \\div 8 \\) memiliki sisa 0. <span class='id-lang'>\\( 936 \\div 8 \\) has remainder 0.</span>",
+         a:true,
+         h:"\\( 117 \\times 8 = 936 \\). Habis dibagi. <span class='id-lang'>Exact division.</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah yang TIDAK habis dibagi 2? <span class='id-lang'>Which is NOT divisible by 2?</span>",
+         o:["1024 <span class='id-lang'>1024</span>","512 <span class='id-lang'>512</span>","782 <span class='id-lang'>782</span>","945 <span class='id-lang'>945</span>"],
+         a:3,
+         h:"945 berakhiran ganjil. <span class='id-lang'>945 is odd.</span>"},
+        {type:"E",etype:"fb",
+		 q:"Jika sebuah pembagian memiliki hasil bagi 117 dan pembagi 8, serta tidak bersisa, berapakah bilangan asal (dividen)-nya? <span class='id-lang'>If quotient is 117 and divisor is 8 with no remainder, what is the dividend?</span>",
+		 a:"936",
+		 h:"\\( 117 \\times 8 = 936 \\). <span class='id-lang'>\\( 117 \\times 8 = 936 \\).</span>"},
+        {type:"E",etype:"mc",
+         q:"Jika \\( 1024 \\div 2 = 512 \\), berapakah \\( 512 \\times 2 \\)? <span class='id-lang'>What is \\( 512 \\times 2 \\)?</span>",
+         o:["1024 <span class='id-lang'>1024</span>","256 <span class='id-lang'>256</span>","1028 <span class='id-lang'>1028</span>","1042 <span class='id-lang'>1042</span>"],
+         a:0,
+         h:"Perkalian adalah kebalikan pembagian. <span class='id-lang'>Multiplication is inverse.</span>"}
+      ]
+    },
+    // ==================== SECTION 7B ====================
+    {
+      id:"7B", title:"Assessment B <span class='id-lang'>Asesmen B</span>", icon:"fa-clipboard-check", color:"#ef4444", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Selesaikan \\( 4567 \\div 9 \\) dan tentukan nilai sisa (remainder). <span class='id-lang'>Find the remainder.</span>",
+         a:"4",
+         h:"\\( 4567 \\div 9 = 507 \\) sisa 4. <span class='id-lang'>507 R 4.</span>"},
+        {type:"E",etype:"fb",
+         q:"Dalam proyek IT, 2341 baris kode di-review 6 developer. Berapa baris per developer? <span class='id-lang'>2341 lines, 6 devs. How many lines per dev?</span>",
+         a:"390",
+         h:"\\( 2341 \\div 6 = 390 \\) sisa 1. <span class='id-lang'>390 R 1.</span>"},
+        {type:"E",etype:"mc",
+         q:"Dari soal sebelumnya (2341 / 6), berapa baris sisanya? <span class='id-lang'>How many lines left over?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","6 <span class='id-lang'>6</span>"],
+         a:1,
+         h:"\\( 2341 - (390 \\times 6) = 1 \\). <span class='id-lang'>1.</span>"},
+        {type:"E",etype:"fb",
+		 q:"Hitunglah hasil bagi dari \\( 1500 \\div 7 \\). <span class='id-lang'>What is the quotient of \\( 1500 \\div 7 \\)?</span>",
+		 a:"214",
+		 h:"\\( 1500 \\div 7 = 214 \\) sisa 2. <span class='id-lang'>214 R 2.</span>"},
+		{type:"E",etype:"fb",
+		 q:"Hitunglah sisa dari pembagian \\( 1500 \\div 7 \\). <span class='id-lang'>What is the remainder of \\( 1500 \\div 7 \\)?</span>",
+		 a:"2",
+		 h:"\\( 1500 - (214 \\times 7) = 2 \\). <span class='id-lang'>1500 - 1498 = 2.</span>"},
+        {type:"E",etype:"fb",
+         q:"Jika \\( 8x = 5432 \\), tentukan nilai \\( x \\) menggunakan pembagian panjang. <span class='id-lang'>Find \\( x \\).</span>",
+         a:"679",
+         h:"\\( 5432 \\div 8 = 679 \\). <span class='id-lang'>679.</span>"},
+        {type:"E",etype:"tf",
+         q:"Buktikan apakah 9876 habis dibagi 3. Hasilnya 3292 sisa 0. <span class='id-lang'>9876 / 3 = 3292 R 0.</span>",
+         a:true,
+         h:"\\( 9876 \\div 3 = 3292 \\). Habis dibagi. <span class='id-lang'>Exact division.</span>"},
+        {type:"E",etype:"fb",
+         q:"Seorang manajer punya 8000 USD dibagi ke 12 tim. Berapa anggaran per tim (bulat)? <span class='id-lang'>8000 USD, 12 teams. How much per team?</span>",
+         a:"666",
+         h:"\\( 8000 \\div 12 = 666 \\) sisa 8. <span class='id-lang'>666 R 8.</span>"},
+        {type:"E",etype:"mc",
+         q:"Berapakah sisa anggaran yang tidak terbagi dari 8000 / 12? <span class='id-lang'>What is the leftover budget?</span>",
+         o:["0 <span class='id-lang'>0</span>","2 <span class='id-lang'>2</span>","6 <span class='id-lang'>6</span>","8 <span class='id-lang'>8</span>"],
+         a:3,
+         h:"\\( 8000 - (666 \\times 12) = 8 \\). <span class='id-lang'>8.</span>"},
+        {type:"E",etype:"fb",
+         q:"Tentukan hasil bagi dari \\( 4567 \\div 9 \\). <span class='id-lang'>Find the quotient.</span>",
+         a:"507",
+         h:"\\( 4567 \\div 9 = 507 \\) sisa 4. <span class='id-lang'>507 R 4.</span>"}
+      ]
+    },
+    // ==================== SECTION 7C ====================
+    {
+      id:"7C", title:"Assessment C <span class='id-lang'>Asesmen C</span>", icon:"fa-clipboard-check", color:"#a855f7", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 725 \\div 5 \\). <span class='id-lang'>Calculate \\( 725 \\div 5 \\).</span>",
+         a:"145",
+         h:"\\( 725 \\div 5 = 145 \\). <span class='id-lang'>145.</span>"},
+        {type:"E",etype:"mc",
+         q:"Dalam \\( 725 \\div 5 \\), langkah pertama (7 dibagi 5) menghasilkan hasil bagi... <span class='id-lang'>First step (7/5) quotient is...</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","5 <span class='id-lang'>5</span>"],
+         a:1,
+         h:"\\( 5 \\times 1 = 5 \\). <span class='id-lang'>1.</span>"},
+        {type:"E",etype:"fb",
+         q:"Setelah turunkan 2 menjadi 22, berapa hasil bagi \\( 22 \\div 5 \\)? <span class='id-lang'>Bring down 2 to make 22. Quotient of 22/5?</span>",
+         a:"4",
+         h:"\\( 5 \\times 4 = 20 \\). <span class='id-lang'>4.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 999 \\div 9 = 111 \\) tanpa sisa. <span class='id-lang'>\\( 999 \\div 9 = 111 \\) R 0.</span>",
+         a:true,
+         h:"\\( 111 \\times 9 = 999 \\). <span class='id-lang'>True.</span>"},
+        {type:"E",etype:"fb",
+         q:"Jika \\( 6x = 936 \\), berapakah \\( x \\)? <span class='id-lang'>Find \\( x \\).</span>",
+         a:"156",
+         h:"\\( 936 \\div 6 = 156 \\). <span class='id-lang'>156.</span>"},
+        {type:"E",etype:"mc",
+		 q:"Manakah operasi perkalian yang bisa memvalidasi hasil dari \\( 725 \\div 5 \\)? <span class='id-lang'>Which multiplication validates 725/5?</span>",
+		 o:["\\( 145 \\times 5 = 725 \\) <span class='id-lang'>\\( 145 \\times 5 = 725 \\)</span>","\\( 145 + 5 = 150 \\) <span class='id-lang'>\\( 145 + 5 = 150 \\)</span>","\\( 725 - 145 = 580 \\) <span class='id-lang'>\\( 725 - 145 = 580 \\)</span>","\\( 145 \\div 5 = 29 \\) <span class='id-lang'>\\( 145 \\div 5 = 29 \\)</span>"],
+		 a:0,
+		 h:"Hasil bagi kali pembagi = dividen. <span class='id-lang'>Quotient times divisor.</span>"},
+        {type:"E",etype:"fb",
+         q:"Ada 850 buku dibagi rata ke 6 kelas. Berapa buku per kelas? <span class='id-lang'>850 books, 6 classes. How many per class?</span>",
+         a:"141",
+         h:"\\( 850 \\div 6 = 141 \\) sisa 4. <span class='id-lang'>141 R 4.</span>"},
+        {type:"E",etype:"mc",
+         q:"Berapakah sisa buku dari 850 / 6? <span class='id-lang'>What is the remainder?</span>",
+         o:["1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","3 <span class='id-lang'>3</span>","4 <span class='id-lang'>4</span>"],
+         a:3,
+         h:"\\( 850 - (141 \\times 6) = 4 \\). <span class='id-lang'>4.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 1500 \\div 7 = 214 \\) sisa 2. <span class='id-lang'>\\( 1500 \\div 7 = 214 \\) R 2.</span>",
+         a:true,
+         h:"\\( (214 \\times 7) + 2 = 1500 \\). <span class='id-lang'>True.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 832 \\div 8 \\). <span class='id-lang'>Calculate \\( 832 \\div 8 \\).</span>",
+         a:"104",
+         h:"\\( 832 \\div 8 = 104 \\). <span class='id-lang'>104.</span>"}
+      ]
+    },
+    // ==================== SECTION 7D ====================
+    {
+      id:"7D", title:"Assessment D <span class='id-lang'>Asesmen D</span>", icon:"fa-clipboard-check", color:"#06b6d4", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Tentukan hasil bagi \\( 963 \\div 9 \\). <span class='id-lang'>Find the quotient.</span>",
+         a:"107",
+         h:"\\( 963 \\div 9 = 107 \\). <span class='id-lang'>107.</span>"},
+        {type:"E",etype:"fb",
+         q:"Tentukan sisa dari \\( 458 \\div 5 \\). <span class='id-lang'>Find the remainder.</span>",
+         a:"3",
+         h:"\\( 458 \\div 5 = 91 \\) sisa 3. <span class='id-lang'>91 R 3.</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah perhitungan yang salah? <span class='id-lang'>Which calculation is wrong?</span>",
+         o:["\\( 942 \\div 7 = 134 \\) R 4 <span class='id-lang'>942/7</span>","\\( 1250 \\div 6 = 208 \\) R 2 <span class='id-lang'>1250/6</span>","\\( 645 \\div 5 = 129 \\) R 0 <span class='id-lang'>645/5</span>","\\( 829 \\div 3 = 275 \\) R 2 <span class='id-lang'>829/3</span>"],
+         a:3,
+         h:"\\( 829 \\div 3 = 276 \\) R 1. <span class='id-lang'>829/3 is 276 R 1.</span>"},
+        {type:"E",etype:"fb",
+         q:"Jika \\( 9x = 936 \\), berapakah \\( x \\)? <span class='id-lang'>Find \\( x \\).</span>",
+         a:"104",
+         h:"\\( 936 \\div 9 = 104 \\). <span class='id-lang'>104.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 782 \\div 4 \\) menghasilkan sisa 2. <span class='id-lang'>\\( 782 \\div 4 \\) has remainder 2.</span>",
+         a:true,
+         h:"\\( 782 \\div 4 = 195 \\) sisa 2. <span class='id-lang'>195 R 2.</span>"},
+        {type:"E",etype:"fb",
+         q:"Sebuah anggaran 5000 USD dibagi 8 tim. Berapa per tim? <span class='id-lang'>5000 USD, 8 teams. How much per team?</span>",
+         a:"625",
+         h:"\\( 5000 \\div 8 = 625 \\). <span class='id-lang'>625.</span>"},
+        {type:"E",etype:"mc",
+         q:"Berapakah sisa dari \\( 5000 \\div 8 \\)? <span class='id-lang'>What is the remainder?</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","8 <span class='id-lang'>8</span>"],
+         a:0,
+         h:"\\( 625 \\times 8 = 5000 \\). Habis dibagi. <span class='id-lang'>Exact.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 1024 \\div 4 \\). <span class='id-lang'>Calculate \\( 1024 \\div 4 \\).</span>",
+         a:"256",
+         h:"\\( 1024 \\div 4 = 256 \\). <span class='id-lang'>256.</span>"},
+        {type:"E",etype:"mc",
+		 q:"Manakah operasi perkalian yang bisa memvalidasi hasil dari \\( 963 \\div 9 \\)? <span class='id-lang'>Which multiplication validates 963/9?</span>",
+		 o:["\\( 107 \\times 9 = 963 \\) <span class='id-lang'>\\( 107 \\times 9 = 963 \\)</span>","\\( 107 + 9 = 116 \\) <span class='id-lang'>\\( 107 + 9 = 116 \\)</span>","\\( 963 - 107 = 856 \\) <span class='id-lang'>\\( 963 - 107 = 856 \\)</span>","\\( 107 \\div 9 = 11 \\) <span class='id-lang'>\\( 107 \\div 9 = 11 \\)</span>"],
+		 a:0,
+		 h:"Hasil bagi kali pembagi. <span class='id-lang'>Quotient times divisor.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 1250 \\div 6 = 208 \\) sisa 2. <span class='id-lang'>\\( 1250 \\div 6 = 208 \\) R 2.</span>",
+         a:true,
+         h:"\\( (208 \\times 6) + 2 = 1250 \\). <span class='id-lang'>True.</span>"}
+      ]
+    },
+    // ==================== SECTION 7E ====================
+    {
+      id:"7E", title:"Assessment E <span class='id-lang'>Asesmen E</span>", icon:"fa-clipboard-check", color:"#f97316", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 678 \\div 6 \\). <span class='id-lang'>Calculate \\( 678 \\div 6 \\).</span>",
+         a:"113",
+         h:"\\( 678 \\div 6 = 113 \\). <span class='id-lang'>113.</span>"},
+        {type:"E",etype:"fb",
+         q:"Tentukan sisa dari \\( 999 \\div 8 \\). <span class='id-lang'>Find the remainder.</span>",
+         a:"7",
+         h:"\\( 999 \\div 8 = 124 \\) sisa 7. <span class='id-lang'>124 R 7.</span>"},
+        {type:"E",etype:"mc",
+         q:"Dalam \\( 678 \\div 6 \\), langkah pertama menghasilkan bagi 1 dan sisa... <span class='id-lang'>First step gives quotient 1 and remainder...</span>",
+         o:["0 <span class='id-lang'>0</span>","1 <span class='id-lang'>1</span>","2 <span class='id-lang'>2</span>","6 <span class='id-lang'>6</span>"],
+         a:0,
+         h:"\\( 6 - 6 = 0 \\). <span class='id-lang'>0.</span>"},
+        {type:"E",etype:"fb",
+         q:"Seorang programmer punya 1234 baris kode dibagi rata 5 hari. Berapa baris per hari? <span class='id-lang'>1234 lines, 5 days. Lines per day?</span>",
+         a:"246",
+         h:"\\( 1234 \\div 5 = 246 \\) sisa 4. <span class='id-lang'>246 R 4.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 2341 \\div 6 = 390 \\) sisa 1. <span class='id-lang'>\\( 2341 \\div 6 = 390 \\) R 1.</span>",
+         a:true,
+         h:"\\( (390 \\times 6) + 1 = 2341 \\). <span class='id-lang'>True.</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapakah sisa baris kode dari 1234 / 5? <span class='id-lang'>What is the remainder?</span>",
+         a:"4",
+         h:"\\( 1234 - (246 \\times 5) = 4 \\). <span class='id-lang'>4.</span>"},
+        {type:"E",etype:"mc",
+         q:"Manakah yang habis dibagi 4? <span class='id-lang'>Which is divisible by 4?</span>",
+         o:["945 <span class='id-lang'>945</span>","783 <span class='id-lang'>783</span>","1024 <span class='id-lang'>1024</span>","458 <span class='id-lang'>458</span>"],
+         a:2,
+         h:"\\( 1024 \\div 4 = 256 \\). <span class='id-lang'>1024.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 875 \\div 7 \\). <span class='id-lang'>Calculate \\( 875 \\div 7 \\).</span>",
+         a:"125",
+         h:"\\( 875 \\div 7 = 125 \\). <span class='id-lang'>125.</span>"},
+        {type:"E",etype:"tf",
+         q:"\\( 4567 \\div 9 = 507 \\) sisa 4. <span class='id-lang'>\\( 4567 \\div 9 = 507 \\) R 4.</span>",
+         a:true,
+         h:"\\( (507 \\times 9) + 4 = 4567 \\). <span class='id-lang'>True.</span>"},
+        {type:"E",etype:"fb",
+         q:"Jika \\( 5x = 945 \\), berapakah \\( x \\)? <span class='id-lang'>Find \\( x \\).</span>",
+         a:"189",
+         h:"\\( 945 \\div 5 = 189 \\). <span class='id-lang'>189.</span>"}
+      ]
+    },
+    // ==================== SECTION 8 ====================
+    {
+      id:8, title:"Consolidation & Reflection <span class='id-lang'>Konsolidasi & Refleksi</span>", icon:"fa-star", color:"#fbbf24", branch:false,
+      lessons:[
+        {type:"T",title:"Ringkasan & Tugas Berikutnya <span class='id-lang'>Summary & Next Steps</span>",
+         body:`<p>Luar biasa kerja kerasnya hari ini! Kita sudah belajar teknik Long Division dan bagaimana menangani sisa pembagian. Kunci utama adalah ketelitian di setiap langkah D-M-S-B (Bagi, Kali, Kurang, Turunkan). <span class='id-lang'>Excellent work today! We learned Long Division and how to handle remainders. The key is accuracy in every D-M-S-B step.</span></p>
+         <div class="mt-4 p-5 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-bold mb-3 text-lg"><i class="fa-solid fa-medal mr-2"></i>Poin Penting <span class='id-lang'>Key Points</span></div>
+           <ul class="space-y-2 text-sm text-slate-300 list-disc list-inside">
+             <li><strong>Algoritma D-M-S-B:</strong> Divide (Bagi), Multiply (Kali), Subtract (Kurang), Bring down (Turunkan). <span class='id-lang'>D-M-S-B Algorithm.</span></li>
+             <li><strong>Sisa (Remainder):</strong> Harus selalu kurang dari pembagi. <span class='id-lang'>Must be less than divisor.</span></li>
+             <li><strong>Validasi:</strong> Gunakan perkalian untuk cek hasil. <span class='id-lang'>Use multiplication to check.</span></li>
+           </ul>
+         </div>
+         <p class="mt-4">Jangan lupa untuk login ke platform dan mengerjakan PR! <span class='id-lang'>Don't forget to login and do your homework!</span></p>
+         <div class="mt-6 p-5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+           <div class="text-amber-400 font-bold text-xl mb-2">Misi Berikutnya <span class='id-lang'>Your Next Mission</span></div>
+           <p class="text-sm text-slate-300 mb-4">Siap untuk tantangan lain? Lanjutkan perjalanan belajarmu di platform Algonova! <span class='id-lang'>Ready for more? Continue on Algonova!</span></p>
+           <a href="https://learn.algonova.id/login" target="_blank" class="btn-primary inline-flex">
+             <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Algonova <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Open Algonova</span>
+           </a>
+         </div>`}
+      ]
+    }
+  ]
+};
+
+// ============================================================
+// STATE APLIKASI
+// ============================================================
+let state = {
+  xp: 0,
+  streak: 0,
+  completed: {},   // { "1-0": true, "1-1": true, ... }  mapIndex-lessonIndex
+  currentView: 'map',
+  currentMap: null,  // index di COURSE.maps
+  currentLesson: null, // index lesson dalam map
+  exerciseState: {},  // state untuk exercise interaktif
+};
+
+// Load dari localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('logicode_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state.xp = parsed.xp || 0;
+      state.streak = parsed.streak || 0;
+      state.completed = parsed.completed || {};
+	  state.mapAnswers = parsed.mapAnswers || {};
+    }
+  } catch(e) {}
+}
+function saveState() {
+  try {
+    localStorage.setItem('logicode_state', JSON.stringify({
+      xp: state.xp, streak: state.streak, completed: state.completed, mapAnswers: state.mapAnswers
+    }));
+  } catch(e) {}
+}
+
+function resetProgress() {
+  if (confirm('Apakah kamu yakin ingin menghapus semua progress? Tindakan ini tidak bisa dibatalkan.')) {
+    // Hapus data dari localStorage
+    localStorage.removeItem('logicode_state');
+    
+    // Reset state di memori
+    state.xp = 0;
+    state.streak = 0;
+    state.completed = {};
+    
+    // Render ulang tampilan peta
+    renderMap();
+    
+    // Tampilkan notifikasi
+    showToast('Progress berhasil direset!', 'info');
+  }
+}
+
+// ============================================================
+// HELPER: Cek apakah peta terbuka
+// ============================================================
+function isMapUnlocked(mapIdx) {
+  return true; // Semua peta selalu terbuka
+}
+
+function isMapCompleted(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  if (!map) return false;
+  return map.lessons.every((_, li) => state.completed[`${mapIdx}-${li}`]);
+}
+
+function isLessonUnlocked(mapIdx, lessonIdx) {
+  return true; // Semua lesson selalu terbuka
+}
+
+function getMapProgress(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  if (!map) return 0;
+  const done = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`]).length;
+  return Math.round((done / map.lessons.length) * 100);
+}
+
+function getTotalProgress() {
+  let total = 0, done = 0;
+  COURSE.maps.forEach((m, mi) => {
+    m.lessons.forEach((_, li) => {
+      total++;
+      if (state.completed[`${mi}-${li}`]) done++;
+    });
+  });
+  return total > 0 ? Math.round((done / total) * 100) : 0;
+}
+
+// ============================================================
+// RENDER: PETA MAP (halaman utama)
+// ============================================================
+function renderMap() {
+  const container = document.getElementById('mapContainer');
+  let html = '';
+
+	COURSE.maps.forEach((map, mi) => {
+	const unlocked = isMapUnlocked(mi);
+	const completed = isMapCompleted(mi);
+	const progress = getMapProgress(mi);
+	const isBranch = map.branch;
+	const isLastBranch = isBranch && !COURSE.maps[mi+1]?.branch;
+	const isFirstBranch = isBranch && !COURSE.maps[mi-1]?.branch;
+
+	// Node kelas
+	const nodeClass = completed ? 'completed' : unlocked ? 'unlocked' + (progress === 0 ? ' current' : '') : 'locked';
+
+	// --- BRANCH START: Visual dari Peta 6 ke Peta 7A-7E ---
+	if (isFirstBranch) {
+      const peta6Completed = isMapCompleted(mi - 1);
+      // Garis vertikal turun dari Peta 6
+      html += `<div class="map-line ${peta6Completed ? 'done' : ''}"></div>`;
+      // Garis horizontal branch (diperlebar)
+      html += `<div style="height: 3px; width: 95%; max-width: 850px; margin: 0 auto; background: var(--border);"></div>`;
+      // Buka container flex untuk 7A-7E (ditambah flex-wrap agar rapi di HP)
+      html += `<div class="flex flex-wrap justify-center" style="gap: 20px; max-width: 850px; margin: 0 auto;">`;
+    }
+
+	// --- RENDER NODE ---
+	html += `
+	  <div class="flex flex-col items-center" style="${isBranch ? 'min-width: 150px;' : ''}" onclick="${unlocked ? `openPeta(${mi})` : ''}">
+		${isBranch ? `<div style="width: 3px; height: 25px; background: var(--border);"></div>` : ''}
+		<div class="map-node ${nodeClass}" style="${unlocked ? `border-color:${map.color};${completed ? `background:${map.color}` : ''}` : ''}">
+		  ${completed ? '<i class="fa-solid fa-check"></i>' : unlocked ? `<i class="fa-solid ${map.icon}"></i>` : '<i class="fa-solid fa-lock text-sm"></i>'}
+		</div>
+		<div class="mt-2 text-center">
+		  <div class="text-sm font-semibold node-title ${unlocked ? 'text-slate-200' : 'text-slate-600'}">Peta ${map.id}</div>
+		  <div class="text-xs node-title ${unlocked ? 'text-slate-400' : 'text-slate-600'}">${map.title}</div>
+		  ${unlocked && !completed ? `<div class="mt-1 w-16 mx-auto"><div class="prog-bar"><div class="prog-fill" style="width:${progress}%;background:${map.color}"></div></div></div>` : ''}
+		</div>
+		${isBranch ? `<div style="width: 3px; height: 25px; background: var(--border);"></div>` : ''}
+	  </div>
+	`;
+
+	// --- BRANCH END: Visual dari Peta 7A-7E ke Peta 8 ---
+	if (isLastBranch) {
+      // Tutup container flex 7A-7E
+      html += `</div>`;
+      // Garis horizontal merge (diperlebar)
+      html += `<div style="height: 3px; width: 95%; max-width: 850px; margin: 0 auto; background: var(--border);"></div>`;
+      // Garis vertikal turun ke Peta 8
+      html += `<div class="map-line"></div>`;
+    }
+
+	// --- GARIS VERTIKAL NORMAL (Peta 1-5) ---
+	if (!isBranch && mi < COURSE.maps.length - 1 && !COURSE.maps[mi+1]?.branch) {
+	  html += `<div class="map-line ${completed ? 'done' : ''}"></div>`;
+	}
+	});
+
+  container.innerHTML = html;
+
+  // Update header stats
+  document.getElementById('headerXP').textContent = state.xp;
+  document.getElementById('headerStreak').textContent = state.streak;
+  document.getElementById('totalProgress').textContent = getTotalProgress() + '%';
+  document.getElementById('totalProgFill').style.width = getTotalProgress() + '%';
+}
+
+// ============================================================
+// RENDER: PETA DETAIL (daftar lesson)
+// ============================================================
+function openPeta(mapIdx) {
+  state.currentMap = mapIdx;
+  showView('peta');
+  const map = COURSE.maps[mapIdx];
+  document.getElementById('petaTitle').innerHTML = `Peta ${map.id}: ${map.title}`;
+  const totalLessons = map.lessons.length;
+  const doneLessons = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`]).length;
+  document.getElementById('petaSubtitle').textContent = `${doneLessons}/${totalLessons} selesai`;
+
+  const container = document.getElementById('lessonContainer');
+  let html = '<div class="stagger-in flex flex-col items-center">';
+
+  map.lessons.forEach((lesson, li) => {
+    const unlocked = isLessonUnlocked(mapIdx, li);
+    const completed = state.completed[`${mapIdx}-${li}`] === true;
+    const isTheory = lesson.type === 'T';
+    const isCurrent = unlocked && !completed;
+
+    const nodeClass = completed ? 'completed' : unlocked ? 'unlocked' : 'locked';
+    const shapeClass = isTheory ? 'theory' : 'exercise';
+
+    html += `
+      <div class="flex flex-col items-center">
+        <div class="lesson-node ${shapeClass} ${nodeClass} ${isCurrent ? 'current' : ''}"
+             style="${unlocked ? `border-color:${map.color};${completed ? `background:${map.color}` : ''}` : ''}"
+             onclick="${unlocked ? `openLesson(${mapIdx},${li})` : ''}">
+          ${completed ? '<i class="fa-solid fa-check text-sm"></i>' : isTheory ? '<i class="fa-solid fa-book text-sm"></i>' : '<i class="fa-solid fa-dumbbell text-sm"></i>'}
+        </div>
+        <div class="mt-1 text-center">
+          <div class="text-xs node-title ${unlocked ? 'text-slate-300' : 'text-slate-600'}">${isTheory ? lesson.title : `Exercise ${li+1}`}</div>
+        </div>
+      </div>
+    `;
+
+    // Koneksi ke lesson berikutnya
+    if (li < map.lessons.length - 1) {
+      const connDone = completed;
+      html += `<div class="lesson-connector ${connDone ? 'done' : ''}"></div>`;
+    }
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER: LESSON (teori atau exercise)
+// ============================================================
+function openLesson(mapIdx, lessonIdx) {
+  state.currentMap = mapIdx;
+  state.currentLesson = lessonIdx;
+  state.exerciseState = {};
+  showView('lesson');
+
+  const map = COURSE.maps[mapIdx];
+  const lesson = map.lessons[lessonIdx];
+  const total = map.lessons.length;
+
+  document.getElementById('lessonCounter').textContent = `${lessonIdx+1}/${total}`;
+  const done = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`] || li < lessonIdx).length;
+  document.getElementById('lessonProgFill').style.width = `${(done/total)*100}%`;
+
+  if (lesson.type === 'T') {
+    renderTheory(lesson);
+  } else {
+    renderExercise(lesson, mapIdx, lessonIdx);
+  }
+}
+
+function renderTheory(lesson) {
+  const content = document.getElementById('lessonContent');
+  content.innerHTML = `
+    <div class="stagger-in">
+      <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-book-open mr-1"></i> Theory <span class="id-lang" style="display:inline; color:#64748b;">Teori</span>
+      </div>
+      <h2 class="text-2xl font-bold mb-6">${lesson.title}</h2>
+      <div class="text-slate-300 leading-relaxed space-y-3">
+        ${lesson.body}
+      </div>
+      <div class="mt-8 flex justify-end">
+        <button id="nextBtn" class="btn-primary" onclick="completeAndNext()">
+          Next <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Lanjut</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderExercise(lesson, mapIdx, lessonIdx) {
+  const content = document.getElementById('lessonContent');
+  const etype = lesson.etype;
+  let exerciseHTML = '';
+
+  switch(etype) {
+    case 'mc': exerciseHTML = renderMC(lesson); break;
+    case 'tf': exerciseHTML = renderTF(lesson); break;
+    case 'fb': exerciseHTML = renderFB(lesson); break;
+    case 'ord': exerciseHTML = renderOrd(lesson); break;
+    case 'match': exerciseHTML = renderMatch(lesson); break;
+    case 'sa': exerciseHTML = renderSA(lesson); break;
+    case 'code': exerciseHTML = renderCode(lesson); break;
+    default: exerciseHTML = '<p>Tipe exercise tidak dikenal</p>';
+  }
+
+  content.innerHTML = `
+    <div class="stagger-in">
+      <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-dumbbell mr-1"></i> Exercise <span class="id-lang" style="display:inline; color:#64748b;">Latihan</span>
+      </div>
+      <h2 class="text-xl font-bold mb-6">${lesson.q}</h2>
+      ${lesson.code ? `<div class="code-block mb-6">${escapeHTML(lesson.code)}</div>` : ''}
+      <div id="exerciseArea">${exerciseHTML}</div>
+      <div id="feedbackArea" class="mt-4"></div>
+      <div class="mt-6 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex gap-2">
+          <button class="btn-secondary text-sm" onclick="showHint()" id="hintBtn">
+            <i class="fa-solid fa-lightbulb mr-1"></i> Hint <span class="id-lang" style="display:inline;">Petunjuk</span>
+          </button>
+          <button class="btn-secondary text-sm" onclick="resetExercise()" id="resetBtn">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Reset <span class="id-lang" style="display:inline;">Atur Ulang</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>
+          Check <span class="id-lang" style="display:inline;">Periksa</span> <i class="fa-solid fa-check"></i>
+        </button>
+      </div>
+      <div id="hintArea" class="mt-4 hidden">
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-amber-200">
+          <i class="fa-solid fa-lightbulb text-amber-400 mr-2"></i>${lesson.h || 'Tidak ada petunjuk'}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Fungsi baru untuk mereset exercise
+function resetExercise() {
+  if (state.exerciseState.answered) return; // Tidak bisa reset jika sudah di-check
+  const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+  renderExercise(lesson, state.currentMap, state.currentLesson);
+}
+
+// ============================================================
+// EXERCISE RENDERERS
+// ============================================================
+
+// Multiple Choice
+function renderMC(lesson) {
+  const labels = ['A','B','C','D','E','F'];
+  return `<div class="space-y-3" id="mcOptions">
+    ${lesson.o.map((opt, i) => `
+      <div class="opt-card" data-idx="${i}" onclick="selectMC(${i})">
+        <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-sm font-bold flex-shrink-0">${labels[i]}</span>
+        <span>${opt}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function selectMC(idx) {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.selected = idx;
+  document.querySelectorAll('#mcOptions .opt-card').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// True/False
+function renderTF(lesson) {
+  return `<div class="flex gap-4" id="tfOptions">
+    <div class="opt-card flex-1 justify-center text-center text-lg" onclick="selectTF(true)" data-val="true">
+      <i class="fa-solid fa-check text-emerald-400 mr-2"></i> True <span class="id-lang">Benar</span>
+    </div>
+    <div class="opt-card flex-1 justify-center text-center text-lg" onclick="selectTF(false)" data-val="false">
+      <i class="fa-solid fa-xmark text-red-400 mr-2"></i> False <span class="id-lang">Salah</span>
+    </div>
+  </div>`;
+}
+
+function selectTF(val) {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.selected = val;
+  document.querySelectorAll('#tfOptions .opt-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.val === String(val));
+  });
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// Fill Blank
+function renderFB(lesson) {
+  return `<div>
+    <input type="text" class="ex-input" id="fbInput" placeholder="Ketik jawaban..." autocomplete="off" oninput="onFBInput()">
+  </div>`;
+}
+
+function onFBInput() {
+  const val = document.getElementById('fbInput').value.trim();
+  document.getElementById('checkBtn').disabled = val.length === 0;
+}
+
+// Order
+function renderOrd(lesson) {
+  // Tampilkan item dalam urutan acak
+  const shuffled = lesson.o.map((item, i) => ({text: item, origIdx: i}));
+  // Shuffle
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  state.exerciseState.ordOrder = [];
+  state.exerciseState.ordItems = shuffled;
+
+  return `<div>
+	<div class="text-sm text-slate-400 mb-3">Click items in the correct order: <span class="id-lang">Klik item dalam urutan yang benar:</span></div>
+    <div class="space-y-2" id="ordList">
+      ${shuffled.map((item, i) => `
+        <div class="order-item flex items-center gap-3" data-orig="${item.origIdx}" onclick="selectOrd(this,${item.origIdx})">
+          <span class="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold ord-num"></span>
+          <span>${item.text}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="mt-3 text-xs text-slate-500" id="ordStatus">Urutan terpilih: (belum ada)</div>
+  </div>`;
+}
+
+function selectOrd(el, origIdx) {
+  if (state.exerciseState.answered) return;
+  if (el.classList.contains('ordered')) return;
+
+  const order = state.exerciseState.ordOrder;
+  order.push(origIdx);
+  el.classList.add('ordered');
+  const numEl = el.querySelector('.ord-num');
+  numEl.textContent = order.length;
+
+  document.getElementById('ordStatus').textContent = `Urutan terpilih: ${order.length}/${state.exerciseState.ordItems.length}`;
+  document.getElementById('checkBtn').disabled = order.length < state.exerciseState.ordItems.length;
+}
+
+// Match
+function renderMatch(lesson) {
+  state.exerciseState.matchLeft = null;
+  state.exerciseState.matchPairs = [];
+  state.exerciseState.matchedLeft = new Set();
+  state.exerciseState.matchedRight = new Set();
+
+  // Shuffle right column
+  const rightShuffled = [...lesson.right];
+  for (let i = rightShuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rightShuffled[i], rightShuffled[j]] = [rightShuffled[j], rightShuffled[i]];
+  }
+  state.exerciseState.rightShuffled = rightShuffled;
+
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Klik item kiri, lalu item kanan untuk mencocokkan:</div>
+    <div class="grid grid-cols-2 gap-3" id="matchGrid">
+      <div class="space-y-2" id="matchLeft">
+        ${lesson.left.map((item, i) => `
+          <div class="match-item" data-side="left" data-idx="${i}" onclick="selectMatch('left',${i})">${item}</div>
+        `).join('')}
+      </div>
+      <div class="space-y-2" id="matchRight">
+        ${rightShuffled.map((item, i) => `
+          <div class="match-item" data-side="right" data-idx="${i}" data-val="${item}" onclick="selectMatch('right',${i})">${item}</div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function selectMatch(side, idx) {
+  if (state.exerciseState.answered) return;
+  const es = state.exerciseState;
+
+  if (side === 'left') {
+    if (es.matchedLeft.has(idx)) return;
+    // Highlight
+    document.querySelectorAll('#matchLeft .match-item').forEach(el => el.classList.remove('active'));
+    const el = document.querySelector(`#matchLeft .match-item[data-idx="${idx}"]`);
+    el.classList.add('active');
+    es.matchLeft = idx;
+  } else {
+    if (es.matchedRight.has(idx)) return;
+    if (es.matchLeft === null) {
+      showToast('Pilih item kiri terlebih dahulu', 'info');
+      return;
+    }
+    // Create pair
+    const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+    const leftIdx = es.matchLeft;
+    const rightVal = es.rightShuffled[idx];
+    es.matchPairs.push({leftIdx, rightVal, rightShuffledIdx: idx});
+    es.matchedLeft.add(leftIdx);
+    es.matchedRight.add(idx);
+
+    // Visual
+    const leftEl = document.querySelector(`#matchLeft .match-item[data-idx="${leftIdx}"]`);
+    const rightEl = document.querySelector(`#matchRight .match-item[data-idx="${idx}"]`);
+    leftEl.classList.remove('active');
+    leftEl.classList.add('matched');
+    rightEl.classList.add('matched');
+
+    es.matchLeft = null;
+
+    document.getElementById('checkBtn').disabled = es.matchPairs.length < lesson.left.length;
+  }
+}
+
+// Select All
+function renderSA(lesson) {
+  state.exerciseState.selectedSet = new Set();
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Pilih semua jawaban yang benar:</div>
+    <div class="space-y-2" id="saOptions">
+      ${lesson.o.map((opt, i) => `
+        <div class="opt-card" data-idx="${i}" onclick="toggleSA(${i})">
+          <span class="w-6 h-6 rounded border-2 border-slate-600 flex items-center justify-center flex-shrink-0 sa-check"></span>
+          <span>${opt}</span>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleSA(idx) {
+  if (state.exerciseState.answered) return;
+  const set = state.exerciseState.selectedSet;
+  if (set.has(idx)) set.delete(idx); else set.add(idx);
+  document.querySelectorAll('#saOptions .opt-card').forEach((el, i) => {
+    const check = el.querySelector('.sa-check');
+    if (set.has(i)) {
+      el.classList.add('selected');
+      check.innerHTML = '<i class="fa-solid fa-check text-emerald-400 text-xs"></i>';
+      check.style.borderColor = '#10b981';
+    } else {
+      el.classList.remove('selected');
+      check.innerHTML = '';
+      check.style.borderColor = '';
+    }
+  });
+  document.getElementById('checkBtn').disabled = set.size === 0;
+}
+
+// Code Output
+function renderCode(lesson) {
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Tulis output yang akan ditampilkan:</div>
+    <input type="text" class="ex-input font-mono" id="codeInput" placeholder="Ketik output..." autocomplete="off" oninput="onCodeInput()">
+  </div>`;
+}
+
+function onCodeInput() {
+  const val = document.getElementById('codeInput').value.trim();
+  document.getElementById('checkBtn').disabled = val.length === 0;
+}
+
+// ============================================================
+// CHECK ANSWER
+// ============================================================
+function checkAnswer() {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.answered = true;
+
+  // Sembunyikan tombol Hint dan Reset
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) resetBtn.style.display = 'none';
+
+  const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+  const etype = lesson.etype;
+  let correct = false;
+  let correctAnswer = '';
+
+  switch(etype) {
+    case 'mc': {
+      const sel = state.exerciseState.selected;
+      correct = sel === lesson.a;
+      document.querySelectorAll('#mcOptions .opt-card').forEach((el, i) => {
+        el.classList.add('disabled');
+        if (i === lesson.a) el.classList.add('correct');
+        if (i === sel && !correct) el.classList.add('wrong');
+      });
+      correctAnswer = lesson.o[lesson.a];
+      break;
+    }
+    case 'tf': {
+      const sel = state.exerciseState.selected;
+      correct = sel === lesson.a;
+      document.querySelectorAll('#tfOptions .opt-card').forEach(el => {
+        el.classList.add('disabled');
+        if (String(lesson.a) === el.dataset.val) el.classList.add('correct');
+        if (String(sel) === el.dataset.val && !correct) el.classList.add('wrong');
+      });
+            correctAnswer = lesson.a ? 'True <span class="id-lang">Benar</span>' : 'False <span class="id-lang">Salah</span>';
+      break;
+    }
+    case 'fb': {
+      const input = document.getElementById('fbInput').value.trim();
+      // Normalisasi: hapus semua spasi dan ubah jadi huruf kecil
+      const normalize = str => str
+        .replace(/[\u200B-\u200D\u2060-\u206F\uFEFF]/g, '') // Hapus karakter tak terlihat (Zero-width, function apply, BOM)
+        .replace(/[（﹝]/g, '(') // Ubah kurung buka full-width ke setengah
+        .replace(/[）﹞]/g, ')') // Ubah kurung tutup full-width ke setengah
+        .replace(/\s+/g, '')    // Hapus semua spasi
+        .toLowerCase();         // Jadiin huruf kecil
+      // Terima beberapa jawaban yang benar (dipisah /)
+      const answers = lesson.a.split('||');
+      correct = answers.some(a => normalize(input) === normalize(a));
+      document.getElementById('fbInput').classList.add(correct ? 'correct' : 'wrong');
+      document.getElementById('fbInput').disabled = true;
+      correctAnswer = lesson.a;
+      break;
+    }
+    case 'ord': {
+      const order = state.exerciseState.ordOrder;
+      correct = order.length === lesson.a.length && order.every((v, i) => v === lesson.a[i]);
+      correctAnswer = lesson.a.map(i => lesson.o[i]).join(' → ');
+      break;
+    }
+    case 'match': {
+      const pairs = state.exerciseState.matchPairs;
+      const lesson_data = lesson;
+      correct = pairs.length === lesson_data.a.length && pairs.every((p, i) => {
+        // Cek apakah leftIdx-i cocok dengan right yang benar
+        const expectedRightVal = lesson_data.right[lesson_data.a[p.leftIdx]];
+        return p.rightVal === expectedRightVal;
+      });
+      correctAnswer = lesson_data.left.map((l, i) => `${l} ↔ ${lesson_data.right[lesson_data.a[i]]}`).join(', ');
+      break;
+    }
+    case 'sa': {
+      const selected = [...state.exerciseState.selectedSet].sort();
+      const expected = [...lesson.a].sort();
+      correct = selected.length === expected.length && selected.every((v, i) => v === expected[i]);
+      document.querySelectorAll('#saOptions .opt-card').forEach((el, i) => {
+        el.classList.add('disabled');
+        if (lesson.a.includes(i)) el.classList.add('correct');
+        if (selected.includes(i) && !lesson.a.includes(i)) el.classList.add('wrong');
+      });
+      correctAnswer = lesson.a.map(i => lesson.o[i]).join(', ');
+      break;
+    }
+    case 'code': {
+      const input = document.getElementById('codeInput').value.trim();
+      // Normalisasi: hapus semua spasi dan ubah jadi huruf kecil
+      const normalize = str => str
+        .replace(/[\u200B-\u200D\u2060-\u206F\uFEFF]/g, '') // Hapus karakter tak terlihat
+        .replace(/[（﹝]/g, '(') // Standar kurung buka
+        .replace(/[）﹞]/g, ')') // Standar kurung tutup
+        .replace(/\s+/g, '')    // Hapus spasi
+        .toLowerCase();         // Huruf kecil
+      correct = normalize(input) === normalize(lesson.a);
+      document.getElementById('codeInput').classList.add(correct ? 'correct' : 'wrong');
+      document.getElementById('codeInput').disabled = true;
+      correctAnswer = lesson.a;
+      break;
+    }
+  }
+
+  // Simpan jawaban untuk Print Result
+  const mi = state.currentMap;
+  const li = state.currentLesson;
+  let studentAnswerText = "";
+  let correctAnswerText = "";
+
+  switch(etype) {
+    case 'mc':
+      studentAnswerText = state.exerciseState.selected !== undefined ? lesson.o[state.exerciseState.selected] : "-";
+      correctAnswerText = lesson.o[lesson.a];
+      break;
+    case 'tf':
+      studentAnswerText = state.exerciseState.selected !== null ? (state.exerciseState.selected ? "True" : "False") : "-";
+      correctAnswerText = lesson.a ? "True" : "False";
+      break;
+    case 'fb':
+      studentAnswerText = document.getElementById('fbInput').value.trim() || "-";
+      correctAnswerText = lesson.a;
+      break;
+    case 'code':
+      studentAnswerText = document.getElementById('codeInput').value.trim() || "-";
+      correctAnswerText = lesson.a;
+      break;
+    case 'ord':
+      studentAnswerText = state.exerciseState.ordOrder.map(i => lesson.o[i]).join(' → ') || "-";
+      correctAnswerText = lesson.a.map(i => lesson.o[i]).join(' → ');
+      break;
+    case 'match':
+      studentAnswerText = "Matched pairs";
+      correctAnswerText = lesson.left.map((l, i) => `${l} ↔ ${lesson.right[lesson.a[i]]}`).join('; ');
+      break;
+    case 'sa':
+      studentAnswerText = [...state.exerciseState.selectedSet].sort().map(i => lesson.o[i]).join(', ') || "-";
+      correctAnswerText = lesson.a.map(i => lesson.o[i]).join(', ');
+      break;
+  }
+
+  if (!state.mapAnswers) state.mapAnswers = {};
+  if (!state.mapAnswers[mi]) state.mapAnswers[mi] = {};
+  state.mapAnswers[mi][li] = {
+    q: lesson.q,
+    studentAnswer: studentAnswerText,
+    correctAnswer: correctAnswerText,
+    isCorrect: correct
+  };
+  saveState();
+
+  // Tampilkan feedback
+  const feedback = document.getElementById('feedbackArea');
+  if (correct) {
+    feedback.innerHTML = `
+      <div class="feedback-bar correct-fb">
+        <i class="fa-solid fa-check-circle text-2xl"></i>
+        <div>
+          <div class="text-lg">Correct! Excellent! <span class="id-lang">Benar! Hebat!</span></div>
+          ${correctAnswer ? `<div class="text-sm opacity-80 mt-1">Answer: ${correctAnswer}</div>` : ''}
+        </div>
+      </div>
+    `;
+    // Tambah XP
+    state.xp += 10;
+    state.streak += 1;
+    showXPPopup(10);
+    spawnConfetti();
+  } else {
+    feedback.innerHTML = `
+      <div class="feedback-bar wrong-fb">
+        <i class="fa-solid fa-times-circle text-2xl"></i>
+        <div>
+            <div class="text-lg">Incorrect <span class="id-lang">Belum tepat</span></div>
+            <div class="text-sm opacity-80 mt-1">Answer: ${correctAnswer}</div>
+        </div>
+      </div>
+    `;
+    state.streak = 0;
+  }
+  
+  renderKatexInElement(feedback);
+  
+  // Update header
+  document.getElementById('headerXP').textContent = state.xp;
+  document.getElementById('headerStreak').textContent = state.streak;
+
+  // Ganti tombol check menjadi lanjut
+  const checkBtn = document.getElementById('checkBtn');
+  checkBtn.textContent = 'Lanjut ';
+  checkBtn.innerHTML = 'Next <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Lanjut</span> <i class="fa-solid fa-arrow-right"></i>';
+  checkBtn.disabled = false;
+  checkBtn.onclick = () => completeAndNext();
+
+  saveState();
+}
+
+// ============================================================
+// PRINT RESULT UNTUK ASSESSMENT
+// ============================================================
+function showPrintResultForm(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  const totalLessons = map.lessons.length;
+  let correctCount = 0;
+  
+  if (state.mapAnswers && state.mapAnswers[mapIdx]) {
+    for (let i = 0; i < totalLessons; i++) {
+      if (state.mapAnswers[mapIdx][i] && state.mapAnswers[mapIdx][i].isCorrect) {
+        correctCount++;
+      }
+    }
+  }
+  
+  const score = Math.round((correctCount / totalLessons) * 100);
+
+  const content = document.getElementById('lessonContent');
+  content.innerHTML = `
+    <div class="stagger-in text-center">
+      <div class="text-5xl mb-4">🎉</div>
+      <h2 class="text-2xl font-bold mb-2">Assessment Completed! <span class="id-lang">Asesmen Selesai!</span></h2>
+      <p class="text-slate-400 mb-6">You scored <span class="text-emerald-400 font-bold text-xl">${score}%</span> (${correctCount}/${totalLessons})</p>
+      
+      <div class="max-w-md mx-auto text-left space-y-4 mb-8">
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Name / <span class="id-lang">Nama</span></label>
+          <input type="text" id="printName" class="ex-input" placeholder="Enter your name / Masukkan nama">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Date / <span class="id-lang">Tanggal</span></label>
+          <input type="date" id="printDate" class="ex-input" value="${new Date().toISOString().split('T')[0]}">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Assessment / <span class="id-lang">Asesmen</span></label>
+          <input type="text" class="ex-input" value="Assessment ${map.id}" disabled style="opacity:0.6">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Score / <span class="id-lang">Skor</span></label>
+          <input type="text" class="ex-input" value="${score}%" disabled style="opacity:0.6">
+        </div>
+      </div>
+
+      <button class="btn-primary text-lg" onclick="generatePrintout(${mapIdx})">
+        <i class="fa-solid fa-print mr-2"></i> Print Result <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Cetak Hasil</span>
+      </button>
+      
+      <div class="mt-4">
+        <button class="btn-secondary" onclick="openPeta(${mapIdx})">
+          Back to Map <span class="id-lang">Kembali ke Peta</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function generatePrintout(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  const studentName = document.getElementById('printName').value || '-';
+  const printDate = document.getElementById('printDate').value || '-';
+  
+  let correctCount = 0;
+  let tableRows = '';
+  
+  for (let i = 0; i < map.lessons.length; i++) {
+    const ansData = (state.mapAnswers && state.mapAnswers[mapIdx] && state.mapAnswers[mapIdx][i]) ? state.mapAnswers[mapIdx][i] : null;
+    // Hapus tag id-lang dari pertanyaan agar printout lebih bersih (hanya bahasa Inggris)
+    const qText = map.lessons[i].q.replace(/<span class='id-lang'>.*?<\/span>/g, '');
+    const studentAns = ansData ? ansData.studentAnswer : '-';
+    const correctAns = ansData ? ansData.correctAnswer : '-';
+    const isCorrect = ansData ? ansData.isCorrect : false;
+    
+    if (isCorrect) correctCount++;
+    
+    const noteSymbol = isCorrect ? '✓' : '✗';
+    const noteColor = isCorrect ? 'green' : 'red';
+    
+    tableRows += `
+      <tr>
+        <td style="text-align:center; width: 40px;">${i + 1}</td>
+        <td>${qText}</td>
+        <td>${studentAns}</td>
+        <td>${correctAns}</td>
+        <td style="text-align:center; color: ${noteColor}; font-weight:bold; font-size:1.2rem;">${noteSymbol}</td>
+      </tr>
+    `;
+  }
+  
+  const score = Math.round((correctCount / map.lessons.length) * 100);
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8">
+      <title>Assessment Result - ${map.id}</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '\\\\(', right: '\\\\)', display: false},{left: '\\\\[', right: '\\\\]', display: true}], throwOnError: false}); setTimeout(function(){window.print();}, 1000);"><\/script>
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #333; line-height: 1.5; }
+        h1 { text-align: center; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+        .header-info { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .header-info p { margin: 5px 0; font-size: 14px; }
+        .header-info strong { margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; vertical-align: top; }
+        th { background: #f0f0f0; font-weight: bold; text-align: center; }
+        @media print {
+          body { padding: 0; }
+          .header-info { border: none; padding: 0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Assessment Result</h1>
+      <div class="subtitle">Direct and Inverse Proportions</div>
+      
+      <div class="header-info">
+        <div style="flex:1; min-width: 200px;">
+          <p><strong>Name:</strong> ${studentName}</p>
+          <p><strong>Date:</strong> ${printDate}</p>
+        </div>
+        <div style="flex:1; min-width: 200px;">
+          <p><strong>Assessment:</strong> ${map.id}</p>
+          <p><strong>Score:</strong> ${score}% (${correctCount}/${map.lessons.length})</p>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Question</th>
+            <th>Student Answer</th>
+            <th>Correct Answer</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// ============================================================
+// COMPLETE & NEXT
+// ============================================================
+function completeAndNext() {
+  const mi = state.currentMap;
+  const li = state.currentLesson;
+  state.completed[`${mi}-${li}`] = true;
+  saveState();
+
+  const map = COURSE.maps[mi];
+  const isLastLesson = li + 1 >= map.lessons.length;
+  const isAssessment = map.branch; // Peta 7A-7E adalah branch: true
+
+  // Jika ini exercise terakhir di Assessment, tampilkan form Print
+  if (isAssessment && isLastLesson) {
+    showPrintResultForm(mi);
+  } else if (li + 1 < map.lessons.length && isLessonUnlocked(mi, li + 1)) {
+    openLesson(mi, li + 1);
+  } else {
+    openPeta(mi);
+  }
+}
+
+// ============================================================
+// NAVIGASI
+// ============================================================
+function showView(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(viewName + 'View').classList.add('active');
+  state.currentView = viewName;
+  window.scrollTo(0, 0);
+}
+
+function showMap() {
+  showView('map');
+  renderMap();
+}
+
+function closeLesson() {
+  openPeta(state.currentMap);
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function showXPPopup(amount) {
+  document.getElementById('xpAmount').textContent = amount;
+  const popup = document.getElementById('xpPopup');
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 1500);
+}
+
+function spawnConfetti() {
+  const colors = ['#10b981','#f59e0b','#ec4899','#8b5cf6','#06b6d4','#ef4444'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width = (Math.random() * 8 + 4) + 'px';
+    c.style.height = (Math.random() * 8 + 4) + 'px';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+    c.style.animationDelay = (Math.random() * 0.5) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+function showHint() {
+  document.getElementById('hintArea').classList.remove('hidden');
+  document.getElementById('hintBtn').disabled = true;
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// --- FUNGSI UNTUK MODAL RULES ---
+function openRules() {
+  document.getElementById('rulesModal').classList.add('active');
+}
+
+function closeRules() {
+  document.getElementById('rulesModal').classList.remove('active');
+}
+
+// ============================================================
+// KATEX RENDERING
+// ============================================================
+function renderKatexInElement(el) {
+  if (typeof renderMathInElement === 'function') {
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '\\(', right: '\\)', display: false},  //
+        {left: '\\[', right: '\\]', display: true}    //
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+// Override showView untuk render KaTeX setiap pindah halaman
+const originalShowView = showView;
+showView = function(viewName) {
+  originalShowView(viewName);
+  setTimeout(() => renderKatexInElement(document.body), 100);
+};
+
+// Override openLesson untuk render KaTeX di konten lesson
+const originalOpenLesson = openLesson;
+openLesson = function(mapIdx, lessonIdx) {
+  originalOpenLesson(mapIdx, lessonIdx);
+  setTimeout(() => renderKatexInElement(document.body), 100);
+};
+
+// ============================================================
+// INISIALISASI APLIKASI
+// ============================================================
+loadState();
+renderMap();
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  // Tekan Escape untuk menutup lesson
+  if (e.key === 'Escape' && state.currentView === 'lesson') {
+    closeLesson();
+  }
+  
+  // Tekan Enter untuk memeriksa jawaban / lanjut ke soal berikutnya
+  if (e.key === 'Enter' && state.currentView === 'lesson') {
+    const checkBtn = document.getElementById('checkBtn');
+    // Pastikan tombol ada dan tidak dalam keadaan disabled
+    if (checkBtn && !checkBtn.disabled) {
+      e.preventDefault(); 
+      checkBtn.click();   // Untuk halaman Exercise
+    } else if (nextBtn) {
+      e.preventDefault();
+      nextBtn.click();    // Untuk halaman Teori
+    }
+  }
+});
+</script>
+</body>
+</html>

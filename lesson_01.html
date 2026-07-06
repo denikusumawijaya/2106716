@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Tutoring — by Deni</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --bg: #0b1121; --bg2: #111827; --card: rgba(17,24,39,0.85);
+  --fg: #e2e8f0; --muted: #64748b; --accent: #10b981;
+  --accent2: #f59e0b; --danger: #ef4444; --border: rgba(100,116,139,0.2);
+  --glass: rgba(16,185,129,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--fg); min-height: 100vh; overflow-x: hidden; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Latar belakang animasi */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(16,185,129,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245,158,11,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.03) 0%, transparent 50%);
+}
+.bg-grid::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(16,185,129,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,185,129,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Transisi halaman */
+.view { display: none; position: relative; z-index: 1; }
+.view.active { display: block; animation: fadeSlideIn 0.4s ease; }
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Peta node */
+.map-node {
+  width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease;
+  position: relative; border: 3px solid var(--border);
+  background: var(--bg2);
+}
+.map-node.unlocked { border-color: var(--accent); box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+.map-node.unlocked:hover { transform: scale(1.12); box-shadow: 0 0 30px rgba(16,185,129,0.4); }
+.map-node.completed { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.map-node.completed:hover { transform: scale(1.08); }
+.map-node.locked { opacity: 0.35; cursor: not-allowed; }
+.map-node.current { animation: pulseGlow 2s ease-in-out infinite; }
+@keyframes pulseGlow {
+  0%,100% { box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+  50% { box-shadow: 0 0 35px rgba(16,185,129,0.6); }
+}
+
+/* Koneksi garis peta */
+.map-line { width: 3px; height: 40px; margin: 0 auto; background: var(--border); transition: background 0.5s; }
+.map-line.done { background: var(--accent); }
+.map-branch-line { height: 3px; width: 60px; background: var(--border); transition: background 0.5s; }
+.map-branch-line.done { background: var(--accent); }
+
+/* Lesson node di peta detail */
+.lesson-node {
+  width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.3s; border: 2px solid var(--border); background: var(--bg2);
+}
+.lesson-node.theory { border-radius: 50%; }
+.lesson-node.exercise { border-radius: 16px; }
+.lesson-node.unlocked { border-color: var(--accent); }
+.lesson-node.unlocked:hover { transform: scale(1.15); box-shadow: 0 0 20px rgba(16,185,129,0.3); }
+.lesson-node.completed { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.lesson-node.locked { opacity: 0.3; cursor: not-allowed; }
+.lesson-connector { width: 2px; height: 24px; margin: 0 auto; background: var(--border); }
+.lesson-connector.done { background: var(--accent); }
+
+/* Tombol */
+.btn-primary {
+  background: var(--accent); color: var(--bg); font-weight: 600; padding: 14px 32px; border-radius: 14px;
+  border: none; cursor: pointer; font-size: 1rem; font-family: inherit; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { filter: brightness(1.15); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16,185,129,0.3); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; filter: none; }
+.btn-secondary {
+  background: transparent; color: var(--accent); font-weight: 600; padding: 12px 24px; border-radius: 14px;
+  border: 2px solid var(--accent); cursor: pointer; font-size: 0.9rem; font-family: inherit; transition: all 0.2s;
+}
+.btn-secondary:hover { background: rgba(16,185,129,0.1); }
+
+/* Opsi exercise */
+.opt-card {
+  padding: 16px 20px; border: 2px solid var(--border); border-radius: 14px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); min-height: 52px; display: flex; align-items: center; gap: 12px;
+}
+.opt-card:hover { border-color: rgba(16,185,129,0.4); background: var(--glass); }
+.opt-card.selected { border-color: var(--accent); background: rgba(16,185,129,0.12); }
+.opt-card.correct { border-color: #10b981; background: rgba(16,185,129,0.15); }
+.opt-card.wrong { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+.opt-card.disabled { pointer-events: none; opacity: 0.7; }
+
+/* Input exercise */
+.ex-input {
+  background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 14px 18px;
+  color: var(--fg); font-size: 1rem; font-family: inherit; width: 100%; outline: none; transition: border-color 0.2s;
+}
+.ex-input:focus { border-color: var(--accent); }
+.ex-input.correct { border-color: #10b981; }
+.ex-input.wrong { border-color: #ef4444; }
+
+/* Code block */
+.code-block {
+  background: #0d1117; border: 1px solid rgba(100,116,139,0.2); border-radius: 12px;
+  padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+  line-height: 1.7; overflow-x: auto; white-space: pre;
+}
+
+/* Progress bar */
+.prog-bar { height: 6px; border-radius: 3px; background: rgba(100,116,139,0.2); overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.5s ease; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+  padding: 14px 28px; border-radius: 14px; font-weight: 600; z-index: 999;
+  transition: transform 0.4s ease; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: #10b981; color: #0b1121; }
+.toast.error { background: #ef4444; color: white; }
+.toast.info { background: #f59e0b; color: #0b1121; }
+
+/* XP popup */
+.xp-popup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+  background: var(--bg2); border: 2px solid var(--accent2); border-radius: 24px;
+  padding: 40px 60px; z-index: 100; text-align: center;
+  transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.xp-popup.show { transform: translate(-50%,-50%) scale(1); }
+
+/* Celebration particles */
+.confetti { position: fixed; top: -10px; z-index: 99; pointer-events: none; animation: confettiFall 2s ease-out forwards; }
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Match exercise */
+.match-item {
+  padding: 12px 18px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); text-align: center; user-select: none;
+}
+.match-item:hover { border-color: rgba(16,185,129,0.4); }
+.match-item.active { border-color: var(--accent); background: rgba(16,185,129,0.12); box-shadow: 0 0 15px rgba(16,185,129,0.2); }
+.match-item.matched { border-color: #10b981; background: rgba(16,185,129,0.15); opacity: 0.6; pointer-events: none; }
+.match-item.wrong-match { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+
+/* Order exercise */
+.order-item {
+  padding: 14px 20px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer;
+  transition: all 0.2s; background: var(--card); user-select: none;
+}
+.order-item:hover { border-color: rgba(16,185,129,0.4); }
+.order-item.ordered { border-color: var(--accent2); background: rgba(245,158,11,0.1); opacity: 0.5; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 3px; }
+
+/* Responsif */
+@media (max-width: 640px) {
+  .map-node { width: 56px; height: 56px; font-size: 1rem; }
+  .lesson-node { width: 48px; height: 48px; font-size: 0.75rem; }
+}
+
+/* Animasi masuk */
+.stagger-in > * { opacity: 0; transform: translateY(15px); animation: staggerFade 0.4s ease forwards; }
+.stagger-in > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-in > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-in > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-in > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-in > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-in > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-in > *:nth-child(10) { animation-delay: 0.5s; }
+@keyframes staggerFade { to { opacity: 1; transform: translateY(0); } }
+
+/* Feedback benar/salah */
+.feedback-bar {
+  padding: 18px 24px; border-radius: 14px; font-weight: 600; display: flex; align-items: center; gap: 12px;
+  animation: fadeSlideIn 0.3s ease;
+}
+.feedback-bar.correct-fb { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #10b981; }
+.feedback-bar.wrong-fb { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+
+/* Terjemahan bahasa Indonesia di bawah teks utama */
+.id-lang { display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 2px; line-height: 1.4; }
+
+/* Khusus label di node peta/lesson: tidak wrap, indo di bawah inggris */
+.node-title { text-align: center; white-space: nowrap; }
+.node-title .id-lang { display: block; white-space: nowrap; margin-top: 2px; }
+
+/* Modal Rules */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+.modal-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 30px; max-width: 450px; width: 90%; position: relative;
+  animation: scaleIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<!-- Rules Modal -->
+<div id="rulesModal" class="modal-overlay">
+  <div class="modal-box">
+    <button onclick="closeRules()" class="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+    <h3 class="text-xl font-bold mb-5 text-amber-400">
+      <i class="fa-solid fa-gavel mr-2"></i>Class Rules <span class="id-lang" style="display:inline; color:#f59e0b;">Aturan Kelas</span>
+    </h3>
+    <ul class="space-y-4 text-slate-300">
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-comments text-emerald-400"></i></span>
+        <div>
+          <strong>Take turns speaking</strong>
+          <span class="id-lang">Berbicara secara bergantian</span>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-video text-amber-400"></i></span>
+        <div>
+          <strong>Turn on camera & microphone when required</strong>
+          <span class="id-lang">Menyalakan kamera & microphone jika diperlukan</span>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <span class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fa-solid fa-hand text-violet-400"></i></span>
+        <div>
+          <strong>Ask for permission to leave the class</strong>
+          <span class="id-lang">Meminta izin jika ingin meninggalkan kelas</span>
+        </div>
+      </li>
+    </ul>
+    <div class="mt-6 text-right">
+      <button onclick="closeRules()" class="btn-primary">Got it! <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Mengerti!</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- XP Popup -->
+<div id="xpPopup" class="xp-popup">
+  <div class="text-5xl font-bold text-amber-400 mb-2">+<span id="xpAmount">10</span> XP</div>
+  <div class="text-lg text-slate-400">Correct answer! <span class="id-lang">Jawaban benar!</span></div>
+</div>
+
+<!-- ========== MAP VIEW ========== -->
+<div id="mapView" class="view active">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+          <i class="fa-solid fa-square-root-variable text-emerald-400"></i>
+        </div>
+        <div>
+          <div class="font-bold text-lg leading-tight">Math Tutoring</div>
+          <div class="text-xs text-slate-500">by Deni</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-5">
+        <button onclick="openRules()" class="text-xs text-slate-500 hover:text-amber-400 transition flex items-center gap-1 border border-transparent hover:border-amber-400/30 rounded-lg px-2 py-1" title="Class Rules">
+          <i class="fa-solid fa-gavel"></i> Rules
+        </button>
+        <button onclick="resetProgress()" class="text-xs text-slate-500 hover:text-red-400 transition flex items-center gap-1 border border-transparent hover:border-red-400/30 rounded-lg px-2 py-1" title="Reset Semua Progress">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <div class="flex items-center gap-2 text-amber-400 font-semibold">
+          <i class="fa-solid fa-bolt"></i><span id="headerXP">0</span> XP
+        </div>
+        <div class="flex items-center gap-2 text-orange-400 font-semibold">
+          <i class="fa-solid fa-fire"></i><span id="headerStreak">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 pt-8 pb-20">
+    <div class="text-center mb-10">
+		<h1 class="text-2xl md:text-3xl font-extrabold mb-3 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent leading-tight">
+		  Strategi Cepat Perkalian Dasar
+		  <span class="id-lang" style="display:block; color:#94a3b8; margin-top: 4px; font-size: 1.25rem;">Quick Multiplication Strategies</span>
+		</h1>
+            <div class="text-slate-400 mx-auto text-center" style="max-width: 90%;">
+        <div style="white-space: nowrap;">Selesaikan setiap peta untuk membuka peta berikutnya. Kumpulkan XP dan bangun streak belajarmu!</div>
+        <div class="id-lang" style="white-space: nowrap;">Complete each map to unlock the next. Collect XP and build your learning streak!</div>
+      </div>
+    </div>
+
+    <!-- Progress keseluruhan -->
+    <div class="max-w-md mx-auto mb-10">
+      <div class="flex justify-between text-sm mb-2">
+        <span class="text-slate-400">Progress Keseluruhan <span class="id-lang" style="display:inline; color:#64748b;">Overall Progress</span></span>
+        <span class="text-emerald-400 font-semibold" id="totalProgress">0%</span>
+      </div>
+      <div class="prog-bar">
+        <div class="prog-fill" id="totalProgFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Peta nodes akan dirender oleh JS -->
+    <div id="mapContainer" class="flex flex-col items-center gap-0"></div>
+  </main>
+</div>
+
+<!-- ========== PETA VIEW (detail lesson) ========== -->
+<div id="petaView" class="view">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+      <button onclick="showMap()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+        <i class="fa-solid fa-arrow-left text-slate-400"></i>
+      </button>
+      <div>
+        <div class="font-bold text-lg" id="petaTitle"></div>
+        <div class="text-xs text-slate-500" id="petaSubtitle"></div>
+      </div>
+    </div>
+  </header>
+  <main class="max-w-2xl mx-auto px-4 pt-8 pb-20">
+    <div id="lessonContainer" class="flex flex-col items-center"></div>
+  </main>
+</div>
+
+<!-- ========== LESSON VIEW ========== -->
+<div id="lessonView" class="view">
+  <header class="sticky top-0 z-10 backdrop-blur-xl bg-[#0b1121]/80 border-b border-white/5">
+    <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+      <button onclick="closeLesson()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+        <i class="fa-solid fa-xmark text-slate-400"></i>
+      </button>
+      <div class="flex-1">
+        <div class="prog-bar">
+          <div class="prog-fill" id="lessonProgFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="text-sm text-slate-400 font-mono" id="lessonCounter">1/10</div>
+    </div>
+  </header>
+  <main class="max-w-2xl mx-auto px-4 pt-6 pb-20" id="lessonContent"></main>
+</div>
+
+<script>
+// ============================================================
+// DATA KURSUS — Seluruh konten pembelajaran
+// ============================================================
+const COURSE = {
+  title: "Strategi Cepat Perkalian Dasar <span class='id-lang'>Quick Multiplication Strategies</span>",
+  maps: [
+    // ==================== SECTION 1 ====================
+    {
+      id:1, title:"Pemanasan Review <span class='id-lang'>Spiral Review Warm-up</span>", icon:"fa-rotate", color:"#10b981", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Jalan Pintas Penjumlahan <span class='id-lang'>Addition Shortcuts</span>",
+         body:`<p>Sebelum kita mahir perkalian cepat, mari pemanasan dengan jalan pintas penjumlahan! Mengelompokkan angka yang berjumlah 10 atau 100 membuat perhitungan instan. <span class='id-lang'>Before mastering quick multiplication, let's warm up with addition shortcuts! Grouping numbers summing to 10 or 100 makes calculations instant.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2"><i class="fa-solid fa-lightbulb mr-2"></i>Teknik Kunci <span class='id-lang'>Key Technique</span></div>
+           <p class="text-sm text-slate-300">\\( 47 + 38 + 12 \\) → Kelompokkan \\( 38 + 12 = 50 \\), lalu \\( 47 + 50 = 97 \\). <span class='id-lang'>Group \\( 38 + 12 = 50 \\), then \\( 47 + 50 = 97 \\).</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung cepat: \\( 47 + 38 + 12 \\). <span class='id-lang'>Calculate quickly: \\( 47 + 38 + 12 \\).</span>",
+         a:"97",
+         h:"Kelompokkan \\( 38 + 12 = 50 \\), tambah 47. <span class='id-lang'>Group \\( 38 + 12 = 50 \\), add 47.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung cepat: \\( 25 + 63 + 75 \\). <span class='id-lang'>Calculate quickly: \\( 25 + 63 + 75 \\).</span>",
+         a:"163",
+         h:"Kelompokkan \\( 25 + 75 = 100 \\), tambah 63. <span class='id-lang'>Group \\( 25 + 75 = 100 \\), add 63.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung cepat: \\( 89 + 56 + 11 \\). <span class='id-lang'>Calculate quickly: \\( 89 + 56 + 11 \\).</span>",
+         a:"156",
+         h:"Kelompokkan \\( 89 + 11 = 100 \\), tambah 56. <span class='id-lang'>Group \\( 89 + 11 = 100 \\), add 56.</span>"},
+        // 1 Teori
+        {type:"T",title:"Pengurangan dengan Komplemen <span class='id-lang'>Subtraction with Complements</span>",
+         body:`<p>Pengurangan dari 1000 atau 100 menjadi mudah dengan teknik komplemen! Cari angka yang membuatnya lengkap sampai 1000. <span class='id-lang'>Subtracting from 1000 or 100 becomes easy with complements! Find what makes the number complete to 1000.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Contoh <span class='id-lang'>Example</span></div>
+           <p class="text-sm text-slate-300">\\( 1000 - 674 \\): Komplemen 674 adalah \\( 9-6, 9-7, 10-4 = 326 \\). <span class='id-lang'>\\( 1000 - 674 \\): Complement of 674 is \\( 9-6, 9-7, 10-4 = 326 \\).</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung cepat dengan komplemen: \\( 1000 - 674 \\). <span class='id-lang'>Calculate quickly using complements: \\( 1000 - 674 \\).</span>",
+         a:"326",
+         h:"Komplemen: \\( 9-6, 9-7, 10-4 \\). <span class='id-lang'>Complement: \\( 9-6, 9-7, 10-4 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung: \\( 1000 - 385 \\). <span class='id-lang'>Calculate: \\( 1000 - 385 \\).</span>",
+         a:"615",
+         h:"Komplemen: \\( 9-3, 9-8, 10-5 = 615 \\). <span class='id-lang'>Complement: \\( 9-3, 9-8, 10-5 = 615 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung: \\( 100 - 37 \\). <span class='id-lang'>Calculate: \\( 100 - 37 \\).</span>",
+         a:"63",
+         h:"Komplemen: \\( 9-3, 10-7 = 63 \\). <span class='id-lang'>Complement: \\( 9-3, 10-7 = 63 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Fondasi Fakta Perkalian <span class='id-lang'>Multiplication Facts Foundation</span>",
+         body:`<p>Perkalian cepat dimulai dengan dasar yang kuat. Hafal tabel perkalian sampai \\( 12 \\times 12 \\) dengan baik – ini adalah alat mental math kamu! <span class='id-lang'>Quick multiplication starts with solid basics. Know your multiplication table up to \\( 12 \\times 12 \\) by heart—this is your mental math toolkit!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Fakta Cepat <span class='id-lang'>Quick Facts</span></div>
+           <p class="text-sm text-slate-300">\\( 7 \\times 8 = 56 \\), \\( 9 \\times 6 = 54 \\), \\( 11 \\times 11 = 121 \\). <span class='id-lang'>Memorize these key facts!</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Berapa \\( 7 \\times 8 \\)? <span class='id-lang'>What is \\( 7 \\times 8 \\)?</span>",
+         a:"56",
+         h:"Dari hafalan! \\( 7 \\times 8 = 56 \\). <span class='id-lang'>From memory! \\( 7 \\times 8 = 56 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Berapa \\( 9 \\times 7 \\)? <span class='id-lang'>What is \\( 9 \\times 7 \\)?</span>",
+         a:"63",
+         h:"\\( 9 \\times 7 = 63 \\)."},
+        {type:"E",etype:"fb",
+         q:"Berapa \\( 12 \\times 11 \\)? <span class='id-lang'>What is \\( 12 \\times 11 \\)?</span>",
+         a:"132",
+         h:"\\( 12 \\times 11 = 132 \\)."},
+        {type:"E",etype:"fb",
+         q:"Berapa \\( 8 \\times 9 \\)? <span class='id-lang'>What is \\( 8 \\times 9 \\)?</span>",
+         a:"72",
+         h:"\\( 8 \\times 9 = 72 \\)."}
+      ]
+    },
+    // ==================== SECTION 2 ====================
+    {
+      id:2, title:"Koneksi Dunia Nyata <span class='id-lang'>Real-World Connection</span>", icon:"fa-lightbulb", color:"#06b6d4", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Kenapa Mental Math Penting <span class='id-lang'>Why Mental Math Matters</span>",
+         body:`<p>Bayangkan kamu sedang belanja atau mengikuti ujian masuk perguruan tinggi – kamu butuh hasil \\( 23 \\times 27 \\) dalam 3 detik. Mental math membuat otakmu lebih cepat dari jari mengetik kalkulator! <span class='id-lang'>Imagine you're shopping or taking an entrance exam—you need \\( 23 \\times 27 \\) in 3 seconds. Mental math makes your brain faster than typing on a calculator!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Manfaat Nyata <span class='id-lang'>Real Benefits</span></div>
+           <p class="text-sm text-slate-300">1. Cepat di ujian. 2. Estimasi belanja dengan cepat. 3. Memukau saat interview. <span class='id-lang'>1. Speed in exams. 2. Estimate bills quickly. 3. Impress in interviews.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Situasi mana yang butuh hitung cepat mental? <span class='id-lang'>Which situation needs quick mental calculation?</span>",
+         o:["Tidur <span class='id-lang'>Sleeping</span>","Bayar belanja <span class='id-lang'>Shopping checkout</span>","Nonton TV <span class='id-lang'>Watching TV</span>","Baca lambat <span class='id-lang'>Reading slowly</span>"],
+         a:1,
+         h:"Belanja butuh penjumlahan cepat! <span class='id-lang'>Shopping requires quick addition!</span>"},
+        {type:"E",etype:"mc",
+         q:"Kenapa belajar mental math untuk ujian? <span class='id-lang'>Why learn mental math for exams?</span>",
+         o:["Kelihatan keren <span class='id-lang'>To look cool</span>","Hemat waktu fokus soal sulit <span class='id-lang'>To save time for hard problems</span>","Abaikan kalkulator <span class='id-lang'>To ignore calculators</span>","Hafal semua <span class='id-lang'>To memorize everything</span>"],
+         a:1,
+         h:"Cepat di soal mudah = lebih banyak waktu untuk soal sulit. <span class='id-lang'>Speed on easy problems = more time for hard ones.</span>"},
+        {type:"E",etype:"tf",
+         q:"Mental math tidak berguna di era modern karena ada smartphone. <span class='id-lang'>Mental math is useless in modern life because we have smartphones.</span>",
+         a:false,
+         h:"Mental math membangun sense angka dan kemampuan problem-solving! <span class='id-lang'>Mental math builds number sense and problem-solving skills!</span>"},
+        // 1 Teori
+        {type:"T",title:"Keseimbangan Kecepatan vs Ketepatan <span class='id-lang'>Speed vs Accuracy Balance</span>",
+         body:`<p>Kecepatan penting, tapi ketepatan adalah raja! Jawaban cepat yang salah lebih buruk dari jawaban lambat yang benar. Latih untuk cepat DAN tepat. <span class='id-lang'>Speed matters, but accuracy is king! A wrong fast answer is worse than a correct slow one. Train to be both fast AND accurate.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">Aturan <span class='id-lang'>The Rule</span></div>
+           <p class="text-sm text-slate-300">Latih pelan dulu, lalu tingkatkan kecepatan. Jangan pernah korbankan ketepatan! <span class='id-lang'>Practice slowly first, then increase speed. Never sacrifice accuracy!</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"mc",
+         q:"Apa yang lebih penting di mental math? <span class='id-lang'>What is more important in mental math?</span>",
+         o:["Cuma kecepatan <span class='id-lang'>Speed only</span>","Cuma ketepatan <span class='id-lang'>Accuracy only</span>","Kecepatan dan ketepatan <span class='id-lang'>Both speed and accuracy</span>","Kelihatan keren <span class='id-lang'>Looking cool</span>"],
+         a:2,
+         h:"Kamu butuh KEDUANYA! Latihan membangun keduanya bersamaan. <span class='id-lang'>You need BOTH! Practice builds both together.</span>"},
+        {type:"E",etype:"tf",
+         q:"Jawaban cepat yang salah masih diterima. <span class='id-lang'>A fast wrong answer is acceptable.</span>",
+         a:false,
+         h:"Jawaban salah = salah, apa pun kecepatannya! <span class='id-lang'>Wrong answer = wrong, regardless of speed!</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung dengan tepat: \\( 15 + 27 + 13 \\). <span class='id-lang'>Calculate accurately: \\( 15 + 27 + 13 \\).</span>",
+         a:"55",
+         h:"\\( 27 + 13 = 40 \\), \\( 15 + 40 = 55 \\)."},
+        // 1 Teori
+        {type:"T",title:"Membangun Sense Angka <span class='id-lang'>Building Number Sense</span>",
+         body:`<p>Sense angka berarti memahami bagaimana angka saling berhubungan. Melihat pola seperti \\( 24 \\times 26 \\) yang punya puluhan sama dan satuan berjumlah 10 – ini adalah pengenalan pola! <span class='id-lang'>Number sense means understanding how numbers relate. Seeing patterns like \\( 24 \\times 26 \\) having same tens and units summing to 10—this is pattern recognition!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+           <div class="text-violet-400 font-semibold mb-2">Contoh Pola <span class='id-lang'>Pattern Example</span></div>
+           <p class="text-sm text-slate-300">\\( 23 \\times 27 \\): Puluhan sama (2), satuan \\( 3+7=10 \\). Trik magic akan datang! <span class='id-lang'>\\( 23 \\times 27 \\): Same tens (2), units \\( 3+7=10 \\). Magic trick incoming!</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"mc",
+		 q:"Pasangan mana yang punya 'puluhan sama, satuan berjumlah 10'? <span class='id-lang'>Which pair has 'same tens, units sum to 10'?</span>",
+		 o:["\\( 23 \\times 27 \\) <span class='id-lang'>\\( 23 \\times 27 \\)</span>","\\( 25 \\times 32 \\) <span class='id-lang'>\\( 25 \\times 32 \\)</span>","\\( 41 \\times 48 \\) <span class='id-lang'>\\( 41 \\times 48 \\)</span>","\\( 12 \\times 17 \\) <span class='id-lang'>\\( 12 \\times 17 \\)</span>"],
+		 a:0,
+		 h:"\\( 23 \\) dan \\( 27 \\): puluhan sama 2, satuan \\( 3+7=10 \\). <span class='id-lang'>\\( 23 \\) and \\( 27 \\): tens are both 2, units \\( 3+7=10 \\).</span>"},
+        {type:"E",etype:"mc",
+		 q:"Mana yang 'puluhan sama, satuan berjumlah 10'? <span class='id-lang'>Which has 'same tens, units sum to 10'?</span>",
+		 o:["\\( 34 \\times 36 \\) <span class='id-lang'>\\( 34 \\times 36 \\)</span>","\\( 35 \\times 42 \\) <span class='id-lang'>\\( 35 \\times 42 \\)</span>","\\( 52 \\times 57 \\) <span class='id-lang'>\\( 52 \\times 57 \\)</span>","\\( 33 \\times 77 \\) <span class='id-lang'>\\( 33 \\times 77 \\)</span>"],
+		 a:0,
+		 h:"\\( 34 \\times 36 \\): puluhan=3, satuan \\( 4+6=10 \\)."},
+        {type:"E",etype:"tf",
+         q:"\\( 41 \\times 49 \\) punya puluhan sama dan satuan berjumlah 10. <span class='id-lang'>\\( 41 \\times 49 \\) has same tens and units sum to 10.</span>",
+         a:true,
+         h:"Puluhan: 4 dan 4. Satuan: \\( 1+9=10 \\). Ya! <span class='id-lang'>Tens: 4 and 4. Units: \\( 1+9=10 \\). Yes!</span>"},
+        {type:"E",etype:"fb",
+         q:"Identifikasi pasangan angka dengan puluhan sama (5) dan satuan berjumlah 10. Tulis angka yang lebih kecil. <span class='id-lang'>Identify a number pair with same tens (5) and units summing to 10. Write the smaller number.</span>",
+         a:"51||52||53||54||55",
+         h:"Contoh: \\( 52 \\times 58 \\), \\( 53 \\times 57 \\), \\( 54 \\times 56 \\)."}
+      ]
+    },
+    // ==================== SECTION 3 ====================
+    {
+      id:3, title:"Review Pengetahuan <span class='id-lang'>Review of Prior Knowledge</span>", icon:"fa-brain", color:"#8b5cf6", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Properti Distributif <span class='id-lang'>Distributive Property</span>",
+         body:`<p>Properti distributif adalah fondasi perkalian cepat: \\( a(b+c) = ab + ac \\). Ini memungkinkan kita memecah perkalian kompleks menjadi bagian lebih sederhana! <span class='id-lang'>The distributive property is the foundation of quick multiplication: \\( a(b+c) = ab + ac \\). This lets us break complex multiplication into simpler parts!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+           <div class="text-violet-400 font-semibold mb-2">Contoh <span class='id-lang'>Example</span></div>
+           <p class="text-sm text-slate-300">\\( (10 + 2) \\times 5 = 10 \\times 5 + 2 \\times 5 = 50 + 10 = 60 \\). <span class='id-lang'>\\( (10 + 2) \\times 5 = 10 \\times 5 + 2 \\times 5 = 60 \\).</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Gunakan properti distributif: \\( (10 + 3) \\times 4 \\). <span class='id-lang'>Use distributive property: \\( (10 + 3) \\times 4 \\).</span>",
+         a:"52",
+         h:"\\( 10 \\times 4 + 3 \\times 4 = 40 + 12 = 52 \\)."},
+        {type:"E",etype:"fb",
+         q:"Gunakan properti distributif: \\( (20 + 5) \\times 3 \\). <span class='id-lang'>Use distributive property: \\( (20 + 5) \\times 3 \\).</span>",
+         a:"75",
+         h:"\\( 20 \\times 3 + 5 \\times 3 = 60 + 15 = 75 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 18 \\times 9 \\) dengan properti distributif (petunjuk: \\( 18 = 20 - 2 \\)). <span class='id-lang'>Calculate \\( 18 \\times 9 \\) using distributive property (hint: \\( 18 = 20 - 2 \\)).</span>",
+         a:"162",
+         h:"\\( 20 \\times 9 - 2 \\times 9 = 180 - 18 = 162 \\)."},
+        // 1 Teori
+        {type:"T",title:"Perkalian Model Area <span class='id-lang'>Area Model Multiplication</span>",
+         body:`<p>Visualisasikan perkalian sebagai persegi panjang! Pecah angka menjadi puluhan dan satuan, lalu hitung setiap bagian. Ini adalah Model Area. <span class='id-lang'>Visualize multiplication as a rectangle! Break numbers into tens and units, then calculate each part. This is the Area Model.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Contoh Visual <span class='id-lang'>Visual Example</span></div>
+           <p class="text-sm text-slate-300">\\( 23 \\times 15 \\): Pecah \\( 23 = 20 + 3 \\), \\( 15 = 10 + 5 \\). Hitung \\( 20 \\times 10 \\), \\( 20 \\times 5 \\), \\( 3 \\times 10 \\), \\( 3 \\times 5 \\). <span class='id-lang'>\\( 23 \\times 15 \\): Split \\( 23 = 20 + 3 \\), \\( 15 = 10 + 5 \\). Calculate 4 parts.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Dengan model area untuk \\( 12 \\times 14 \\), berapa \\( 10 \\times 10 \\)? <span class='id-lang'>Using area model for \\( 12 \\times 14 \\), what is \\( 10 \\times 10 \\)?</span>",
+         a:"100",
+         h:"Bagian persegi panjang besar: \\( 10 \\times 10 = 100 \\). <span class='id-lang'>The large rectangle part: \\( 100 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 12 \\times 14 \\) dengan model area. <span class='id-lang'>Calculate \\( 12 \\times 14 \\) using area model.</span>",
+         a:"168",
+         h:"\\( 10 \\times 10 + 10 \\times 4 + 2 \\times 10 + 2 \\times 4 = 100 + 40 + 20 + 8 = 168 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 21 \\times 13 \\) dengan model area. <span class='id-lang'>Calculate \\( 21 \\times 13 \\) using area model.</span>",
+         a:"273",
+         h:"\\( 20 \\times 10 + 20 \\times 3 + 1 \\times 10 + 1 \\times 3 = 200 + 60 + 10 + 3 = 273 \\)."},
+        // 1 Teori
+        {type:"T",title:"Memecah Angka dengan Strategis <span class='id-lang'>Breaking Numbers Strategically</span>",
+         body:`<p>Pilih cara memecah angka dengan bijak! Memecah dekat kelipatan 10 membuat perhitungan lebih mudah. <span class='id-lang'>Choose how to break numbers wisely! Breaking near multiples of 10 makes calculation easier.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Strategi <span class='id-lang'>Strategy</span></div>
+           <p class="text-sm text-slate-300">Untuk \\( 99 \\times 8 \\): Gunakan pendekatan \\( 100 - 1 \\): \\( 100 \\times 8 - 1 \\times 8 = 800 - 8 = 792 \\). <span class='id-lang'>For \\( 99 \\times 8 \\): Use \\( 100 - 1 \\) approach: \\( 100 \\times 8 - 1 \\times 8 = 792 \\).</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 99 \\times 5 \\) dengan pendekatan \\( 100 - 1 \\). <span class='id-lang'>Calculate \\( 99 \\times 5 \\) using \\( 100 - 1 \\) approach.</span>",
+         a:"495",
+         h:"\\( 100 \\times 5 - 1 \\times 5 = 500 - 5 = 495 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 19 \\times 6 \\) dengan pendekatan \\( 20 - 1 \\). <span class='id-lang'>Calculate \\( 19 \\times 6 \\) using \\( 20 - 1 \\) approach.</span>",
+         a:"114",
+         h:"\\( 20 \\times 6 - 1 \\times 6 = 120 - 6 = 114 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 101 \\times 7 \\) dengan memecah \\( 101 = 100 + 1 \\). <span class='id-lang'>Calculate \\( 101 \\times 7 \\) by splitting \\( 101 = 100 + 1 \\).</span>",
+         a:"707",
+         h:"\\( 100 \\times 7 + 1 \\times 7 = 700 + 7 = 707 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 25 \\times 8 \\) dengan memecah \\( 25 = 20 + 5 \\). <span class='id-lang'>Calculate \\( 25 \\times 8 \\) by splitting \\( 25 = 20 + 5 \\).</span>",
+         a:"200",
+         h:"\\( 20 \\times 8 + 5 \\times 8 = 160 + 40 = 200 \\)."}
+      ]
+    },
+    // ==================== SECTION 4 ====================
+    {
+      id:4, title:"Pengenalan Masalah <span class='id-lang'>Problem Introduction</span>", icon:"fa-circle-question", color:"#f59e0b", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Trik Puluhan Sama, Satuan Berjumlah 10 <span class='id-lang'>Same Tens, Units Sum to 10 Trick</span>",
+         body:`<p>Perhatikan soal \\( 24 \\times 26 \\). Angka depan sama (2) dan angka belakang berjumlah 10 (\\( 4+6=10 \\)). Ada trik magic! Kalikan angka depan dengan 'kakaknya' (\\( 2 \\times 3 = 6 \\)), lalu kalikan angka belakang (\\( 4 \\times 6 = 24 \\)). Hasilnya 624! <span class='id-lang'>Look at \\( 24 \\times 26 \\). Same tens (2), units sum to 10 (\\( 4+6=10 \\)). Magic trick! Multiply tens by its 'big brother' (\\( 2 \\times 3 = 6 \\)), then multiply units (\\( 4 \\times 6 = 24 \\)). Result: 624!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Aturan Kakak <span class='id-lang'>Big Brother Rule</span></div>
+           <p class="text-sm text-slate-300">'Kakak' = angka depan ditambah 1. Jika angka depan 2, kakaknya 3. <span class='id-lang'>'Big brother' = tens digit plus 1. If tens is 2, big brother is 3.</span></p>
+           <p class="text-sm text-slate-300 mt-2">\\( 24 \\times 26 \\): \\( 2 \\times 3 = 6 \\) dan \\( 4 \\times 6 = 24 \\) → gabung: **624**. <span class='id-lang'>\\( 24 \\times 26 \\): \\( 2 \\times 3 = 6 \\) and \\( 4 \\times 6 = 24 \\) → combine: **624**.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 24 \\times 26 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 24 \\times 26 \\) using same tens trick.</span>",
+         a:"624",
+         h:"\\( 2 \\times 3 = 6 \\), \\( 4 \\times 6 = 24 \\) → gabungkan: 624. <span class='id-lang'>\\( 2 \\times 3 = 6 \\), \\( 4 \\times 6 = 24 \\) → combine: 624.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 47 \\times 43 \\) dengan trik ini. <span class='id-lang'>Calculate \\( 47 \\times 43 \\) using this trick.</span>",
+         a:"2021",
+         h:"\\( 4 \\times 5 = 20 \\), \\( 7 \\times 3 = 21 \\) → gabungkan: 2021. <span class='id-lang'>\\( 4 \\times 5 = 20 \\), \\( 7 \\times 3 = 21 \\) → combine: 2021.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 32 \\times 38 \\) dengan trik ini. <span class='id-lang'>Calculate \\( 32 \\times 38 \\) using this trick.</span>",
+         a:"1216",
+         h:"\\( 3 \\times 4 = 12 \\), \\( 2 \\times 8 = 16 \\) → gabungkan: 1216. <span class='id-lang'>\\( 3 \\times 4 = 12 \\), \\( 2 \\times 8 = 16 \\) → combine: 1216.</span>"},
+        // 1 Teori
+        {type:"T",title:"Trik Perkalian dengan 11 <span class='id-lang'>Multiply by 11 Trick</span>",
+         body:`<p>Perkalian dengan 11 sangat mudah! Pisahkan kedua angka, lalu taruh jumlahnya di tengah. <span class='id-lang'>Multiplying by 11 is super easy! Separate the digits, then place their sum in the middle.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">Contoh <span class='id-lang'>Example</span></div>
+           <p class="text-sm text-slate-300">\\( 42 \\times 11 \\): Pisahkan 4 dan 2 → taruh \\( 4+2=6 \\) di tengah → **462**. <span class='id-lang'>\\( 42 \\times 11 \\): Separate 4 and 2 → place \\( 4+2=6 \\) in middle → **462**.</span></p>
+           <p class="text-sm text-slate-300 mt-2">\\( 43 \\times 11 \\): Pisahkan 4 dan 3 → \\( 4+3=7 \\) → **473**. <span class='id-lang'>\\( 43 \\times 11 \\): Separate 4 and 3 → \\( 4+3=7 \\) → **473**.</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 43 \\times 11 \\) dengan trik angka 11. <span class='id-lang'>Calculate \\( 43 \\times 11 \\) using the 11 trick.</span>",
+         a:"473",
+         h:"Pisahkan 4 dan 3, taruh \\( 4+3=7 \\) di tengah → 473. <span class='id-lang'>Separate 4 and 3, place \\( 4+3=7 \\) in middle → 473.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 52 \\times 11 \\) dengan trik angka 11. <span class='id-lang'>Calculate \\( 52 \\times 11 \\) using the 11 trick.</span>",
+         a:"572",
+         h:"Pisahkan 5 dan 2, taruh \\( 5+2=7 \\) di tengah → 572. <span class='id-lang'>Separate 5 and 2, place \\( 5+2=7 \\) in middle → 572.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 36 \\times 11 \\). Perhatian: \\( 3+6=9 \\). <span class='id-lang'>Calculate \\( 36 \\times 11 \\). Note: \\( 3+6=9 \\).</span>",
+         a:"396",
+         h:"Pisahkan 3 dan 6, taruh \\( 3+6=9 \\) di tengah → 396. <span class='id-lang'>Separate 3 and 6, place \\( 3+6=9 \\) in middle → 396.</span>"},
+        // 1 Teori
+        {type:"T",title:"Trik Angka Berakhiran 5 <span class='id-lang'>Numbers Ending in 5 Trick</span>",
+         body:`<p>Untuk angka berakhiran 5 yang dikalikan dengan dirinya sendiri, triknya: kalikan angka depan dengan kakaknya, lalu tambahkan 25 di belakang! <span class='id-lang'>For numbers ending in 5 multiplied by themselves, the trick: multiply the front digit by its big brother, then add 25 at the end!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+           <div class="text-violet-400 font-semibold mb-2">Contoh Kuadrat <span class='id-lang'>Square Example</span></div>
+           <p class="text-sm text-slate-300">\\( 65 \\times 65 \\): \\( 6 \\times 7 = 42 \\), tambahkan 25 → **4225**. <span class='id-lang'>\\( 65 \\times 65 \\): \\( 6 \\times 7 = 42 \\), add 25 → **4225**.</span></p>
+           <p class="text-sm text-slate-300 mt-2">\\( 35 \\times 35 \\): \\( 3 \\times 4 = 12 \\), tambahkan 25 → **1225**. <span class='id-lang'>\\( 35 \\times 35 \\): \\( 3 \\times 4 = 12 \\), add 25 → **1225**.</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 65 \\times 65 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 65 \\times 65 \\) using ending-5 trick.</span>",
+         a:"4225",
+         h:"\\( 6 \\times 7 = 42 \\), tambah 25 → 4225. <span class='id-lang'>\\( 6 \\times 7 = 42 \\), add 25 → 4225.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 35 \\times 35 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 35 \\times 35 \\) using ending-5 trick.</span>",
+         a:"1225",
+         h:"\\( 3 \\times 4 = 12 \\), tambah 25 → 1225. <span class='id-lang'>\\( 3 \\times 4 = 12 \\), add 25 → 1225.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 75 \\times 75 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 75 \\times 75 \\) using ending-5 trick.</span>",
+         a:"5625",
+         h:"\\( 7 \\times 8 = 56 \\), tambah 25 → 5625. <span class='id-lang'>\\( 7 \\times 8 = 56 \\), add 25 → 5625.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 85 \\times 85 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 85 \\times 85 \\) using ending-5 trick.</span>",
+         a:"7225",
+         h:"\\( 8 \\times 9 = 72 \\), tambah 25 → 7225. <span class='id-lang'>\\( 8 \\times 9 = 72 \\), add 25 → 7225.</span>"}
+      ]
+    },
+    // ==================== SECTION 5 ====================
+    {
+      id:5, title:"Latihan Terbimbing <span class='id-lang'>Guided Practice</span>", icon:"fa-chalkboard-user", color:"#ec4899", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Metode Cross-Multiplication <span class='id-lang'>Cross-Multiplication Method</span>",
+         body:`<p>Cross-multiplication adalah metode visual untuk perkalian dua digit. Kalikan diagonal dan tambahkan hasilnya! <span class='id-lang'>Cross-multiplication is a visual method for two-digit multiplication. Multiply diagonally and add the results!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-pink-500/10 border border-pink-500/20">
+           <div class="text-pink-400 font-semibold mb-2">Langkah-langkah <span class='id-lang'>Steps</span></div>
+           <p class="text-sm text-slate-300">\\( 23 \\times 12 \\): <span class='id-lang'>\\( 23 \\times 12 \\):</span></p>
+           <p class="text-sm text-slate-300">1. Satuan: \\( 3 \\times 2 = 6 \\) <span class='id-lang'>1. Units: \\( 3 \\times 2 = 6 \\)</span></p>
+           <p class="text-sm text-slate-300">2. Silang: \\( 2 \\times 2 + 3 \\times 1 = 7 \\) <span class='id-lang'>2. Cross: \\( 2 \\times 2 + 3 \\times 1 = 7 \\)</span></p>
+           <p class="text-sm text-slate-300">3. Puluhan: \\( 2 \\times 1 = 2 \\) <span class='id-lang'>3. Tens: \\( 2 \\times 1 = 2 \\)</span></p>
+           <p class="text-sm text-slate-300 mt-2">Hasil: **276** <span class='id-lang'>Result: **276**</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 23 \\times 12 \\) dengan cross-multiplication. <span class='id-lang'>Calculate \\( 23 \\times 12 \\) using cross-multiplication.</span>",
+         a:"276",
+         h:"Satuan \\( 3 \\times 2 = 6 \\), Silang \\( 4+3=7 \\), Puluhan \\( 2 \\times 1 = 2 \\) → 276. <span class='id-lang'>Units \\( 6 \\), Cross \\( 7 \\), Tens \\( 2 \\) → 276.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 52 \\times 21 \\) dengan cross-multiplication. <span class='id-lang'>Calculate \\( 52 \\times 21 \\) using cross-multiplication.</span>",
+         a:"1092",
+         h:"Satuan \\( 2 \\times 1 = 2 \\), Silang \\( 5 \\times 1 + 2 \\times 2 = 9 \\), Puluhan \\( 5 \\times 2 = 10 \\) → 1092. <span class='id-lang'>\\( 2 \\), \\( 5+4=9 \\), \\( 10 \\) → 1092.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 34 \\times 12 \\) dengan cross-multiplication. <span class='id-lang'>Calculate \\( 34 \\times 12 \\) using cross-multiplication.</span>",
+         a:"408",
+         h:"Satuan \\( 4 \\times 2 = 8 \\), Silang \\( 3 \\times 2 + 4 \\times 1 = 10 \\) (simpan 0, bawa 1), Puluhan \\( 3+1=4 \\) → 408. <span class='id-lang'>\\( 8 \\), \\( 6+4=10 \\) (carry 1), \\( 3+1=4 \\) → 408.</span>"},
+        // 1 Teori
+        {type:"T",title:"Strategi Basis 100 <span class='id-lang'>Base 100 Strategy</span>",
+         body:`<p>Untuk angka mendekati 100, gunakan basis 100! Kurangi dari 100, lalu kalikan selisihnya. <span class='id-lang'>For numbers near 100, use base 100! Subtract from 100, then multiply the differences.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Contoh <span class='id-lang'>Example</span></div>
+           <p class="text-sm text-slate-300">\\( 92 \\times 98 \\): <span class='id-lang'>\\( 92 \\times 98 \\):</span></p>
+           <p class="text-sm text-slate-300">Selisih: \\( 100-92=8 \\), \\( 100-98=2 \\) <span class='id-lang'>Differences: \\( 100-92=8 \\), \\( 100-98=2 \\)</span></p>
+           <p class="text-sm text-slate-300">Bagian depan: \\( 92-2 = 90 \\) atau \\( 98-8 = 90 \\) <span class='id-lang'>Front part: \\( 92-2 = 90 \\) or \\( 98-8 = 90 \\)</span></p>
+           <p class="text-sm text-slate-300">Bagian belakang: \\( 8 \\times 2 = 16 \\) <span class='id-lang'>Back part: \\( 8 \\times 2 = 16 \\)</span></p>
+           <p class="text-sm text-slate-300 mt-2">Hasil: **9016** <span class='id-lang'>Result: **9016**</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 92 \\times 98 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 92 \\times 98 \\) using base 100 strategy.</span>",
+         a:"9016",
+         h:"\\( 92-2=90 \\), \\( 8 \\times 2=16 \\) → 9016. <span class='id-lang'>\\( 92-2=90 \\), \\( 8 \\times 2=16 \\) → 9016.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 97 \\times 94 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 97 \\times 94 \\) using base 100 strategy.</span>",
+         a:"9118",
+         h:"\\( 97-6=91 \\), \\( 3 \\times 6=18 \\) → 9118. <span class='id-lang'>\\( 97-6=91 \\), \\( 3 \\times 6=18 \\) → 9118.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 99 \\times 99 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 99 \\times 99 \\) using base 100 strategy.</span>",
+         a:"9801",
+         h:"\\( 99-1=98 \\), \\( 1 \\times 1=01 \\) → 9801. <span class='id-lang'>\\( 99-1=98 \\), \\( 1 \\times 1=01 \\) → 9801.</span>"},
+        // 1 Teori
+        {type:"T",title:"Menggabungkan Strategi <span class='id-lang'>Combining Strategies</span>",
+         body:`<p>Pilih strategi yang tepat untuk setiap soal! Kenali pola angka untuk menentukan metode tercepat. <span class='id-lang'>Choose the right strategy for each problem! Recognize number patterns to determine the fastest method.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+           <div class="text-cyan-400 font-semibold mb-2">Daftar Strategi <span class='id-lang'>Strategy List</span></div>
+           <p class="text-sm text-slate-300">• Puluhan sama + satuan 10 → Trik Kakak <span class='id-lang'>• Same tens + units sum 10 → Big Brother Trick</span></p>
+           <p class="text-sm text-slate-300">• Perkalian dengan 11 → Trik Tengah <span class='id-lang'>• Multiply by 11 → Middle Trick</span></p>
+           <p class="text-sm text-slate-300">• Angka berakhiran 5 → Trik 25 <span class='id-lang'>• Numbers ending 5 → 25 Trick</span></p>
+           <p class="text-sm text-slate-300">• Mendekati 100 → Basis 100 <span class='id-lang'>• Near 100 → Base 100</span></p>
+           <p class="text-sm text-slate-300">• Angka acak → Cross-multiplication <span class='id-lang'>• Random numbers → Cross-multiplication</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"mc",
+         q:"Strategi apa untuk \\( 35 \\times 35 \\)? <span class='id-lang'>Which strategy for \\( 35 \\times 35 \\)?</span>",
+         o:["Trik Kakak <span class='id-lang'>Big Brother Trick</span>","Trik Angka 11 <span class='id-lang'>11 Trick</span>","Trik Angka Berakhiran 5 <span class='id-lang'>Ending-5 Trick</span>","Basis 100 <span class='id-lang'>Base 100</span>"],
+         a:2,
+         h:"Berakhiran 5 kuadrat → Trik 25! <span class='id-lang'>Ending 5 squared → 25 Trick!</span>"},
+        {type:"E",etype:"mc",
+         q:"Strategi apa untuk \\( 24 \\times 26 \\)? <span class='id-lang'>Which strategy for \\( 24 \\times 26 \\)?</span>",
+         o:["Trik Kakak <span class='id-lang'>Big Brother Trick</span>","Trik Angka 11 <span class='id-lang'>11 Trick</span>","Cross-multiplication <span class='id-lang'>Cross-multiplication</span>","Basis 100 <span class='id-lang'>Base 100</span>"],
+         a:0,
+         h:"Puluhan sama (2), satuan \\( 4+6=10 \\) → Trik Kakak! <span class='id-lang'>Same tens (2), units \\( 4+6=10 \\) → Big Brother Trick!</span>"},
+        {type:"E",etype:"mc",
+         q:"Strategi apa untuk \\( 53 \\times 11 \\)? <span class='id-lang'>Which strategy for \\( 53 \\times 11 \\)?</span>",
+         o:["Trik Kakak <span class='id-lang'>Big Brother Trick</span>","Trik Angka 11 <span class='id-lang'>11 Trick</span>","Basis 100 <span class='id-lang'>Base 100</span>","Cross-multiplication <span class='id-lang'>Cross-multiplication</span>"],
+         a:1,
+         h:"Perkalian dengan 11 → Trik Tengah! <span class='id-lang'>Multiply by 11 → Middle Trick!</span>"},
+        {type:"E",etype:"mc",
+         q:"Strategi apa untuk \\( 23 \\times 15 \\)? <span class='id-lang'>Which strategy for \\( 23 \\times 15 \\)?</span>",
+         o:["Trik Kakak <span class='id-lang'>Big Brother Trick</span>","Trik Angka 11 <span class='id-lang'>11 Trick</span>","Cross-multiplication <span class='id-lang'>Cross-multiplication</span>","Trik 25 <span class='id-lang'>25 Trick</span>"],
+         a:2,
+         h:"Angka acak, tidak ada pola khusus → Cross-multiplication! <span class='id-lang'>Random numbers, no special pattern → Cross-multiplication!</span>"}
+      ]
+    },
+    // ==================== SECTION 6 ====================
+    {
+      id:6, title:"Latihan Mandiri <span class='id-lang'>Independent Practice</span>", icon:"fa-user-graduate", color:"#14b8a6", branch:false,
+      lessons:[
+        // 1 Teori
+        {type:"T",title:"Skenario Gudang <span class='id-lang'>Warehouse Scenario</span>",
+         body:`<p>Bayangkan kamu adalah analis data! Kamu harus menghitung total stok barang di gudang dengan cepat. Fokus pada kecepatan dan ketepatan! <span class='id-lang'>Imagine you're a data analyst! You need to calculate total warehouse stock quickly. Focus on speed and accuracy!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-teal-500/10 border border-teal-500/20">
+           <div class="text-teal-400 font-semibold mb-2">Tantangan <span class='id-lang'>Challenge</span></div>
+           <p class="text-sm text-slate-300">Selesaikan soal tanpa kertas jika bisa. Latih otakmu! <span class='id-lang'>Solve problems without paper if possible. Train your brain!</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Toko buku punya 11 rak, masing-masing berisi 89 buku. Berapa total buku? <span class='id-lang'>Bookstore has 11 shelves, each with 89 books. Total books?</span>",
+         a:"979",
+         h:"\\( 89 \\times 11 \\): Pisahkan 8 dan 9, \\( 8+9=17 \\) (bawa 1 ke 8), hasil 979. <span class='id-lang'>\\( 89 \\times 11 \\): Separate 8 and 9, \\( 8+9=17 \\) (carry 1 to 8), result 979.</span>"},
+        {type:"E",etype:"fb",
+         q:"Gudang A punya 43 kotak, Gudang B punya 11 kotak jenis sama. Berapa total jika setiap kotak isi 25 item? Hitung \\( 54 \\times 25 \\). <span class='id-lang'>Warehouse A: 43 boxes, B: 11 same boxes. Each box: 25 items. Calculate \\( 54 \\times 25 \\).</span>",
+         a:"1350",
+         h:"\\( 54 \\times 25 \\): \\( 54 \\times 100 \\div 4 = 5400 \\div 4 = 1350 \\). <span class='id-lang'>\\( 54 \\times 100 \\div 4 = 1350 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Pabrik memproduksi 125 unit per jam. Berapa total dalam 8 jam? <span class='id-lang'>Factory produces 125 units/hour. Total in 8 hours?</span>",
+         a:"1000",
+         h:"\\( 125 \\times 8 \\): \\( 125 \\times 2 \\times 2 \\times 2 = 250 \\times 2 \\times 2 = 1000 \\). <span class='id-lang'>\\( 125 \\times 2 \\times 2 \\times 2 = 1000 \\).</span>"},
+        // 1 Teori
+        {type:"T",title:"Memilih Metode Terbaik <span class='id-lang'>Choosing the Best Method</span>",
+         body:`<p>Dalam ujian atau kehidupan nyata, kecepatan memilih metode yang tepat adalah kunci! Latih pengenalan pola. <span class='id-lang'>In exams or real life, quickly choosing the right method is key! Practice pattern recognition.</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+           <div class="text-amber-400 font-semibold mb-2">Tips Memilih <span class='id-lang'>Selection Tips</span></div>
+           <p class="text-sm text-slate-300">• Lihat angka depan: sama? → Trik Kakak <span class='id-lang'>• Check tens: same? → Big Brother Trick</span></p>
+           <p class="text-sm text-slate-300">• Lihat angka belakang: berjumlah 10? → Cocok! <span class='id-lang'>• Check units: sum to 10? → Match!</span></p>
+           <p class="text-sm text-slate-300">• Ada angka 11? → Trik Tengah <span class='id-lang'>• Has 11? → Middle Trick</span></p>
+           <p class="text-sm text-slate-300">• Mendekati 100? → Basis 100 <span class='id-lang'>• Near 100? → Base 100</span></p>
+         </div>`},
+        // 3 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 56 \\times 54 \\). Pilih strategi yang tepat. <span class='id-lang'>Calculate \\( 56 \\times 54 \\). Choose the right strategy.</span>",
+         a:"3024",
+         h:"Puluhan sama (5), satuan \\( 6+4=10 \\) → \\( 5 \\times 6=30 \\), \\( 6 \\times 4=24 \\) → 3024. <span class='id-lang'>Same tens (5), units \\( 6+4=10 \\) → \\( 5 \\times 6=30 \\), \\( 6 \\times 4=24 \\) → 3024.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 95 \\times 95 \\). Pilih strategi yang tepat. <span class='id-lang'>Calculate \\( 95 \\times 95 \\). Choose the right strategy.</span>",
+         a:"9025",
+         h:"Berakhiran 5 kuadrat → \\( 9 \\times 10=90 \\), tambah 25 → 9025. <span class='id-lang'>Ending 5 squared → \\( 9 \\times 10=90 \\), add 25 → 9025.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 96 \\times 97 \\). Pilih strategi yang tepat. <span class='id-lang'>Calculate \\( 96 \\times 97 \\). Choose the right strategy.</span>",
+         a:"9312",
+         h:"Mendekati 100 → \\( 96-3=93 \\), \\( 4 \\times 3=12 \\) → 9312. <span class='id-lang'>Near 100 → \\( 96-3=93 \\), \\( 4 \\times 3=12 \\) → 9312.</span>"},
+        // 1 Teori
+        {type:"T",title:"Checklist Mental Math <span class='id-lang'>Mental Math Checklist</span>",
+         body:`<p>Sebelum menghitung, ikuti checklist ini untuk memastikan hasil akurat! <span class='id-lang'>Before calculating, follow this checklist to ensure accurate results!</span></p>
+         <div class="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-semibold mb-2">3 Langkah <span class='id-lang'>3 Steps</span></div>
+           <p class="text-sm text-slate-300">1. **Kenali pola** → Tentukan strategi <span class='id-lang'>1. **Recognize pattern** → Choose strategy</span></p>
+           <p class="text-sm text-slate-300">2. **Hitung mental** → Gunakan trik <span class='id-lang'>2. **Calculate mentally** → Use trick</span></p>
+           <p class="text-sm text-slate-300">3. **Verifikasi** → Cek dengan estimasi <span class='id-lang'>3. **Verify** → Check with estimate</span></p>
+         </div>`},
+        // 4 Exercise
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 45 \\times 45 \\) dan verifikasi dengan estimasi (harus dekat 2000). <span class='id-lang'>Calculate \\( 45 \\times 45 \\) and verify with estimate (should be near 2000).</span>",
+         a:"2025",
+         h:"\\( 4 \\times 5=20 \\), tambah 25 → 2025. Estimasi \\( 40 \\times 50=2000 \\) ✓. <span class='id-lang'>\\( 4 \\times 5=20 \\), add 25 → 2025. Estimate \\( 40 \\times 50=2000 \\) ✓.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 63 \\times 11 \\) dan verifikasi (harus dekat 700). <span class='id-lang'>Calculate \\( 63 \\times 11 \\) and verify (should be near 700).</span>",
+         a:"693",
+         h:"\\( 6+3=9 \\) → 693. Estimasi \\( 60 \\times 11=660 \\) ✓. <span class='id-lang'>\\( 6+3=9 \\) → 693. Estimate \\( 60 \\times 11=660 \\) ✓.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 72 \\times 78 \\) dan verifikasi (harus dekat 5000). <span class='id-lang'>Calculate \\( 72 \\times 78 \\) and verify (should be near 5000).</span>",
+         a:"5616",
+         h:"\\( 7 \\times 8=56 \\), \\( 2 \\times 8=16 \\) → 5616. Estimasi \\( 70 \\times 80=5600 \\) ✓. <span class='id-lang'>\\( 7 \\times 8=56 \\), \\( 2 \\times 8=16 \\) → 5616. Estimate \\( 70 \\times 80=5600 \\) ✓.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 125 \\times 8 \\) dengan strategi pemecahan faktor dan verifikasi. <span class='id-lang'>Calculate \\( 125 \\times 8 \\) using factor splitting and verify.</span>",
+         a:"1000",
+         h:"\\( 125 \\times 8 = 125 \\times 2 \\times 2 \\times 2 = 1000 \\). Estimasi \\( 100 \\times 10=1000 \\) ✓. <span class='id-lang'>\\( 125 \\times 2 \\times 2 \\times 2 = 1000 \\). Estimate ✓.</span>"}
+      ]
+    },
+    // ==================== SECTION 7A ====================
+    {
+      id:"7A", title:"Asesmen A <span class='id-lang'>Assessment A</span>", icon:"fa-clipboard-check", color:"#3b82f6", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 65 \\times 65 \\) dengan strategi angka berakhiran 5. <span class='id-lang'>Calculate \\( 65 \\times 65 \\) using ending-5 strategy.</span>",
+         a:"4225",
+         h:"\\( 6 \\times 7=42 \\), tambah 25 → 4225. <span class='id-lang'>\\( 6 \\times 7=42 \\), add 25 → 4225.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 43 \\times 11 \\) dengan strategi pemisahan angka. <span class='id-lang'>Calculate \\( 43 \\times 11 \\) using digit separation.</span>",
+         a:"473",
+         h:"Pisahkan 4 dan 3, taruh \\( 4+3=7 \\) di tengah → 473. <span class='id-lang'>Separate 4 and 3, place \\( 4+3=7 \\) in middle → 473.</span>"},
+        {type:"E",etype:"fb",
+         q:"Gunakan metode distributif untuk \\( 18 \\times 9 \\) (petunjuk: \\( 18 = 20 - 2 \\)). <span class='id-lang'>Use distributive method for \\( 18 \\times 9 \\) (hint: \\( 18 = 20 - 2 \\)).</span>",
+         a:"162",
+         h:"\\( 20 \\times 9 - 2 \\times 9 = 180 - 18 = 162 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 24 \\times 26 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 24 \\times 26 \\) using same tens trick.</span>",
+         a:"624",
+         h:"\\( 2 \\times 3=6 \\), \\( 4 \\times 6=24 \\) → 624. <span class='id-lang'>\\( 2 \\times 3=6 \\), \\( 4 \\times 6=24 \\) → 624.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 35 \\times 35 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 35 \\times 35 \\) using ending-5 trick.</span>",
+         a:"1225",
+         h:"\\( 3 \\times 4=12 \\), tambah 25 → 1225. <span class='id-lang'>\\( 3 \\times 4=12 \\), add 25 → 1225.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 52 \\times 11 \\). <span class='id-lang'>Calculate \\( 52 \\times 11 \\).</span>",
+         a:"572",
+         h:"\\( 5+2=7 \\) → 572. <span class='id-lang'>\\( 5+2=7 \\) → 572.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 34 \\times 36 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 34 \\times 36 \\) using same tens trick.</span>",
+         a:"1224",
+         h:"\\( 3 \\times 4=12 \\), \\( 4 \\times 6=24 \\) → 1224. <span class='id-lang'>\\( 3 \\times 4=12 \\), \\( 4 \\times 6=24 \\) → 1224.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 19 \\times 8 \\) dengan pendekatan \\( 20 - 1 \\). <span class='id-lang'>Calculate \\( 19 \\times 8 \\) using \\( 20 - 1 \\) approach.</span>",
+         a:"152",
+         h:"\\( 20 \\times 8 - 1 \\times 8 = 160 - 8 = 152 \\)."},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 45 \\times 45 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 45 \\times 45 \\) using ending-5 trick.</span>",
+         a:"2025",
+         h:"\\( 4 \\times 5=20 \\), tambah 25 → 2025. <span class='id-lang'>\\( 4 \\times 5=20 \\), add 25 → 2025.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 23 \\times 12 \\) dengan cross-multiplication. <span class='id-lang'>Calculate \\( 23 \\times 12 \\) using cross-multiplication.</span>",
+         a:"276",
+         h:"Satuan \\( 6 \\), Silang \\( 4+3=7 \\), Puluhan \\( 2 \\) → 276. <span class='id-lang'>Units \\( 6 \\), Cross \\( 7 \\), Tens \\( 2 \\) → 276.</span>"}
+      ]
+    },
+    // ==================== SECTION 7B ====================
+    {
+      id:"7B", title:"Asesmen B <span class='id-lang'>Assessment B</span>", icon:"fa-clipboard-check", color:"#ef4444", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 92 \\times 98 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 92 \\times 98 \\) using base 100 strategy.</span>",
+         a:"9016",
+         h:"\\( 92-2=90 \\), \\( 8 \\times 2=16 \\) → 9016. <span class='id-lang'>\\( 92-2=90 \\), \\( 8 \\times 2=16 \\) → 9016.</span>"},
+        {type:"E",etype:"fb",
+         q:"Selesaikan \\( 47 \\times 43 \\) dengan penjelasan langkahnya (gunakan trik kakak). <span class='id-lang'>Solve \\( 47 \\times 43 \\) using big brother trick.</span>",
+         a:"2021",
+         h:"\\( 4 \\times 5=20 \\), \\( 7 \\times 3=21 \\) → 2021. <span class='id-lang'>\\( 4 \\times 5=20 \\), \\( 7 \\times 3=21 \\) → 2021.</span>"},
+        {type:"E",etype:"fb",
+         q:"Gunakan cross-multiplication untuk \\( 52 \\times 21 \\). <span class='id-lang'>Use cross-multiplication for \\( 52 \\times 21 \\).</span>",
+         a:"1092",
+         h:"\\( 2 \\times 1=2 \\), \\( 5 \\times 1 + 2 \\times 2=9 \\), \\( 5 \\times 2=10 \\) → 1092. <span class='id-lang'>\\( 2 \\), \\( 5+4=9 \\), \\( 10 \\) → 1092.</span>"},
+        {type:"E",etype:"fb",
+         q:"Toko buku punya 11 rak, masing-masing berisi 89 buku. Berapa total buku? <span class='id-lang'>Bookstore has 11 shelves with 89 books each. Total?</span>",
+         a:"979",
+         h:"\\( 89 \\times 11 \\): \\( 8+9=17 \\) (bawa 1), → 979. <span class='id-lang'>\\( 89 \\times 11 \\): \\( 8+9=17 \\) (carry 1), → 979.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 125 \\times 8 \\) dengan strategi pemecahan faktor. <span class='id-lang'>Calculate \\( 125 \\times 8 \\) using factor splitting.</span>",
+         a:"1000",
+         h:"\\( 125 \\times 2 \\times 2 \\times 2 = 250 \\times 2 \\times 2 = 1000 \\)."},
+        {type:"E",etype:"fb",
+         q:"Tentukan hasil \\( 99 \\times 99 \\) dengan metode pendekatan 100. <span class='id-lang'>Find \\( 99 \\times 99 \\) using base 100 approach.</span>",
+         a:"9801",
+         h:"\\( 99-1=98 \\), \\( 1 \\times 1=01 \\) → 9801. <span class='id-lang'>\\( 99-1=98 \\), \\( 1 \\times 1=01 \\) → 9801.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 56 \\times 54 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 56 \\times 54 \\) using same tens trick.</span>",
+         a:"3024",
+         h:"\\( 5 \\times 6=30 \\), \\( 6 \\times 4=24 \\) → 3024. <span class='id-lang'>\\( 5 \\times 6=30 \\), \\( 6 \\times 4=24 \\) → 3024.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 97 \\times 93 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 97 \\times 93 \\) using base 100.</span>",
+         a:"9021",
+         h:"\\( 97-7=90 \\), \\( 3 \\times 7=21 \\) → 9021. <span class='id-lang'>\\( 97-7=90 \\), \\( 3 \\times 7=21 \\) → 9021.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 78 \\times 11 \\). <span class='id-lang'>Calculate \\( 78 \\times 11 \\).</span>",
+         a:"858",
+         h:"\\( 7+8=15 \\) (bawa 1 ke 7 jadi 8), taruh 5 di tengah, 8 di belakang → 858. <span class='id-lang'>\\( 7+8=15 \\) (carry 1 to 7 → 8), place 5 middle, 8 end → 858.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 85 \\times 85 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 85 \\times 85 \\) using ending-5 trick.</span>",
+         a:"7225",
+         h:"\\( 8 \\times 9=72 \\), tambah 25 → 7225. <span class='id-lang'>\\( 8 \\times 9=72 \\), add 25 → 7225.</span>"}
+      ]
+    },
+    // ==================== SECTION 7C ====================
+    {
+      id:"7C", title:"Asesmen C <span class='id-lang'>Assessment C</span>", icon:"fa-clipboard-check", color:"#a855f7", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 95 \\times 95 \\) dengan strategi yang tepat. <span class='id-lang'>Calculate \\( 95 \\times 95 \\) using appropriate strategy.</span>",
+         a:"9025",
+         h:"\\( 9 \\times 10=90 \\), tambah 25 → 9025. <span class='id-lang'>\\( 9 \\times 10=90 \\), add 25 → 9025.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 96 \\times 97 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 96 \\times 97 \\) using base 100.</span>",
+         a:"9312",
+         h:"\\( 96-4=92 \\), tapi lebih mudah: \\( 96-3=93 \\), \\( 4 \\times 3=12 \\) → 9312. <span class='id-lang'>\\( 96-3=93 \\), \\( 4 \\times 3=12 \\) → 9312.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 64 \\times 11 \\). <span class='id-lang'>Calculate \\( 64 \\times 11 \\).</span>",
+         a:"704",
+         h:"\\( 6+4=10 \\) (bawa 1 ke 6 jadi 7), taruh 0 di tengah, 4 di belakang → 704. <span class='id-lang'>\\( 6+4=10 \\) (carry 1 → 7), place 0 middle, 4 end → 704.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 72 \\times 78 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 72 \\times 78 \\) using same tens trick.</span>",
+         a:"5616",
+         h:"\\( 7 \\times 8=56 \\), \\( 2 \\times 8=16 \\) → 5616. <span class='id-lang'>\\( 7 \\times 8=56 \\), \\( 2 \\times 8=16 \\) → 5616.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 88 \\times 11 \\). <span class='id-lang'>Calculate \\( 88 \\times 11 \\).</span>",
+         a:"968",
+         h:"\\( 8+8=16 \\) (bawa 1 ke 8 jadi 9), taruh 6 di tengah, 8 di belakang → 968. <span class='id-lang'>\\( 8+8=16 \\) (carry 1 → 9), place 6 middle, 8 end → 968.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 25 \\times 25 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 25 \\times 25 \\) using ending-5 trick.</span>",
+         a:"625",
+         h:"\\( 2 \\times 3=6 \\), tambah 25 → 625. <span class='id-lang'>\\( 2 \\times 3=6 \\), add 25 → 625.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 41 \\times 49 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 41 \\times 49 \\) using same tens trick.</span>",
+         a:"2009",
+         h:"\\( 4 \\times 5=20 \\), \\( 1 \\times 9=9 \\) → tulis 09 → 2009. <span class='id-lang'>\\( 4 \\times 5=20 \\), \\( 1 \\times 9=9 \\) → write 09 → 2009.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 91 \\times 99 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 91 \\times 99 \\) using base 100.</span>",
+         a:"9009",
+         h:"\\( 91-1=90 \\), \\( 9 \\times 1=9 \\) → tulis 09 → 9009. <span class='id-lang'>\\( 91-1=90 \\), \\( 9 \\times 1=9 \\) → write 09 → 9009.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 32 \\times 11 \\). <span class='id-lang'>Calculate \\( 32 \\times 11 \\).</span>",
+         a:"352",
+         h:"\\( 3+2=5 \\) → 352. <span class='id-lang'>\\( 3+2=5 \\) → 352.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 98 \\times 94 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 98 \\times 94 \\) using base 100.</span>",
+         a:"9212",
+         h:"\\( 98-6=92 \\), \\( 2 \\times 6=12 \\) → 9212. <span class='id-lang'>\\( 98-6=92 \\), \\( 2 \\times 6=12 \\) → 9212.</span>"}
+      ]
+    },
+    // ==================== SECTION 7D ====================
+    {
+      id:"7D", title:"Asesmen D <span class='id-lang'>Assessment D</span>", icon:"fa-clipboard-check", color:"#06b6d4", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 15 \\times 15 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 15 \\times 15 \\) using ending-5 trick.</span>",
+         a:"225",
+         h:"\\( 1 \\times 2=2 \\), tambah 25 → 225. <span class='id-lang'>\\( 1 \\times 2=2 \\), add 25 → 225.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 55 \\times 55 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 55 \\times 55 \\) using ending-5 trick.</span>",
+         a:"3025",
+         h:"\\( 5 \\times 6=30 \\), tambah 25 → 3025. <span class='id-lang'>\\( 5 \\times 6=30 \\), add 25 → 3025.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 23 \\times 27 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 23 \\times 27 \\) using same tens trick.</span>",
+         a:"621",
+         h:"\\( 2 \\times 3=6 \\), \\( 3 \\times 7=21 \\) → 621. <span class='id-lang'>\\( 2 \\times 3=6 \\), \\( 3 \\times 7=21 \\) → 621.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 46 \\times 44 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 46 \\times 44 \\) using same tens trick.</span>",
+         a:"2024",
+         h:"\\( 4 \\times 5=20 \\), \\( 6 \\times 4=24 \\) → 2024. <span class='id-lang'>\\( 4 \\times 5=20 \\), \\( 6 \\times 4=24 \\) → 2024.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 19 \\times 11 \\). <span class='id-lang'>Calculate \\( 19 \\times 11 \\).</span>",
+         a:"209",
+         h:"\\( 1+9=10 \\) (bawa 1 ke 1 jadi 2), taruh 0 di tengah, 9 di belakang → 209. <span class='id-lang'>\\( 1+9=10 \\) (carry 1 → 2), place 0 middle, 9 end → 209.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 75 \\times 75 \\) dengan trik angka berakhiran 5. <span class='id-lang'>Calculate \\( 75 \\times 75 \\) using ending-5 trick.</span>",
+         a:"5625",
+         h:"\\( 7 \\times 8=56 \\), tambah 25 → 5625. <span class='id-lang'>\\( 7 \\times 8=56 \\), add 25 → 5625.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 89 \\times 91 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 89 \\times 91 \\) using base 100.</span>",
+         a:"8099",
+         h:"\\( 89-9=80 \\), \\( 11 \\times 9=99 \\) → 8099. <span class='id-lang'>\\( 89-9=80 \\), \\( 11 \\times 9=99 \\) → 8099.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 29 \\times 11 \\). <span class='id-lang'>Calculate \\( 29 \\times 11 \\).</span>",
+         a:"319",
+         h:"\\( 2+9=11 \\) (bawa 1 ke 2 jadi 3), taruh 1 di tengah, 9 di belakang → 319. <span class='id-lang'>\\( 2+9=11 \\) (carry 1 → 3), place 1 middle, 9 end → 319.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 54 \\times 56 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 54 \\times 56 \\) using same tens trick.</span>",
+         a:"3024",
+         h:"\\( 5 \\times 6=30 \\), \\( 4 \\times 6=24 \\) → 3024. <span class='id-lang'>\\( 5 \\times 6=30 \\), \\( 4 \\times 6=24 \\) → 3024.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 62 \\times 68 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 62 \\times 68 \\) using same tens trick.</span>",
+         a:"4216",
+         h:"\\( 6 \\times 7=42 \\), \\( 2 \\times 8=16 \\) → 4216. <span class='id-lang'>\\( 6 \\times 7=42 \\), \\( 2 \\times 8=16 \\) → 4216.</span>"}
+      ]
+    },
+    // ==================== SECTION 7E ====================
+    {
+      id:"7E", title:"Asesmen E <span class='id-lang'>Assessment E</span>", icon:"fa-clipboard-check", color:"#f97316", branch:true,
+      lessons:[
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 105 \\times 11 \\) dengan strategi yang tepat. <span class='id-lang'>Calculate \\( 105 \\times 11 \\) using appropriate strategy.</span>",
+         a:"1155",
+         h:"\\( 10+5=15 \\), gabungkan: 10-15-5 → simpan 5, bawa 1 ke 10 → 1155. <span class='id-lang'>\\( 10+5=15 \\), combine: carry 1 to 10 → 1155.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 33 \\times 37 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 33 \\times 37 \\) using same tens trick.</span>",
+         a:"1221",
+         h:"\\( 3 \\times 4=12 \\), \\( 3 \\times 7=21 \\) → 1221. <span class='id-lang'>\\( 3 \\times 4=12 \\), \\( 3 \\times 7=21 \\) → 1221.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 58 \\times 52 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 58 \\times 52 \\) using same tens trick.</span>",
+         a:"3016",
+         h:"\\( 5 \\times 6=30 \\), \\( 8 \\times 2=16 \\) → 3016. <span class='id-lang'>\\( 5 \\times 6=30 \\), \\( 8 \\times 2=16 \\) → 3016.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 99 \\times 11 \\). <span class='id-lang'>Calculate \\( 99 \\times 11 \\).</span>",
+         a:"1089",
+         h:"\\( 9+9=18 \\) (bawa 1 ke 9 jadi 10), taruh 8 di tengah, 9 di belakang → 1089. <span class='id-lang'>\\( 9+9=18 \\) (carry 1 → 10), place 8 middle, 9 end → 1089.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 88 \\times 88 \\) dengan trik angka berakhiran 5? Tidak! Gunakan cross-multiplication atau trik kakak (tidak cocok). Gunakan pendekatan \\( 90-2 \\). <span class='id-lang'>Calculate \\( 88 \\times 88 \\). Use \\( 90-2 \\) approach.</span>",
+         a:"7744",
+         h:"\\( 88 \\times 88 \\): \\( 90-2 \\times 90-2 = 8100 - 360 + 4 = 7744 \\). Atau kuadrat biasa. <span class='id-lang'>\\( (90-2)^2 = 8100 - 360 + 4 = 7744 \\).</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 93 \\times 97 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 93 \\times 97 \\) using base 100.</span>",
+         a:"9021",
+         h:"\\( 93-7=86 \\)... lebih mudah: \\( 93-3=90 \\), \\( 7 \\times 3=21 \\) → 9021. <span class='id-lang'>\\( 93-3=90 \\), \\( 7 \\times 3=21 \\) → 9021.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 67 \\times 11 \\). <span class='id-lang'>Calculate \\( 67 \\times 11 \\).</span>",
+         a:"737",
+         h:"\\( 6+7=13 \\) (bawa 1 ke 6 jadi 7), taruh 3 di tengah, 7 di belakang → 737. <span class='id-lang'>\\( 6+7=13 \\) (carry 1 → 7), place 3 middle, 7 end → 737.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 86 \\times 84 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 86 \\times 84 \\) using same tens trick.</span>",
+         a:"7224",
+         h:"\\( 8 \\times 9=72 \\), \\( 6 \\times 4=24 \\) → 7224. <span class='id-lang'>\\( 8 \\times 9=72 \\), \\( 6 \\times 4=24 \\) → 7224.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 31 \\times 39 \\) dengan trik puluhan sama. <span class='id-lang'>Calculate \\( 31 \\times 39 \\) using same tens trick.</span>",
+         a:"1209",
+         h:"\\( 3 \\times 4=12 \\), \\( 1 \\times 9=9 \\) → tulis 09 → 1209. <span class='id-lang'>\\( 3 \\times 4=12 \\), \\( 1 \\times 9=9 \\) → write 09 → 1209.</span>"},
+        {type:"E",etype:"fb",
+         q:"Hitung \\( 94 \\times 96 \\) dengan strategi basis 100. <span class='id-lang'>Calculate \\( 94 \\times 96 \\) using base 100.</span>",
+         a:"9024",
+         h:"\\( 94-6=88 \\)... lebih mudah: \\( 94-4=90 \\), \\( 6 \\times 4=24 \\) → 9024. <span class='id-lang'>\\( 94-4=90 \\), \\( 6 \\times 4=24 \\) → 9024.</span>"}
+      ]
+    },
+    // ==================== SECTION 8 ====================
+    {
+      id:8, title:"Konsolidasi & Refleksi <span class='id-lang'>Consolidation & Reflection</span>", icon:"fa-star", color:"#fbbf24", branch:false,
+      lessons:[
+        {type:"T",title:"Ringkasan & Langkah Berikutnya <span class='id-lang'>Summary & Next Steps</span>",
+         body:`<p>Kerja luar biasa hari ini! Kamu telah berhasil menguasai teknik Mental Math untuk perkalian cepat tanpa kalkulator! <span class='id-lang'>Brilliant work today! You've successfully mastered Mental Math techniques for quick multiplication without a calculator!</span></p>
+         <div class="mt-4 p-5 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+           <div class="text-emerald-400 font-bold mb-3 text-lg"><i class="fa-solid fa-medal mr-2"></i>Daftar 5 Strategi <span class='id-lang'>5 Strategies List</span></div>
+           <ul class="space-y-2 text-sm text-slate-300 list-disc list-inside">
+             <li><strong>Trik Kakak:</strong> Puluhan sama, satuan berjumlah 10. <span class='id-lang'><strong>Big Brother Trick:</strong> Same tens, units sum to 10.</span></li>
+             <li><strong>Trik Angka 11:</strong> Pisahkan angka, taruh jumlah di tengah. <span class='id-lang'><strong>11 Trick:</strong> Separate digits, place sum in middle.</span></li>
+             <li><strong>Trik Angka Berakhiran 5:</strong> Kuadrat = kakak × depan + 25. <span class='id-lang'><strong>Ending-5 Trick:</strong> Square = big brother × front + 25.</span></li>
+             <li><strong>Strategi Basis 100:</strong> Angka mendekati 100. <span class='id-lang'><strong>Base 100:</strong> Numbers near 100.</span></li>
+             <li><strong>Cross-Multiplication:</strong> Angka acak dua digit. <span class='id-lang'><strong>Cross-Multiplication:</strong> Random two-digit numbers.</span></li>
+           </ul>
+         </div>
+         <p class="mt-4">Ingat untuk menyelesaikan latihan tambahan di portal! <span class='id-lang'>Remember to complete additional exercises on the portal!</span></p>
+         <div class="mt-6 p-5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
+           <div class="text-amber-400 font-bold text-xl mb-2">Misi Berikutnya <span class='id-lang'>Your Next Mission</span></div>
+           <p class="text-sm text-slate-300 mb-4">Siap untuk tantangan lebih? Lanjutkan perjalanan belajar di platform Algonova! <span class='id-lang'>Ready for more challenges? Continue your learning journey on the Algonova platform!</span></p>
+           <a href="https://learn.algonova.id/login" target="_blank" class="btn-primary inline-flex">
+             <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Algonova <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Open Algonova</span>
+           </a>
+         </div>`}
+      ]
+    }
+  ]
+};
+
+// ============================================================
+// STATE APLIKASI
+// ============================================================
+let state = {
+  xp: 0,
+  streak: 0,
+  completed: {},   // { "1-0": true, "1-1": true, ... }  mapIndex-lessonIndex
+  currentView: 'map',
+  currentMap: null,  // index di COURSE.maps
+  currentLesson: null, // index lesson dalam map
+  exerciseState: {},  // state untuk exercise interaktif
+};
+
+// Load dari localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('logicode_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state.xp = parsed.xp || 0;
+      state.streak = parsed.streak || 0;
+      state.completed = parsed.completed || {};
+	  state.mapAnswers = parsed.mapAnswers || {};
+    }
+  } catch(e) {}
+}
+function saveState() {
+  try {
+    localStorage.setItem('logicode_state', JSON.stringify({
+      xp: state.xp, streak: state.streak, completed: state.completed, mapAnswers: state.mapAnswers
+    }));
+  } catch(e) {}
+}
+
+function resetProgress() {
+  if (confirm('Apakah kamu yakin ingin menghapus semua progress? Tindakan ini tidak bisa dibatalkan.')) {
+    // Hapus data dari localStorage
+    localStorage.removeItem('logicode_state');
+    
+    // Reset state di memori
+    state.xp = 0;
+    state.streak = 0;
+    state.completed = {};
+    
+    // Render ulang tampilan peta
+    renderMap();
+    
+    // Tampilkan notifikasi
+    showToast('Progress berhasil direset!', 'info');
+  }
+}
+
+// ============================================================
+// HELPER: Cek apakah peta terbuka
+// ============================================================
+function isMapUnlocked(mapIdx) {
+  return true; // Semua peta selalu terbuka
+}
+
+function isMapCompleted(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  if (!map) return false;
+  return map.lessons.every((_, li) => state.completed[`${mapIdx}-${li}`]);
+}
+
+function isLessonUnlocked(mapIdx, lessonIdx) {
+  return true; // Semua lesson selalu terbuka
+}
+
+function getMapProgress(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  if (!map) return 0;
+  const done = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`]).length;
+  return Math.round((done / map.lessons.length) * 100);
+}
+
+function getTotalProgress() {
+  let total = 0, done = 0;
+  COURSE.maps.forEach((m, mi) => {
+    m.lessons.forEach((_, li) => {
+      total++;
+      if (state.completed[`${mi}-${li}`]) done++;
+    });
+  });
+  return total > 0 ? Math.round((done / total) * 100) : 0;
+}
+
+// ============================================================
+// RENDER: PETA MAP (halaman utama)
+// ============================================================
+function renderMap() {
+  const container = document.getElementById('mapContainer');
+  let html = '';
+
+	COURSE.maps.forEach((map, mi) => {
+	const unlocked = isMapUnlocked(mi);
+	const completed = isMapCompleted(mi);
+	const progress = getMapProgress(mi);
+	const isBranch = map.branch;
+	const isLastBranch = isBranch && !COURSE.maps[mi+1]?.branch;
+	const isFirstBranch = isBranch && !COURSE.maps[mi-1]?.branch;
+
+	// Node kelas
+	const nodeClass = completed ? 'completed' : unlocked ? 'unlocked' + (progress === 0 ? ' current' : '') : 'locked';
+
+	// --- BRANCH START: Visual dari Peta 6 ke Peta 7A-7E ---
+	if (isFirstBranch) {
+      const peta6Completed = isMapCompleted(mi - 1);
+      // Garis vertikal turun dari Peta 6
+      html += `<div class="map-line ${peta6Completed ? 'done' : ''}"></div>`;
+      // Garis horizontal branch (diperlebar)
+      html += `<div style="height: 3px; width: 95%; max-width: 850px; margin: 0 auto; background: var(--border);"></div>`;
+      // Buka container flex untuk 7A-7E (ditambah flex-wrap agar rapi di HP)
+      html += `<div class="flex flex-wrap justify-center" style="gap: 20px; max-width: 850px; margin: 0 auto;">`;
+    }
+
+	// --- RENDER NODE ---
+	html += `
+	  <div class="flex flex-col items-center" style="${isBranch ? 'min-width: 150px;' : ''}" onclick="${unlocked ? `openPeta(${mi})` : ''}">
+		${isBranch ? `<div style="width: 3px; height: 25px; background: var(--border);"></div>` : ''}
+		<div class="map-node ${nodeClass}" style="${unlocked ? `border-color:${map.color};${completed ? `background:${map.color}` : ''}` : ''}">
+		  ${completed ? '<i class="fa-solid fa-check"></i>' : unlocked ? `<i class="fa-solid ${map.icon}"></i>` : '<i class="fa-solid fa-lock text-sm"></i>'}
+		</div>
+		<div class="mt-2 text-center">
+		  <div class="text-sm font-semibold node-title ${unlocked ? 'text-slate-200' : 'text-slate-600'}">Peta ${map.id}</div>
+		  <div class="text-xs node-title ${unlocked ? 'text-slate-400' : 'text-slate-600'}">${map.title}</div>
+		  ${unlocked && !completed ? `<div class="mt-1 w-16 mx-auto"><div class="prog-bar"><div class="prog-fill" style="width:${progress}%;background:${map.color}"></div></div></div>` : ''}
+		</div>
+		${isBranch ? `<div style="width: 3px; height: 25px; background: var(--border);"></div>` : ''}
+	  </div>
+	`;
+
+	// --- BRANCH END: Visual dari Peta 7A-7E ke Peta 8 ---
+	if (isLastBranch) {
+      // Tutup container flex 7A-7E
+      html += `</div>`;
+      // Garis horizontal merge (diperlebar)
+      html += `<div style="height: 3px; width: 95%; max-width: 850px; margin: 0 auto; background: var(--border);"></div>`;
+      // Garis vertikal turun ke Peta 8
+      html += `<div class="map-line"></div>`;
+    }
+
+	// --- GARIS VERTIKAL NORMAL (Peta 1-5) ---
+	if (!isBranch && mi < COURSE.maps.length - 1 && !COURSE.maps[mi+1]?.branch) {
+	  html += `<div class="map-line ${completed ? 'done' : ''}"></div>`;
+	}
+	});
+
+  container.innerHTML = html;
+
+  // Update header stats
+  document.getElementById('headerXP').textContent = state.xp;
+  document.getElementById('headerStreak').textContent = state.streak;
+  document.getElementById('totalProgress').textContent = getTotalProgress() + '%';
+  document.getElementById('totalProgFill').style.width = getTotalProgress() + '%';
+}
+
+// ============================================================
+// RENDER: PETA DETAIL (daftar lesson)
+// ============================================================
+function openPeta(mapIdx) {
+  state.currentMap = mapIdx;
+  showView('peta');
+  const map = COURSE.maps[mapIdx];
+  document.getElementById('petaTitle').innerHTML = `Peta ${map.id}: ${map.title}`;
+  const totalLessons = map.lessons.length;
+  const doneLessons = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`]).length;
+  document.getElementById('petaSubtitle').textContent = `${doneLessons}/${totalLessons} selesai`;
+
+  const container = document.getElementById('lessonContainer');
+  let html = '<div class="stagger-in flex flex-col items-center">';
+
+  map.lessons.forEach((lesson, li) => {
+    const unlocked = isLessonUnlocked(mapIdx, li);
+    const completed = state.completed[`${mapIdx}-${li}`] === true;
+    const isTheory = lesson.type === 'T';
+    const isCurrent = unlocked && !completed;
+
+    const nodeClass = completed ? 'completed' : unlocked ? 'unlocked' : 'locked';
+    const shapeClass = isTheory ? 'theory' : 'exercise';
+
+    html += `
+      <div class="flex flex-col items-center">
+        <div class="lesson-node ${shapeClass} ${nodeClass} ${isCurrent ? 'current' : ''}"
+             style="${unlocked ? `border-color:${map.color};${completed ? `background:${map.color}` : ''}` : ''}"
+             onclick="${unlocked ? `openLesson(${mapIdx},${li})` : ''}">
+          ${completed ? '<i class="fa-solid fa-check text-sm"></i>' : isTheory ? '<i class="fa-solid fa-book text-sm"></i>' : '<i class="fa-solid fa-dumbbell text-sm"></i>'}
+        </div>
+        <div class="mt-1 text-center">
+          <div class="text-xs node-title ${unlocked ? 'text-slate-300' : 'text-slate-600'}">${isTheory ? lesson.title : `Exercise ${li+1}`}</div>
+        </div>
+      </div>
+    `;
+
+    // Koneksi ke lesson berikutnya
+    if (li < map.lessons.length - 1) {
+      const connDone = completed;
+      html += `<div class="lesson-connector ${connDone ? 'done' : ''}"></div>`;
+    }
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// RENDER: LESSON (teori atau exercise)
+// ============================================================
+function openLesson(mapIdx, lessonIdx) {
+  state.currentMap = mapIdx;
+  state.currentLesson = lessonIdx;
+  state.exerciseState = {};
+  showView('lesson');
+
+  const map = COURSE.maps[mapIdx];
+  const lesson = map.lessons[lessonIdx];
+  const total = map.lessons.length;
+
+  document.getElementById('lessonCounter').textContent = `${lessonIdx+1}/${total}`;
+  const done = map.lessons.filter((_, li) => state.completed[`${mapIdx}-${li}`] || li < lessonIdx).length;
+  document.getElementById('lessonProgFill').style.width = `${(done/total)*100}%`;
+
+  if (lesson.type === 'T') {
+    renderTheory(lesson);
+  } else {
+    renderExercise(lesson, mapIdx, lessonIdx);
+  }
+}
+
+function renderTheory(lesson) {
+  const content = document.getElementById('lessonContent');
+  content.innerHTML = `
+    <div class="stagger-in">
+      <div class="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-book-open mr-1"></i> Theory <span class="id-lang" style="display:inline; color:#64748b;">Teori</span>
+      </div>
+      <h2 class="text-2xl font-bold mb-6">${lesson.title}</h2>
+      <div class="text-slate-300 leading-relaxed space-y-3">
+        ${lesson.body}
+      </div>
+      <div class="mt-8 flex justify-end">
+        <button id="nextBtn" class="btn-primary" onclick="completeAndNext()">
+          Next <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Lanjut</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderExercise(lesson, mapIdx, lessonIdx) {
+  const content = document.getElementById('lessonContent');
+  const etype = lesson.etype;
+  let exerciseHTML = '';
+
+  switch(etype) {
+    case 'mc': exerciseHTML = renderMC(lesson); break;
+    case 'tf': exerciseHTML = renderTF(lesson); break;
+    case 'fb': exerciseHTML = renderFB(lesson); break;
+    case 'ord': exerciseHTML = renderOrd(lesson); break;
+    case 'match': exerciseHTML = renderMatch(lesson); break;
+    case 'sa': exerciseHTML = renderSA(lesson); break;
+    case 'code': exerciseHTML = renderCode(lesson); break;
+    default: exerciseHTML = '<p>Tipe exercise tidak dikenal</p>';
+  }
+
+  content.innerHTML = `
+    <div class="stagger-in">
+      <div class="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">
+        <i class="fa-solid fa-dumbbell mr-1"></i> Exercise <span class="id-lang" style="display:inline; color:#64748b;">Latihan</span>
+      </div>
+      <h2 class="text-xl font-bold mb-6">${lesson.q}</h2>
+      ${lesson.code ? `<div class="code-block mb-6">${escapeHTML(lesson.code)}</div>` : ''}
+      <div id="exerciseArea">${exerciseHTML}</div>
+      <div id="feedbackArea" class="mt-4"></div>
+      <div class="mt-6 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex gap-2">
+          <button class="btn-secondary text-sm" onclick="showHint()" id="hintBtn">
+            <i class="fa-solid fa-lightbulb mr-1"></i> Hint <span class="id-lang" style="display:inline;">Petunjuk</span>
+          </button>
+          <button class="btn-secondary text-sm" onclick="resetExercise()" id="resetBtn">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Reset <span class="id-lang" style="display:inline;">Atur Ulang</span>
+          </button>
+        </div>
+        <button class="btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>
+          Check <span class="id-lang" style="display:inline;">Periksa</span> <i class="fa-solid fa-check"></i>
+        </button>
+      </div>
+      <div id="hintArea" class="mt-4 hidden">
+        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-sm text-amber-200">
+          <i class="fa-solid fa-lightbulb text-amber-400 mr-2"></i>${lesson.h || 'Tidak ada petunjuk'}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Fungsi baru untuk mereset exercise
+function resetExercise() {
+  if (state.exerciseState.answered) return; // Tidak bisa reset jika sudah di-check
+  const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+  renderExercise(lesson, state.currentMap, state.currentLesson);
+}
+
+// ============================================================
+// EXERCISE RENDERERS
+// ============================================================
+
+// Multiple Choice
+function renderMC(lesson) {
+  const labels = ['A','B','C','D','E','F'];
+  return `<div class="space-y-3" id="mcOptions">
+    ${lesson.o.map((opt, i) => `
+      <div class="opt-card" data-idx="${i}" onclick="selectMC(${i})">
+        <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-sm font-bold flex-shrink-0">${labels[i]}</span>
+        <span>${opt}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function selectMC(idx) {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.selected = idx;
+  document.querySelectorAll('#mcOptions .opt-card').forEach((el, i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// True/False
+function renderTF(lesson) {
+  return `<div class="flex gap-4" id="tfOptions">
+    <div class="opt-card flex-1 justify-center text-center text-lg" onclick="selectTF(true)" data-val="true">
+      <i class="fa-solid fa-check text-emerald-400 mr-2"></i> True <span class="id-lang">Benar</span>
+    </div>
+    <div class="opt-card flex-1 justify-center text-center text-lg" onclick="selectTF(false)" data-val="false">
+      <i class="fa-solid fa-xmark text-red-400 mr-2"></i> False <span class="id-lang">Salah</span>
+    </div>
+  </div>`;
+}
+
+function selectTF(val) {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.selected = val;
+  document.querySelectorAll('#tfOptions .opt-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.val === String(val));
+  });
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// Fill Blank
+function renderFB(lesson) {
+  return `<div>
+    <input type="text" class="ex-input" id="fbInput" placeholder="Ketik jawaban..." autocomplete="off" oninput="onFBInput()">
+  </div>`;
+}
+
+function onFBInput() {
+  const val = document.getElementById('fbInput').value.trim();
+  document.getElementById('checkBtn').disabled = val.length === 0;
+}
+
+// Order
+function renderOrd(lesson) {
+  // Tampilkan item dalam urutan acak
+  const shuffled = lesson.o.map((item, i) => ({text: item, origIdx: i}));
+  // Shuffle
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  state.exerciseState.ordOrder = [];
+  state.exerciseState.ordItems = shuffled;
+
+  return `<div>
+	<div class="text-sm text-slate-400 mb-3">Click items in the correct order: <span class="id-lang">Klik item dalam urutan yang benar:</span></div>
+    <div class="space-y-2" id="ordList">
+      ${shuffled.map((item, i) => `
+        <div class="order-item flex items-center gap-3" data-orig="${item.origIdx}" onclick="selectOrd(this,${item.origIdx})">
+          <span class="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold ord-num"></span>
+          <span>${item.text}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="mt-3 text-xs text-slate-500" id="ordStatus">Urutan terpilih: (belum ada)</div>
+  </div>`;
+}
+
+function selectOrd(el, origIdx) {
+  if (state.exerciseState.answered) return;
+  if (el.classList.contains('ordered')) return;
+
+  const order = state.exerciseState.ordOrder;
+  order.push(origIdx);
+  el.classList.add('ordered');
+  const numEl = el.querySelector('.ord-num');
+  numEl.textContent = order.length;
+
+  document.getElementById('ordStatus').textContent = `Urutan terpilih: ${order.length}/${state.exerciseState.ordItems.length}`;
+  document.getElementById('checkBtn').disabled = order.length < state.exerciseState.ordItems.length;
+}
+
+// Match
+function renderMatch(lesson) {
+  state.exerciseState.matchLeft = null;
+  state.exerciseState.matchPairs = [];
+  state.exerciseState.matchedLeft = new Set();
+  state.exerciseState.matchedRight = new Set();
+
+  // Shuffle right column
+  const rightShuffled = [...lesson.right];
+  for (let i = rightShuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rightShuffled[i], rightShuffled[j]] = [rightShuffled[j], rightShuffled[i]];
+  }
+  state.exerciseState.rightShuffled = rightShuffled;
+
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Klik item kiri, lalu item kanan untuk mencocokkan:</div>
+    <div class="grid grid-cols-2 gap-3" id="matchGrid">
+      <div class="space-y-2" id="matchLeft">
+        ${lesson.left.map((item, i) => `
+          <div class="match-item" data-side="left" data-idx="${i}" onclick="selectMatch('left',${i})">${item}</div>
+        `).join('')}
+      </div>
+      <div class="space-y-2" id="matchRight">
+        ${rightShuffled.map((item, i) => `
+          <div class="match-item" data-side="right" data-idx="${i}" data-val="${item}" onclick="selectMatch('right',${i})">${item}</div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function selectMatch(side, idx) {
+  if (state.exerciseState.answered) return;
+  const es = state.exerciseState;
+
+  if (side === 'left') {
+    if (es.matchedLeft.has(idx)) return;
+    // Highlight
+    document.querySelectorAll('#matchLeft .match-item').forEach(el => el.classList.remove('active'));
+    const el = document.querySelector(`#matchLeft .match-item[data-idx="${idx}"]`);
+    el.classList.add('active');
+    es.matchLeft = idx;
+  } else {
+    if (es.matchedRight.has(idx)) return;
+    if (es.matchLeft === null) {
+      showToast('Pilih item kiri terlebih dahulu', 'info');
+      return;
+    }
+    // Create pair
+    const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+    const leftIdx = es.matchLeft;
+    const rightVal = es.rightShuffled[idx];
+    es.matchPairs.push({leftIdx, rightVal, rightShuffledIdx: idx});
+    es.matchedLeft.add(leftIdx);
+    es.matchedRight.add(idx);
+
+    // Visual
+    const leftEl = document.querySelector(`#matchLeft .match-item[data-idx="${leftIdx}"]`);
+    const rightEl = document.querySelector(`#matchRight .match-item[data-idx="${idx}"]`);
+    leftEl.classList.remove('active');
+    leftEl.classList.add('matched');
+    rightEl.classList.add('matched');
+
+    es.matchLeft = null;
+
+    document.getElementById('checkBtn').disabled = es.matchPairs.length < lesson.left.length;
+  }
+}
+
+// Select All
+function renderSA(lesson) {
+  state.exerciseState.selectedSet = new Set();
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Pilih semua jawaban yang benar:</div>
+    <div class="space-y-2" id="saOptions">
+      ${lesson.o.map((opt, i) => `
+        <div class="opt-card" data-idx="${i}" onclick="toggleSA(${i})">
+          <span class="w-6 h-6 rounded border-2 border-slate-600 flex items-center justify-center flex-shrink-0 sa-check"></span>
+          <span>${opt}</span>
+        </div>
+      `).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleSA(idx) {
+  if (state.exerciseState.answered) return;
+  const set = state.exerciseState.selectedSet;
+  if (set.has(idx)) set.delete(idx); else set.add(idx);
+  document.querySelectorAll('#saOptions .opt-card').forEach((el, i) => {
+    const check = el.querySelector('.sa-check');
+    if (set.has(i)) {
+      el.classList.add('selected');
+      check.innerHTML = '<i class="fa-solid fa-check text-emerald-400 text-xs"></i>';
+      check.style.borderColor = '#10b981';
+    } else {
+      el.classList.remove('selected');
+      check.innerHTML = '';
+      check.style.borderColor = '';
+    }
+  });
+  document.getElementById('checkBtn').disabled = set.size === 0;
+}
+
+// Code Output
+function renderCode(lesson) {
+  return `<div>
+    <div class="text-sm text-slate-400 mb-3">Tulis output yang akan ditampilkan:</div>
+    <input type="text" class="ex-input font-mono" id="codeInput" placeholder="Ketik output..." autocomplete="off" oninput="onCodeInput()">
+  </div>`;
+}
+
+function onCodeInput() {
+  const val = document.getElementById('codeInput').value.trim();
+  document.getElementById('checkBtn').disabled = val.length === 0;
+}
+
+// ============================================================
+// CHECK ANSWER
+// ============================================================
+function checkAnswer() {
+  if (state.exerciseState.answered) return;
+  state.exerciseState.answered = true;
+
+  // Sembunyikan tombol Hint dan Reset
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) resetBtn.style.display = 'none';
+
+  const lesson = COURSE.maps[state.currentMap].lessons[state.currentLesson];
+  const etype = lesson.etype;
+  let correct = false;
+  let correctAnswer = '';
+
+  switch(etype) {
+    case 'mc': {
+      const sel = state.exerciseState.selected;
+      correct = sel === lesson.a;
+      document.querySelectorAll('#mcOptions .opt-card').forEach((el, i) => {
+        el.classList.add('disabled');
+        if (i === lesson.a) el.classList.add('correct');
+        if (i === sel && !correct) el.classList.add('wrong');
+      });
+      correctAnswer = lesson.o[lesson.a];
+      break;
+    }
+    case 'tf': {
+      const sel = state.exerciseState.selected;
+      correct = sel === lesson.a;
+      document.querySelectorAll('#tfOptions .opt-card').forEach(el => {
+        el.classList.add('disabled');
+        if (String(lesson.a) === el.dataset.val) el.classList.add('correct');
+        if (String(sel) === el.dataset.val && !correct) el.classList.add('wrong');
+      });
+            correctAnswer = lesson.a ? 'True <span class="id-lang">Benar</span>' : 'False <span class="id-lang">Salah</span>';
+      break;
+    }
+    case 'fb': {
+      const input = document.getElementById('fbInput').value.trim();
+      // Normalisasi: hapus semua spasi dan ubah jadi huruf kecil
+      const normalize = str => str
+        .replace(/[\u200B-\u200D\u2060-\u206F\uFEFF]/g, '') // Hapus karakter tak terlihat (Zero-width, function apply, BOM)
+        .replace(/[（﹝]/g, '(') // Ubah kurung buka full-width ke setengah
+        .replace(/[）﹞]/g, ')') // Ubah kurung tutup full-width ke setengah
+        .replace(/\s+/g, '')    // Hapus semua spasi
+        .toLowerCase();         // Jadiin huruf kecil
+      // Terima beberapa jawaban yang benar (dipisah /)
+      const answers = lesson.a.split('||');
+      correct = answers.some(a => normalize(input) === normalize(a));
+      document.getElementById('fbInput').classList.add(correct ? 'correct' : 'wrong');
+      document.getElementById('fbInput').disabled = true;
+      correctAnswer = lesson.a;
+      break;
+    }
+    case 'ord': {
+      const order = state.exerciseState.ordOrder;
+      correct = order.length === lesson.a.length && order.every((v, i) => v === lesson.a[i]);
+      correctAnswer = lesson.a.map(i => lesson.o[i]).join(' → ');
+      break;
+    }
+    case 'match': {
+      const pairs = state.exerciseState.matchPairs;
+      const lesson_data = lesson;
+      correct = pairs.length === lesson_data.a.length && pairs.every((p, i) => {
+        // Cek apakah leftIdx-i cocok dengan right yang benar
+        const expectedRightVal = lesson_data.right[lesson_data.a[p.leftIdx]];
+        return p.rightVal === expectedRightVal;
+      });
+      correctAnswer = lesson_data.left.map((l, i) => `${l} ↔ ${lesson_data.right[lesson_data.a[i]]}`).join(', ');
+      break;
+    }
+    case 'sa': {
+      const selected = [...state.exerciseState.selectedSet].sort();
+      const expected = [...lesson.a].sort();
+      correct = selected.length === expected.length && selected.every((v, i) => v === expected[i]);
+      document.querySelectorAll('#saOptions .opt-card').forEach((el, i) => {
+        el.classList.add('disabled');
+        if (lesson.a.includes(i)) el.classList.add('correct');
+        if (selected.includes(i) && !lesson.a.includes(i)) el.classList.add('wrong');
+      });
+      correctAnswer = lesson.a.map(i => lesson.o[i]).join(', ');
+      break;
+    }
+    case 'code': {
+      const input = document.getElementById('codeInput').value.trim();
+      // Normalisasi: hapus semua spasi dan ubah jadi huruf kecil
+      const normalize = str => str
+        .replace(/[\u200B-\u200D\u2060-\u206F\uFEFF]/g, '') // Hapus karakter tak terlihat
+        .replace(/[（﹝]/g, '(') // Standar kurung buka
+        .replace(/[）﹞]/g, ')') // Standar kurung tutup
+        .replace(/\s+/g, '')    // Hapus spasi
+        .toLowerCase();         // Huruf kecil
+      correct = normalize(input) === normalize(lesson.a);
+      document.getElementById('codeInput').classList.add(correct ? 'correct' : 'wrong');
+      document.getElementById('codeInput').disabled = true;
+      correctAnswer = lesson.a;
+      break;
+    }
+  }
+
+  // Simpan jawaban untuk Print Result
+  const mi = state.currentMap;
+  const li = state.currentLesson;
+  let studentAnswerText = "";
+  let correctAnswerText = "";
+
+  switch(etype) {
+    case 'mc':
+      studentAnswerText = state.exerciseState.selected !== undefined ? lesson.o[state.exerciseState.selected] : "-";
+      correctAnswerText = lesson.o[lesson.a];
+      break;
+    case 'tf':
+      studentAnswerText = state.exerciseState.selected !== null ? (state.exerciseState.selected ? "True" : "False") : "-";
+      correctAnswerText = lesson.a ? "True" : "False";
+      break;
+    case 'fb':
+      studentAnswerText = document.getElementById('fbInput').value.trim() || "-";
+      correctAnswerText = lesson.a;
+      break;
+    case 'code':
+      studentAnswerText = document.getElementById('codeInput').value.trim() || "-";
+      correctAnswerText = lesson.a;
+      break;
+    case 'ord':
+      studentAnswerText = state.exerciseState.ordOrder.map(i => lesson.o[i]).join(' → ') || "-";
+      correctAnswerText = lesson.a.map(i => lesson.o[i]).join(' → ');
+      break;
+    case 'match':
+      studentAnswerText = "Matched pairs";
+      correctAnswerText = lesson.left.map((l, i) => `${l} ↔ ${lesson.right[lesson.a[i]]}`).join('; ');
+      break;
+    case 'sa':
+      studentAnswerText = [...state.exerciseState.selectedSet].sort().map(i => lesson.o[i]).join(', ') || "-";
+      correctAnswerText = lesson.a.map(i => lesson.o[i]).join(', ');
+      break;
+  }
+
+  if (!state.mapAnswers) state.mapAnswers = {};
+  if (!state.mapAnswers[mi]) state.mapAnswers[mi] = {};
+  state.mapAnswers[mi][li] = {
+    q: lesson.q,
+    studentAnswer: studentAnswerText,
+    correctAnswer: correctAnswerText,
+    isCorrect: correct
+  };
+  saveState();
+
+  // Tampilkan feedback
+  const feedback = document.getElementById('feedbackArea');
+  if (correct) {
+    feedback.innerHTML = `
+      <div class="feedback-bar correct-fb">
+        <i class="fa-solid fa-check-circle text-2xl"></i>
+        <div>
+          <div class="text-lg">Correct! Excellent! <span class="id-lang">Benar! Hebat!</span></div>
+          ${correctAnswer ? `<div class="text-sm opacity-80 mt-1">Answer: ${correctAnswer}</div>` : ''}
+        </div>
+      </div>
+    `;
+    // Tambah XP
+    state.xp += 10;
+    state.streak += 1;
+    showXPPopup(10);
+    spawnConfetti();
+  } else {
+    feedback.innerHTML = `
+      <div class="feedback-bar wrong-fb">
+        <i class="fa-solid fa-times-circle text-2xl"></i>
+        <div>
+            <div class="text-lg">Incorrect <span class="id-lang">Belum tepat</span></div>
+            <div class="text-sm opacity-80 mt-1">Answer: ${correctAnswer}</div>
+        </div>
+      </div>
+    `;
+    state.streak = 0;
+  }
+  
+  renderKatexInElement(feedback);
+  
+  // Update header
+  document.getElementById('headerXP').textContent = state.xp;
+  document.getElementById('headerStreak').textContent = state.streak;
+
+  // Ganti tombol check menjadi lanjut
+  const checkBtn = document.getElementById('checkBtn');
+  checkBtn.textContent = 'Lanjut ';
+  checkBtn.innerHTML = 'Next <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Lanjut</span> <i class="fa-solid fa-arrow-right"></i>';
+  checkBtn.disabled = false;
+  checkBtn.onclick = () => completeAndNext();
+
+  saveState();
+}
+
+// ============================================================
+// PRINT RESULT UNTUK ASSESSMENT
+// ============================================================
+function showPrintResultForm(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  const totalLessons = map.lessons.length;
+  let correctCount = 0;
+  
+  if (state.mapAnswers && state.mapAnswers[mapIdx]) {
+    for (let i = 0; i < totalLessons; i++) {
+      if (state.mapAnswers[mapIdx][i] && state.mapAnswers[mapIdx][i].isCorrect) {
+        correctCount++;
+      }
+    }
+  }
+  
+  const score = Math.round((correctCount / totalLessons) * 100);
+
+  const content = document.getElementById('lessonContent');
+  content.innerHTML = `
+    <div class="stagger-in text-center">
+      <div class="text-5xl mb-4">🎉</div>
+      <h2 class="text-2xl font-bold mb-2">Assessment Completed! <span class="id-lang">Asesmen Selesai!</span></h2>
+      <p class="text-slate-400 mb-6">You scored <span class="text-emerald-400 font-bold text-xl">${score}%</span> (${correctCount}/${totalLessons})</p>
+      
+      <div class="max-w-md mx-auto text-left space-y-4 mb-8">
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Name / <span class="id-lang">Nama</span></label>
+          <input type="text" id="printName" class="ex-input" placeholder="Enter your name / Masukkan nama">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Date / <span class="id-lang">Tanggal</span></label>
+          <input type="date" id="printDate" class="ex-input" value="${new Date().toISOString().split('T')[0]}">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Assessment / <span class="id-lang">Asesmen</span></label>
+          <input type="text" class="ex-input" value="Assessment ${map.id}" disabled style="opacity:0.6">
+        </div>
+        <div>
+          <label class="text-sm text-slate-400 block mb-1">Score / <span class="id-lang">Skor</span></label>
+          <input type="text" class="ex-input" value="${score}%" disabled style="opacity:0.6">
+        </div>
+      </div>
+
+      <button class="btn-primary text-lg" onclick="generatePrintout(${mapIdx})">
+        <i class="fa-solid fa-print mr-2"></i> Print Result <span class="id-lang" style="color:rgba(11,17,33,0.7); display:inline;">Cetak Hasil</span>
+      </button>
+      
+      <div class="mt-4">
+        <button class="btn-secondary" onclick="openPeta(${mapIdx})">
+          Back to Map <span class="id-lang">Kembali ke Peta</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function generatePrintout(mapIdx) {
+  const map = COURSE.maps[mapIdx];
+  const studentName = document.getElementById('printName').value || '-';
+  const printDate = document.getElementById('printDate').value || '-';
+  
+  let correctCount = 0;
+  let tableRows = '';
+  
+  for (let i = 0; i < map.lessons.length; i++) {
+    const ansData = (state.mapAnswers && state.mapAnswers[mapIdx] && state.mapAnswers[mapIdx][i]) ? state.mapAnswers[mapIdx][i] : null;
+    // Hapus tag id-lang dari pertanyaan agar printout lebih bersih (hanya bahasa Inggris)
+    const qText = map.lessons[i].q.replace(/<span class='id-lang'>.*?<\/span>/g, '');
+    const studentAns = ansData ? ansData.studentAnswer : '-';
+    const correctAns = ansData ? ansData.correctAnswer : '-';
+    const isCorrect = ansData ? ansData.isCorrect : false;
+    
+    if (isCorrect) correctCount++;
+    
+    const noteSymbol = isCorrect ? '✓' : '✗';
+    const noteColor = isCorrect ? 'green' : 'red';
+    
+    tableRows += `
+      <tr>
+        <td style="text-align:center; width: 40px;">${i + 1}</td>
+        <td>${qText}</td>
+        <td>${studentAns}</td>
+        <td>${correctAns}</td>
+        <td style="text-align:center; color: ${noteColor}; font-weight:bold; font-size:1.2rem;">${noteSymbol}</td>
+      </tr>
+    `;
+  }
+  
+  const score = Math.round((correctCount / map.lessons.length) * 100);
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="id">
+    <head>
+      <meta charset="UTF-8">
+      <title>Assessment Result - ${map.id}</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '\\\\(', right: '\\\\)', display: false},{left: '\\\\[', right: '\\\\]', display: true}], throwOnError: false}); setTimeout(function(){window.print();}, 1000);"><\/script>
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #333; line-height: 1.5; }
+        h1 { text-align: center; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+        .header-info { margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .header-info p { margin: 5px 0; font-size: 14px; }
+        .header-info strong { margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; vertical-align: top; }
+        th { background: #f0f0f0; font-weight: bold; text-align: center; }
+        @media print {
+          body { padding: 0; }
+          .header-info { border: none; padding: 0; }
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Assessment Result</h1>
+      <div class="subtitle">Direct and Inverse Proportions</div>
+      
+      <div class="header-info">
+        <div style="flex:1; min-width: 200px;">
+          <p><strong>Name:</strong> ${studentName}</p>
+          <p><strong>Date:</strong> ${printDate}</p>
+        </div>
+        <div style="flex:1; min-width: 200px;">
+          <p><strong>Assessment:</strong> ${map.id}</p>
+          <p><strong>Score:</strong> ${score}% (${correctCount}/${map.lessons.length})</p>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Question</th>
+            <th>Student Answer</th>
+            <th>Correct Answer</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+// ============================================================
+// COMPLETE & NEXT
+// ============================================================
+function completeAndNext() {
+  const mi = state.currentMap;
+  const li = state.currentLesson;
+  state.completed[`${mi}-${li}`] = true;
+  saveState();
+
+  const map = COURSE.maps[mi];
+  const isLastLesson = li + 1 >= map.lessons.length;
+  const isAssessment = map.branch; // Peta 7A-7E adalah branch: true
+
+  // Jika ini exercise terakhir di Assessment, tampilkan form Print
+  if (isAssessment && isLastLesson) {
+    showPrintResultForm(mi);
+  } else if (li + 1 < map.lessons.length && isLessonUnlocked(mi, li + 1)) {
+    openLesson(mi, li + 1);
+  } else {
+    openPeta(mi);
+  }
+}
+
+// ============================================================
+// NAVIGASI
+// ============================================================
+function showView(viewName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(viewName + 'View').classList.add('active');
+  state.currentView = viewName;
+  window.scrollTo(0, 0);
+}
+
+function showMap() {
+  showView('map');
+  renderMap();
+}
+
+function closeLesson() {
+  openPeta(state.currentMap);
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function showXPPopup(amount) {
+  document.getElementById('xpAmount').textContent = amount;
+  const popup = document.getElementById('xpPopup');
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 1500);
+}
+
+function spawnConfetti() {
+  const colors = ['#10b981','#f59e0b','#ec4899','#8b5cf6','#06b6d4','#ef4444'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width = (Math.random() * 8 + 4) + 'px';
+    c.style.height = (Math.random() * 8 + 4) + 'px';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+    c.style.animationDelay = (Math.random() * 0.5) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+function showHint() {
+  document.getElementById('hintArea').classList.remove('hidden');
+  document.getElementById('hintBtn').disabled = true;
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// --- FUNGSI UNTUK MODAL RULES ---
+function openRules() {
+  document.getElementById('rulesModal').classList.add('active');
+}
+
+function closeRules() {
+  document.getElementById('rulesModal').classList.remove('active');
+}
+
+// ============================================================
+// KATEX RENDERING
+// ============================================================
+function renderKatexInElement(el) {
+  if (typeof renderMathInElement === 'function') {
+    renderMathInElement(el, {
+      delimiters: [
+        {left: '\\(', right: '\\)', display: false},  //
+        {left: '\\[', right: '\\]', display: true}    //
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+// Override showView untuk render KaTeX setiap pindah halaman
+const originalShowView = showView;
+showView = function(viewName) {
+  originalShowView(viewName);
+  setTimeout(() => renderKatexInElement(document.body), 100);
+};
+
+// Override openLesson untuk render KaTeX di konten lesson
+const originalOpenLesson = openLesson;
+openLesson = function(mapIdx, lessonIdx) {
+  originalOpenLesson(mapIdx, lessonIdx);
+  setTimeout(() => renderKatexInElement(document.body), 100);
+};
+
+// ============================================================
+// INISIALISASI APLIKASI
+// ============================================================
+loadState();
+renderMap();
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  // Tekan Escape untuk menutup lesson
+  if (e.key === 'Escape' && state.currentView === 'lesson') {
+    closeLesson();
+  }
+  
+  // Tekan Enter untuk memeriksa jawaban / lanjut ke soal berikutnya
+  if (e.key === 'Enter' && state.currentView === 'lesson') {
+    const checkBtn = document.getElementById('checkBtn');
+    // Pastikan tombol ada dan tidak dalam keadaan disabled
+    if (checkBtn && !checkBtn.disabled) {
+      e.preventDefault(); 
+      checkBtn.click();   // Untuk halaman Exercise
+    } else if (nextBtn) {
+      e.preventDefault();
+      nextBtn.click();    // Untuk halaman Teori
+    }
+  }
+});
+</script>
+</body>
+</html>

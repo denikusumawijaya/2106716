@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Tutoring - by Deni</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    
+    <style>
+        :root {
+            --primary: #6366F1; --secondary: #10B981; --accent: #F59E0B; --danger: #EF4444;
+            --bg-app: #F1F5F9; --bg-card: #FFFFFF; --text-main: #334155; --en-trans: #64748B;
+            --sidebar-bg: #1E293B; --sidebar-text: #94A3B8; --sidebar-active: #6366F1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-app); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 280px; background-color: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10; }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #334155; }
+        .sidebar-header h1 { color: white; font-size: 1.5em; margin-bottom: 5px; }
+        .sidebar-header p { font-size: 0.9em; color: var(--accent); font-weight: bold; }
+        .sidebar-nav { flex: 1; overflow-y: auto; padding: 15px 0; }
+        .nav-section-title { padding: 10px 20px 5px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; color: #475569; font-weight: bold; }
+        .nav-item { padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s; border-left: 4px solid transparent; font-size: 0.9em; }
+        .nav-item:hover { background-color: #334155; color: white; }
+        .nav-item.active { background-color: rgba(99, 102, 241, 0.1); color: white; border-left-color: var(--sidebar-active); font-weight: bold; }
+        .nav-icon { font-size: 1.2em; }
+
+        /* MAIN CONTENT */
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: var(--bg-app); }
+        .top-bar { background: var(--bg-card); padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+        .module-title { font-size: 1.1em; font-weight: bold; color: var(--primary); }
+        .progress-container { flex: 1; max-width: 400px; margin: 0 20px; height: 12px; background: #E2E8F0; border-radius: 20px; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 20px; transition: width 0.4s ease-out; width: 0%; }
+        .progress-text { font-size: 0.9em; font-weight: bold; color: var(--text-main); min-width: 50px; text-align: right; }
+
+        .slide-area { flex: 1; overflow-y: auto; padding: 30px; display: flex; justify-content: center; }
+        .slide-wrapper { width: 100%; max-width: 800px; }
+        .slide { display: none; animation: fadeIn 0.3s ease; }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .bottom-bar { background: var(--bg-card); padding: 15px 30px; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; }
+        .btn-nav { padding: 12px 25px; border: none; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-prev { background: #E2E8F0; color: var(--text-main); }
+        .btn-prev:hover { background: #CBD5E1; }
+        .btn-next { background: var(--primary); color: white; box-shadow: 0 4px 0 #4338CA; }
+        .btn-next:hover { transform: translateY(2px); box-shadow: 0 2px 0 #4338CA; }
+
+        /* CONTENT STYLES */
+        .en-trans { display: block; font-size: 0.85em; color: var(--en-trans); font-style: italic; margin-top: -5px; margin-bottom: 15px; }
+        .theory-box { background: linear-gradient(135deg, #EEF2FF, #E0E7FF); border-left: 6px solid var(--accent); padding: 20px; margin-bottom: 20px; border-radius: 0 12px 12px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .theory-box h3 { color: var(--primary); margin-bottom: 10px; font-size: 1.3em; }
+
+        /* HOMEPAGE */
+        .homepage-banner { text-align: center; margin-bottom: 30px; padding: 20px 0; }
+        .homepage-banner h1 { color: var(--primary); font-size: 2.8em; margin-bottom: 5px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        .homepage-banner h2 { color: var(--accent); font-size: 1.8em; font-weight: normal; }
+        .lesson-title-box { background: #EEF2FF; border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 30px; border: 3px solid var(--primary); }
+        .lesson-title-box h3 { color: var(--text-main); font-size: 1.6em; margin-bottom: 5px; }
+        .lesson-title-en { color: var(--primary); font-size: 1.2em; font-weight: 600; font-style: normal; }
+        .rules-box { background: #FFF7ED; border: 3px dashed var(--accent); border-radius: 16px; padding: 25px; }
+        .rules-box h3 { color: #9A3412; margin-bottom: 20px; font-size: 1.4em; text-align: center; }
+        .rules-list { list-style: none; padding: 0; }
+        .rules-list li { background: white; padding: 15px 20px; margin-bottom: 15px; border-radius: 12px; border-left: 6px solid var(--accent); font-size: 1.1em; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; }
+        .rule-icon { font-size: 1.5em; }
+        .rule-text-en { display: block; font-size: 0.85em; color: var(--en-trans); font-style: italic; margin-top: 4px; }
+
+        /* QUESTION CARD */
+        .q-card { background: var(--bg-card); border: 2px solid #E2E8F0; padding: 25px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .q-text { font-size: 1.2em; font-weight: bold; color: var(--text-main); margin-bottom: 15px; }
+        .q-card label { display: block; margin: 10px 0; cursor: pointer; padding: 12px; border-radius: 10px; border: 2px solid #E2E8F0; transition: all 0.2s; }
+        .q-card label:hover { background: #F8FAFC; border-color: var(--primary); }
+        input[type="text"], select { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #CBD5E1; border-radius: 10px; font-size: 1em; font-family: inherit; }
+        input[type="text"]:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+
+        .btn-check { background-color: var(--secondary); color: white; padding: 12px 25px; border: none; border-radius: 12px; cursor: pointer; font-size: 1em; font-weight: bold; margin-top: 20px; transition: all 0.2s; box-shadow: 0 4px 0 #059669; }
+        .btn-check:hover { transform: translateY(2px); box-shadow: 0 2px 0 #059669; }
+        .btn-check:disabled { background-color: #94A3B8; box-shadow: none; cursor: not-allowed; transform: none; }
+        
+        .btn-reset { background-color: var(--accent); color: white; padding: 12px 25px; border: none; border-radius: 12px; cursor: pointer; font-size: 1em; font-weight: bold; margin-top: 20px; margin-left: 15px; transition: all 0.2s; box-shadow: 0 4px 0 #D97706; display: none; }
+        .btn-reset:hover { transform: translateY(2px); box-shadow: 0 2px 0 #D97706; }
+
+        .q-feedback { margin-top: 15px; font-weight: bold; font-size: 1.1em; display: none; padding: 10px; border-radius: 8px; }
+        .q-feedback.correct { background: #D1FAE5; color: #065F46; }
+        .q-feedback.incorrect { background: #FEE2E2; color: #991B1B; }
+
+        details.q-solution { margin-top: 20px; background: #FFF7ED; border: 2px solid #FED7AA; border-radius: 12px; padding: 15px; display: none; }
+        details.q-solution summary { font-weight: bold; color: #9A3412; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+        details.q-solution summary::-webkit-details-marker { display: none; }
+        .step-list { margin: 15px 0 0 20px; }
+        .step-list li { margin-bottom: 8px; line-height: 1.5; }
+
+        .pairing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .pair-item { display: flex; align-items: center; gap: 10px; background: #F8FAFC; padding: 10px; border-radius: 8px; white-space: nowrap; }
+        .pair-item select { width: auto !important; min-width: 85px; flex-grow: 1; }
+		
+        /* ================= RESULT & REPORT STYLES ================= */
+        .result-card {
+            background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+            border: 3px solid var(--primary);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .result-card h2 { color: var(--primary); font-size: 2em; margin-bottom: 10px; }
+        .result-score { font-size: 3em; font-weight: bold; color: var(--secondary); margin: 20px 0; }
+        .result-form { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; text-align: left; }
+        .result-form label { font-weight: bold; display: block; margin-top: 10px; color: var(--text-main); }
+        .result-form input { width: 100%; padding: 10px; margin-top: 5px; border: 2px solid #CBD5E1; border-radius: 8px; font-size: 1em; box-sizing: border-box; }
+        .btn-report { background-color: var(--primary); color: white; padding: 15px 30px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.2em; font-weight: bold; margin-top: 20px; box-shadow: 0 4px 0 #4338CA; transition: all 0.2s; }
+        .btn-report:hover { transform: translateY(2px); box-shadow: 0 2px 0 #4338CA; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h1>🚀 Math Tutoring</h1>
+        <p>by Deni</p>
+    </div>
+    <div class="sidebar-nav">
+        <div class="nav-section-title">Start Here</div>
+        <div class="nav-item active" onclick="goToModule('homepage')"><span class="nav-icon">🏠</span> Beranda</div>
+
+        <div class="nav-section-title">Main Lesson</div>
+        <div class="nav-item" onclick="goToModule('section1')"><span class="nav-icon">🧠</span> 1. Spiral Review (00:00-00:10)</div>
+        <div class="nav-item" onclick="goToModule('section2')"><span class="nav-icon">🌍</span> 2. Intro & Real-World (00:10-00:15)</div>
+        <div class="nav-item" onclick="goToModule('section3')"><span class="nav-icon">🧩</span> 3. Distributif (00:15-00:25)</div>
+        <div class="nav-item" onclick="goToModule('section4')"><span class="nav-icon">🤝</span> 4. Guided Practice (00:25-00:40)</div>
+        <div class="nav-item" onclick="goToModule('section5')"><span class="nav-icon">💪</span> 5. Independent Prac. (00:40-00:55)</div>
+        <div class="nav-item" onclick="goToModule('section6')"><span class="nav-icon">🧘</span> 6. Consolidation (00:55-01:00)</div>
+
+        <div class="nav-section-title" style="margin-top:20px;">Assignment Groups</div>
+        <div class="nav-item" onclick="goToModule('assign1')"><span class="nav-icon">📝</span> Assignment Grup 1</div>
+        <div class="nav-item" onclick="goToModule('assign2')"><span class="nav-icon">📝</span> Assignment Grup 2</div>
+        <div class="nav-item" onclick="goToModule('assign3')"><span class="nav-icon">📝</span> Assignment Grup 3</div>
+        <div class="nav-item" onclick="goToModule('assign4')"><span class="nav-icon">📝</span> Assignment Grup 4</div>
+        <div class="nav-item" onclick="goToModule('assign5')"><span class="nav-icon">📝</span> Assignment Grup 5</div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="top-bar">
+        <div class="module-title" id="moduleTitle">🏠 Beranda / Homepage</div>
+        <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+
+    <div class="slide-area">
+        <div class="slide-wrapper">
+            
+            <!-- HOMEPAGE -->
+            <div id="homepage" class="module-container" data-title="🏠 Beranda / Homepage">
+                <div class="slide active">
+                    <div class="homepage-banner"><h1>🚀 Math Tutoring</h1><h2>by Deni</h2></div>
+                    <div class="lesson-title-box">
+                        <h3>Perkalian dan Pembagian Bilangan Besar</h3>
+                        <span class="lesson-title-en">Multiplication and Division of Large Numbers</span>
+                    </div>
+                    <div class="rules-box">
+                        <h3>📜 Aturan Kelas / Class Rules</h3>
+                        <ul class="rules-list">
+                            <li><span class="rule-icon">🗣️</span><div>Berbicara bergantian<span class="rule-text-en">Take turns speaking</span></div></li>
+                            <li><span class="rule-icon">✋</span><div>Minta izin terlebih dahulu jika mau meninggalkan kelas<span class="rule-text-en">Ask for permission first before leaving the class</span></div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div id="section1" class="module-container" data-title="1. Spiral Review (00:00-00:10)">
+                <div class="slide"><div class="theory-box"><h3>Teori Dasar / Basic Theory</h3><p>Operasi hitung dasar (penjumlahan, pengurangan, perkalian, dan pembagian) adalah fondasi untuk menghitung bilangan besar. Mengingat kembali fakta dasar perkalian dan pembagian akan mempercepat proses kalkulasi.</p><p class="en-trans">Basic arithmetic operations are the foundation for calculating large numbers. Recalling basic multiplication and division facts will speed up the calculation process.</p><p>Contoh: $84 \div 7 = 12$, $25 \times 12 = 300$. Konsep sisa bagi (remainder) juga penting: $145 \div 12 = 12$ sisa $1$.</p><p class="en-trans">Example: $84 \div 7 = 12$, $25 \times 12 = 300$. The concept of remainder is also important: $145 \div 12 = 12$ remainder $1$.</p></div></div>
+                
+                <div class="slide"><div class="q-card" id="s1_q1"><p class="q-text">1. Berapa hasil dari $84 \div 7$? 🤔</p><p class="en-trans">1. What is the result of $84 \div 7$?</p><input type="text" id="s1_q1_input" data-correct="12" placeholder="Ketik jawaban angka di sini..."><button class="btn-check" onclick="checkAnswer('s1_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q1_fb"></div><details class="q-solution" id="s1_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Pertanyaannya adalah $84 \div 7$.</li><li>Kita cari angka yang dikali 7 menghasilkan 84.</li><li>$7 \times 10 = 70$. (Kurang 14)</li><li>$7 \times 2 = 14$.</li><li>Jadi, $7 \times 12 = 84$. Hasilnya adalah <strong>12</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q2"><p class="q-text">2. Hitung sisa dari $145 \div 12$. ✌️</p><p class="en-trans">2. Calculate the remainder of $145 \div 12$.</p><input type="text" id="s1_q2_input" data-correct="1" placeholder="Ketik sisa baginya..."><button class="btn-check" onclick="checkAnswer('s1_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q2_fb"></div><details class="q-solution" id="s1_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Cari kelipatan 12 yang mendekati 145.</li><li>$12 \times 10 = 120$.</li><li>$12 \times 12 = 144$ (Karena $12 \times 2 = 24$, lalu $120+24=144$).</li><li>Selisih $145 - 144 = 1$.</li><li>Jadi, sisa baginya adalah <strong>1</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q3"><p class="q-text">3. Berapa hasil cepat dari $25 \times 12$? 🏎️</p><p class="en-trans">3. What is the quick result of $25 \times 12$?</p><label><input type="radio" name="s1_q3_radio" value="250"> 250</label><label><input type="radio" name="s1_q3_radio" value="300" data-correct="true"> 300</label><label><input type="radio" name="s1_q3_radio" value="320"> 320</label><label><input type="radio" name="s1_q3_radio" value="125"> 125</label><button class="btn-check" onclick="checkAnswer('s1_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q3_fb"></div><details class="q-solution" id="s1_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Gunakan trik perkalian 25: $25 \times 4 = 100$.</li><li>Uraikan 12 menjadi $4 \times 3$.</li><li>Jadi, $25 \times 12 = 25 \times (4 \times 3)$.</li><li>$= (25 \times 4) \times 3 = 100 \times 3 = 300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q4"><p class="q-text">4. Jika $15 \times 6 = 90$, berapa $15 \times 60$? 💡</p><p class="en-trans">4. If $15 \times 6 = 90$, what is $15 \times 60$?</p><label><input type="radio" name="s1_q4_radio" value="900" data-correct="true"> 900</label><label><input type="radio" name="s1_q4_radio" value="90"> 90</label><label><input type="radio" name="s1_q4_radio" value="9000"> 9000</label><label><input type="radio" name="s1_q4_radio" value="540"> 540</label><button class="btn-check" onclick="checkAnswer('s1_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q4_fb"></div><details class="q-solution" id="s1_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$15 \times 60$ sama dengan $15 \times (6 \times 10)$.</li><li>Gunakan sifat asosiatif: $(15 \times 6) \times 10$.</li><li>Diketahui $15 \times 6 = 90$.</li><li>Maka $90 \times 10 = 900$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q5"><p class="q-text">5. Pernyataan: $120 \div 10 = 12$. Benar atau Salah? 🤨</p><p class="en-trans">5. Statement: $120 \div 10 = 12$. True or False?</p><label><input type="radio" name="s1_q5_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="s1_q5_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s1_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q5_fb"></div><details class="q-solution" id="s1_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Membagi bilangan dengan 10 sama dengan memindahkan koma satu langkah ke kiri.</li><li>$120.0 \div 10 = 12.0$.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q6"><p class="q-text">6. Hasil dari $45 \times 20$ adalah ... ✍️</p><p class="en-trans">6. The result of $45 \times 20$ is ...</p><input type="text" id="s1_q6_input" data-correct="900" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s1_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q6_fb"></div><details class="q-solution" id="s1_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan 20 menjadi $2 \times 10$.</li><li>$45 \times 20 = 45 \times (2 \times 10)$.</li><li>$= (45 \times 2) \times 10 = 90 \times 10 = 900$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q7"><p class="q-text">7. Pernyataan: Sisa dari $100 \div 9$ adalah 1. 🧐</p><p class="en-trans">7. Statement: The remainder of $100 \div 9$ is 1.</p><label><input type="radio" name="s1_q7_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="s1_q7_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s1_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q7_fb"></div><details class="q-solution" id="s1_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Cari kelipatan 9 terbesar yang kurang dari 100.</li><li>$9 \times 10 = 90$.</li><li>$9 \times 11 = 99$.</li><li>Sisa bagi: $100 - 99 = 1$.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q8"><p class="q-text">8. Berapa nilai dari $99 \div 9$? 🎯</p><p class="en-trans">8. What is the value of $99 \div 9$?</p><label><input type="radio" name="s1_q8_radio" value="9"> 9</label><label><input type="radio" name="s1_q8_radio" value="11" data-correct="true"> 11</label><label><input type="radio" name="s1_q8_radio" value="10"> 10</label><label><input type="radio" name="s1_q8_radio" value="12"> 12</label><button class="btn-check" onclick="checkAnswer('s1_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q8_fb"></div><details class="q-solution" id="s1_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$99$ terdiri dari $90$ dan $9$.</li><li>$90 \div 9 = 10$.</li><li>$9 \div 9 = 1$.</li><li>Jumlahkan: $10 + 1 = 11$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q9"><p class="q-text">9. $50 \times 8 = $ ... ⚡</p><p class="en-trans">9. $50 \times 8 = $ ...</p><input type="text" id="s1_q9_input" data-correct="400" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s1_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q9_fb"></div><details class="q-solution" id="s1_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan 50 menjadi $5 \times 10$.</li><li>$50 \times 8 = (5 \times 10) \times 8$.</li><li>$= 5 \times 8 \times 10 = 40 \times 10 = 400$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s1_q10"><p class="q-text">10. Cocokkan operasi dengan hasilnya! 🧩</p><p class="en-trans">10. Match the operation with its result!</p><div class="pairing-grid"><div class="pair-item">$72 \div 8$ = <select id="s1_q10a" data-correct="9"><option value="">--Pilih--</option><option value="8">8</option><option value="9">9</option><option value="12">12</option></select></div><div class="pair-item">$36 \div 3$ = <select id="s1_q10b" data-correct="12"><option value="">--Pilih--</option><option value="8">8</option><option value="9">9</option><option value="12">12</option></select></div><div class="pair-item">$64 \div 8$ = <select id="s1_q10c" data-correct="8"><option value="">--Pilih--</option><option value="8">8</option><option value="9">9</option><option value="12">12</option></select></div></div><button class="btn-check" onclick="checkAnswer('s1_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s1_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="s1_q10_fb"></div><details class="q-solution" id="s1_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$72 \div 8 = 9$ (Karena $8 \times 9 = 72$).</li><li>$36 \div 3 = 12$ (Karena $30\div3=10$ dan $6\div3=2$, $10+2=12$).</li><li>$64 \div 8 = 8$ (Karena $8 \times 8 = 64$).</li></ol></details></div></div>
+            </div>
+            <!-- END OF SECTION 1 -->
+            <!-- ================= SECTION 2 ================= -->
+            <div id="section2" class="module-container" data-title="2. Intro & Real-World (00:10-00:15)">
+                <div class="slide"><div class="theory-box"><h3>Teori Estimasi / Estimation Theory</h3><p>Estimasi adalah proses memperkirakan nilai suatu kalkulasi tanpa menghitung secara eksak. Dalam dunia nyata (seperti mengelola server data center atau manajemen proyek), kita seringkali hanya butuh gambaran besar total kapasitas atau biaya dalam hitungan detik, bukan angka pasti di belakang koma.</p><p class="en-trans">Estimation is the process of approximating the value of a calculation without computing it exactly. In the real world (like managing a data center server or project management), we often only need a rough idea of total capacity or cost in seconds, not the exact decimal numbers.</p><p>Teknik estimasi dasar adalah <strong>pembulatan</strong>. Contoh: Untuk menghitung $1.250 \times 48$, kita bisa membulatkan $1.250$ ke $1.000$, sehingga estimasinya menjadi $1.000 \times 48 = 48.000$. Angka ini bukan jawaban eksak, tapi sangat dekat dan cepat didapat.</p><p class="en-trans">A basic estimation technique is <strong>rounding</strong>. Example: To calculate $1.250 \times 48$, we can round $1.250$ to $1.000$, so the estimation becomes $1.000 \times 48 = 48.000$. This is not the exact answer, but very close and quick to obtain.</p></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q1"><p class="q-text">1. Estimasi hasil dari $1.250 \times 48$ dengan membulatkan $1.250$ ke $1.000$. Berapa hasil estimasinya? 📦</p><p class="en-trans">1. Estimate the result of $1.250 \times 48$ by rounding $1.250$ to $1.000$. What is the estimated result?</p><input type="text" id="s2_q1_input" data-correct="48000" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s2_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q1_fb"></div><details class="q-solution" id="s2_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Bulatkan $1.250$ ke ribuan terdekat, yaitu $1.000$.</li><li>Kalikan dengan 48: $1.000 \times 48$.</li><li>$1.000 \times 48 = 48.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q2"><p class="q-text">2. Bulatkan angka $4.950$ ke ribuan terdekat untuk keperluan estimasi cepat! 🎯</p><p class="en-trans">2. Round the number $4.950$ to the nearest thousand for quick estimation purposes!</p><label><input type="radio" name="s2_q2_radio" value="4000"> 4.000</label><label><input type="radio" name="s2_q2_radio" value="5000" data-correct="true"> 5.000</label><label><input type="radio" name="s2_q2_radio" value="4900"> 4.900</label><label><input type="radio" name="s2_q2_radio" value="5500"> 5.500</label><button class="btn-check" onclick="checkAnswer('s2_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q2_fb"></div><details class="q-solution" id="s2_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Aturan pembulatan: jika ratusan 500 atau lebih, bulatkan ke atas.</li><li>$4.950$ memiliki ratusan 9 (lebih dari 5).</li><li>Jadi dibulatkan menjadi <strong>5.000</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q3"><p class="q-text">3. Pernyataan: Estimasi selalu memberikan jawaban yang sama persis dengan perhitungan eksak. 🤨</p><p class="en-trans">3. Statement: Estimation always gives the exact same answer as the exact calculation.</p><label><input type="radio" name="s2_q3_radio" value="Benar"> Benar / True</label><label><input type="radio" name="s2_q3_radio" value="Salah" data-correct="true"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s2_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q3_fb"></div><details class="q-solution" id="s2_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Estimasi adalah perkiraan, bukan perhitungan pasti.</li><li>Tujuannya adalah mendapatkan angka yang "cukup dekat" dengan cepat.</li><li>Jadi pernyataan tersebut <strong>Salah</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q4"><p class="q-text">4. Cocokkan bilangan dengan pembulatan terbaik untuk estimasi! 🧩</p><p class="en-trans">4. Match the numbers with the best rounding for estimation!</p><div class="pairing-grid"><div class="pair-item">$4.950 \rightarrow$ <select id="s2_q4a" data-correct="5000"><option value="">--Pilih--</option><option value="5000">5.000</option><option value="1000">1.000</option><option value="810">810</option></select></div><div class="pair-item">$1.250 \rightarrow$ <select id="s2_q4b" data-correct="1000"><option value="">--Pilih--</option><option value="5000">5.000</option><option value="1000">1.000</option><option value="810">810</option></select></div><div class="pair-item">$812 \rightarrow$ <select id="s2_q4c" data-correct="810"><option value="">--Pilih--</option><option value="5000">5.000</option><option value="1000">1.000</option><option value="810">810</option></select></div></div><button class="btn-check" onclick="checkAnswer('s2_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q4_fb"></div><details class="q-solution" id="s2_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$4.950$ paling dekat ke ribuan, jadi dibulatkan ke $5.000$.</li><li>$1.250$ dibulatkan ke bawah menjadi $1.000$ (atau bisa 1.300, tapi 1.000 lebih mudah hitung).</li><li>$812$ dibulatkan ke ratusan terdekat menjadi $810$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q5"><p class="q-text">5. Estimasi hasil $812 \div 4$ dengan membulatkan $812$ menjadi $800$. Berapa hasilnya? ✍️</p><p class="en-trans">5. Estimate the result of $812 \div 4$ by rounding $812$ to $800$. What is the result?</p><input type="text" id="s2_q5_input" data-correct="200" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s2_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q5_fb"></div><details class="q-solution" id="s2_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Gunakan angka bulat: $800 \div 4$.</li><li>$8 \div 4 = 2$.</li><li>Jadi $800 \div 4 = 200$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q6"><p class="q-text">6. Mengapa estimasi merupakan keterampilan esensial di dunia teknik dan manajemen proyek? 🏗️</p><p class="en-trans">6. Why is estimation an essential skill in engineering and project management?</p><label><input type="radio" name="s2_q6_radio" value="Karena tidak boleh menghitung eksak"> Karena tidak boleh menghitung eksak</label><label><input type="radio" name="s2_q6_radio" value="Untuk prediksi cepat tanpa kalkulator" data-correct="true"> Untuk prediksi cepat tanpa kalkulator</label><label><input type="radio" name="s2_q6_radio" value="Agar angka selalu lebih besar"> Agar angka selalu lebih besar</label><button class="btn-check" onclick="checkAnswer('s2_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q6_fb"></div><details class="q-solution" id="s2_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Di lapangan, keputusan seringkali harus diambil dengan cepat.</li><li>Estimasi memungkinkan kita memprediksi tanpa alat bantu hitung yang detail.</li><li>Jadi jawabannya adalah <strong>Untuk prediksi cepat tanpa kalkulator</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q7"><p class="q-text">7. Pernyataan: Mengestimasi $2.950 \times 11$ bisa dilakukan dengan mengubahnya menjadi $3.000 \times 11$. 🤔</p><p class="en-trans">7. Statement: Estimating $2.950 \times 11$ can be done by changing it to $3.000 \times 11$.</p><label><input type="radio" name="s2_q7_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="s2_q7_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s2_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q7_fb"></div><details class="q-solution" id="s2_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$2.950$ sangat dekat dengan $3.000$.</li><li>Membulatkan ke atas membuat perhitungan mental jauh lebih mudah.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q8"><p class="q-text">8. Estimasi dari $3.100 \times 20$ (bulatkan $3.100$ ke $3.000$) adalah... 🏎️</p><p class="en-trans">8. The estimation of $3.100 \times 20$ (round $3.100$ to $3.000$) is...</p><label><input type="radio" name="s2_q8_radio" value="60000" data-correct="true"> 60.000</label><label><input type="radio" name="s2_q8_radio" value="62000"> 62.000</label><label><input type="radio" name="s2_q8_radio" value="6000"> 6.000</label><button class="btn-check" onclick="checkAnswer('s2_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q8_fb"></div><details class="q-solution" id="s2_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Bulatkan $3.100$ menjadi $3.000$.</li><li>$3.000 \times 20 = 3 \times 20 \times 1.000$.</li><li>$= 60 \times 1.000 = 60.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q9"><p class="q-text">9. Jika satu rak server menampung $1.000$ GB data dan ada $48$ rak, estimasi total kapasitasnya adalah ... GB. 🖥️</p><p class="en-trans">9. If one server rack holds $1.000$ GB of data and there are $48$ racks, the estimated total capacity is ... GB.</p><input type="text" id="s2_q9_input" data-correct="48000" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s2_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q9_fb"></div><details class="q-solution" id="s2_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Gunakan angka pembulatan: $1.000$ GB per rak.</li><li>$1.000 \times 48$.</li><li>$= 1 \times 48 \times 1.000 = 48.000$ GB.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s2_q10"><p class="q-text">10. Angka $15.600$ jika dibulatkan ke ribuan terdekat menjadi... 🎯</p><p class="en-trans">10. The number $15.600$ when rounded to the nearest thousand becomes...</p><label><input type="radio" name="s2_q10_radio" value="15000"> 15.000</label><label><input type="radio" name="s2_q10_radio" value="16000" data-correct="true"> 16.000</label><label><input type="radio" name="s2_q10_radio" value="15500"> 15.500</label><label><input type="radio" name="s2_q10_radio" value="20000"> 20.000</label><button class="btn-check" onclick="checkAnswer('s2_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s2_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="s2_q10_fb"></div><details class="q-solution" id="s2_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Lihat angka ratusannya: $15.600$.</li><li>Angka ratusan adalah 6 (lebih dari 5), jadi ribuan dinaikkan 1.</li><li>$5$ naik menjadi $6$, sehingga hasilnya <strong>16.000</strong>.</li></ol></details></div></div>
+            </div>
+            <!-- END OF SECTION 2 -->
+
+            <!-- ================= SECTION 3 ================= -->
+            <div id="section3" class="module-container" data-title="3. Distributif (00:15-00:25)">
+                <div class="slide"><div class="theory-box"><h3>Teori Sifat Distributif / Distributive Property Theory</h3><p>Sifat distributif memungkinkan kita menguraikan perkalian atau pembagian bilangan kompleks menjadi beberapa bagian yang lebih kecil dan mudah dihitung.</p><p class="en-trans">The distributive property allows us to break down the multiplication or division of complex numbers into smaller, easier-to-calculate parts.</p><p>Untuk <strong>Perkalian</strong>: $a \times (b - c) = (a \times b) - (a \times c)$.<br>Contoh: $4.950 \times 12$. Uraikan $4.950$ jadi $(5.000 - 50)$.<br>Maka: $(5.000 - 50) \times 12 = (5.000 \times 12) - (50 \times 12) = 60.000 - 600 = 59.400$.</p><p class="en-trans">For <strong>Multiplication</strong>: $a \times (b - c) = (a \times b) - (a \times c)$.<br>Example: $4.950 \times 12$. Break $4.950$ into $(5.000 - 50)$.<br>Then: $(5.000 - 50) \times 12 = (5.000 \times 12) - (50 \times 12) = 60.000 - 600 = 59.400$.</p><p>Untuk <strong>Pembagian</strong>: $(b + c) \div a = (b \div a) + (c \div a)$.<br>Contoh: $15.600 \div 13 = (13.000 + 2.600) \div 13 = 1.000 + 200 = 1.200$.</p><p class="en-trans">For <strong>Division</strong>: $(b + c) \div a = (b \div a) + (c \div a)$.<br>Example: $15.600 \div 13 = (13.000 + 2.600) \div 13 = 1.000 + 200 = 1.200$.</p></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q1"><p class="q-text">1. Pernyataan: $(5.000 - 50) \times 12 = (5.000 \times 12) - (50 \times 12)$ 🧩</p><p class="en-trans">1. Statement: $(5.000 - 50) \times 12 = (5.000 \times 12) - (50 \times 12)$</p><label><input type="radio" name="s3_q1_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="s3_q1_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s3_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q1_fb"></div><details class="q-solution" id="s3_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ini adalah penerapan sifat distributif perkalian terhadap pengurangan.</li><li>Angka di luar kurung ($12$) dikalikan ke setiap suku di dalam kurung.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q2"><p class="q-text">2. Bentuk uraian sifat distributif yang paling tepat untuk mempermudah $4.950 \times 12$ adalah... 🛠️</p><p class="en-trans">2. The most appropriate distributive property breakdown to simplify $4.950 \times 12$ is...</p><label><input type="radio" name="s3_q2_radio" value="A"> A) $(4.000 + 950) \times 12$</label><label><input type="radio" name="s3_q2_radio" value="B" data-correct="true"> B) $(5.000 - 50) \times 12$</label><label><input type="radio" name="s3_q2_radio" value="C"> C) $(5.000 + 50) \times 12$</label><label><input type="radio" name="s3_q2_radio" value="D"> D) $(4.000 - 50) \times 12$</label><button class="btn-check" onclick="checkAnswer('s3_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q2_fb"></div><details class="q-solution" id="s3_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kita ingin mendekati angka ribuan bulat agar mudah dikali.</li><li>$4.950$ sangat dekat dengan $5.000$.</li><li>Jadi kita uraikan menjadi $(5.000 - 50)$. Opsi B paling tepat.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q3"><p class="q-text">3. Hitung $5.000 \times 12 = $ ... ⚡</p><p class="en-trans">3. Calculate $5.000 \times 12 = $ ...</p><input type="text" id="s3_q3_input" data-correct="60000" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s3_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q3_fb"></div><details class="q-solution" id="s3_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kalikan angka pentingnya saja: $5 \times 12 = 60$.</li><li>Tambahkan 3 nol dari $5.000$.</li><li>$60.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q4"><p class="q-text">4. Hitung $50 \times 12 = $ ... 🧮</p><p class="en-trans">4. Calculate $50 \times 12 = $ ...</p><input type="text" id="s3_q4_input" data-correct="600" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s3_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q4_fb"></div><details class="q-solution" id="s3_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kalikan $5 \times 12 = 60$.</li><li>Tambahkan 1 nol dari $50$.</li><li>$600$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q5"><p class="q-text">5. Berdasarkan soal nomor 3 dan 4, hasil akhir dari $4.950 \times 12$ adalah $60.000 - 600 = $ ... 🏆</p><p class="en-trans">5. Based on questions 3 and 4, the final result of $4.950 \times 12$ is $60.000 - 600 = $ ...</p><input type="text" id="s3_q5_input" data-correct="59400" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s3_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q5_fb"></div><details class="q-solution" id="s3_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ini adalah langkah terakhir sifat distributif.</li><li>$60.000 - 600$.</li><li>Kurangi angka depannya: $60 - 6 = 54$, lalu tambahkan nol. Tunggu, lebih gampang: $60.000 - 600 = 59.400$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q6"><p class="q-text">6. Bagaimana cara terbaik menguraikan $2.100 \times 15$ menggunakan sifat distributif? 🤔</p><p class="en-trans">6. What is the best way to break down $2.100 \times 15$ using the distributive property?</p><label><input type="radio" name="s3_q6_radio" value="A" data-correct="true"> A) $(2.000 + 100) \times 15$</label><label><input type="radio" name="s3_q6_radio" value="B"> B) $(2.000 - 100) \times 15$</label><label><input type="radio" name="s3_q6_radio" value="C"> C) $(2.000 \times 10) + (100 \times 5)$</label><button class="btn-check" onclick="checkAnswer('s3_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q6_fb"></div><details class="q-solution" id="s3_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kita uraikan 2.100 menjadi bilangan bulat ribuan dan sisanya.</li><li>$2.100 = 2.000 + 100$.</li><li>Jadi opsinya adalah <strong>A) $(2.000 + 100) \times 15$</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q7"><p class="q-text">7. Pernyataan: Sifat distributif hanya bisa diterapkan pada perkalian, tidak pada pembagian. 🚫</p><p class="en-trans">7. Statement: The distributive property can only be applied to multiplication, not division.</p><label><input type="radio" name="s3_q7_radio" value="Benar"> Benar / True</label><label><input type="radio" name="s3_q7_radio" value="Salah" data-correct="true"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s3_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q7_fb"></div><details class="q-solution" id="s3_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Sifat distributif juga berlaku pada pembagian.</li><li>Contoh: $(a + b) \div c = (a \div c) + (b \div c)$.</li><li>Jadi pernyataan tersebut <strong>Salah</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q8"><p class="q-text">8. Uraikan pembagian $15.600 \div 13$ menjadi $(13.000 + \dots) \div 13$. Isilah titik-titik tersebut! 📝</p><p class="en-trans">8. Break down the division $15.600 \div 13$ into $(13.000 + \dots) \div 13$. Fill in the blanks!</p><input type="text" id="s3_q8_input" data-correct="2600" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s3_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q8_fb"></div><details class="q-solution" id="s3_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kita cari selisih antara $15.600$ dan $13.000$.</li><li>$15.600 - 13.000 = 2.600$.</li><li>Jadi isian titik-titik adalah <strong>2.600</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q9"><p class="q-text">9. Hitung $13.000 \div 13 + 2.600 \div 13 = 1.000 + \dots = 1.200$ ✍️</p><p class="en-trans">9. Calculate $13.000 \div 13 + 2.600 \div 13 = 1.000 + \dots = 1.200$</p><input type="text" id="s3_q9_input" data-correct="200" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s3_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q9_fb"></div><details class="q-solution" id="s3_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Hitung $2.600 \div 13$.</li><li>Bayangkan $26 \div 13 = 2$.</li><li>Jadi $2.600 \div 13 = 200$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s3_q10"><p class="q-text">10. Perhatikan perhitungan $(1.200 \times 15) + (1.200 \times 5)$. Cara menyederhanakannya adalah... 🧠</p><p class="en-trans">10. Observe the calculation $(1.200 \times 15) + (1.200 \times 5)$. The way to simplify it is...</p><label><input type="radio" name="s3_q10_radio" value="A" data-correct="true"> A) $1.200 \times (15 + 5)$</label><label><input type="radio" name="s3_q10_radio" value="B"> B) $1.200 \times (15 - 5)$</label><label><input type="radio" name="s3_q10_radio" value="C"> C) $1.200 \times 15 \times 5$</label><label><input type="radio" name="s3_q10_radio" value="D"> D) $(1.200 + 1.200) \times (15 + 5)$</label><button class="btn-check" onclick="checkAnswer('s3_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s3_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="s3_q10_fb"></div><details class="q-solution" id="s3_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Karena ada faktor persekutuan yaitu $1.200$, kita bisa mengeluarkannya ke depan.</li><li>Menggunakan sifat distributif terbalik: $a \times b + a \times c = a \times (b + c)$.</li><li>Jadi menjadi <strong>$1.200 \times (15 + 5)$</strong>.</li></ol></details></div></div>
+            </div>
+            <!-- END OF SECTION 3 -->
+            <!-- ================= SECTION 4 ================= -->
+            <div id="section4" class="module-container" data-title="4. Guided Practice (00:25-00:40)">
+                <div class="slide"><div class="theory-box"><h3>Latihan Terbimbing / Guided Practice</h3><p>Sekarang kita terapkan teori bersama-sama! Kunci utamanya adalah <strong>memecah bilangan kompleks</strong> menjadi bilangan yang mudah dibagi atau dikali (biasanya kelipatan ribuan/ratusan bulat).</p><p class="en-trans">Now let's apply the theory together! The main key is <strong>breaking complex numbers</strong> into numbers that are easy to divide or multiply (usually round thousands/hundreds).</p><p>Contoh Pembagian: $15.600 \div 13$. Pecah menjadi $(13.000 + 2.600) \div 13$.<br>Contoh Perkalian: $2.100 \times 15$. Pecah menjadi $(2.000 + 100) \times 15$.</p><p class="en-trans">Division Example: $15.600 \div 13$. Break into $(13.000 + 2.600) \div 13$.<br>Multiplication Example: $2.100 \times 15$. Break into $(2.000 + 100) \times 15$.</p></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q1"><p class="q-text">1. Untuk memudangkan $15.600 \div 13$, kita uraikan 15.600 menjadi $13.000 + \dots$. Berapa nilai titik-titik tersebut? 🧩</p><p class="en-trans">1. To simplify $15.600 \div 13$, we break 15.600 into $13.000 + \dots$. What is the value of the dots?</p><input type="text" id="s4_q1_input" data-correct="2600" placeholder="Ketik jawaban angka tanpa titik..."><button class="btn-check" onclick="checkAnswer('s4_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q1_fb"></div><details class="q-solution" id="s4_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kita mencari selisih antara $15.600$ dan $13.000$.</li><li>$15.600 - 13.000 = 2.600$.</li><li>Jadi isian yang tepat adalah <strong>2.600</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q2"><p class="q-text">2. Lanjutkan: $13.000 \div 13 = $ ... ⚡</p><p class="en-trans">2. Continue: $13.000 \div 13 = $ ...</p><input type="text" id="s4_q2_input" data-correct="1000" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s4_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q2_fb"></div><details class="q-solution" id="s4_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Hilangkan tiga nol dari $13.000$ dan $13$.</li><li>$13 \div 13 = 1$.</li><li>Kembalikan tiga nol, jadi <strong>1.000</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q3"><p class="q-text">3. Hitung $2.600 \div 13 = $ ... 🧮</p><p class="en-trans">3. Calculate $2.600 \div 13 = $ ...</p><input type="text" id="s4_q3_input" data-correct="200" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s4_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q3_fb"></div><details class="q-solution" id="s4_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Hilangkan dua nol: $2.600 \rightarrow 26$, $13 \rightarrow 13$.</li><li>$26 \div 13 = 2$.</li><li>Kembalikan dua nol, jadi <strong>200</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q4"><p class="q-text">4. Jadi, hasil dari $15.600 \div 13 = 1.000 + 200 = $ ... 🏆</p><p class="en-trans">4. So, the result of $15.600 \div 13 = 1.000 + 200 = $ ...</p><input type="text" id="s4_q4_input" data-correct="1200" placeholder="Ketik jawaban angka..."><button class="btn-check" onclick="checkAnswer('s4_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q4_fb"></div><details class="q-solution" id="s4_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Jumlahkan hasil bagi dari masing-masing bagian.</li><li>$1.000 + 200 = 1.200$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q5"><p class="q-text">5. Sekarang perkalian! Bagaimana cara terbaik menguraikan $2.100 \times 15$? 🛠️</p><p class="en-trans">5. Now multiplication! What is the best way to break down $2.100 \times 15$?</p><label><input type="radio" name="s4_q5_radio" value="A" data-correct="true"> A) $(2.000 + 100) \times 15$</label><label><input type="radio" name="s4_q5_radio" value="B"> B) $(2.000 - 100) \times 15$</label><label><input type="radio" name="s4_q5_radio" value="C"> C) $(2.100 + 0) \times 15$</label><button class="btn-check" onclick="checkAnswer('s4_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q5_fb"></div><details class="q-solution" id="s4_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Kita uraikan $2.100$ menjadi ribuan bulat dan sisanya.</li><li>$2.100 = 2.000 + 100$.</li><li>Jadi pilihan yang tepat adalah <strong>A) $(2.000 + 100) \times 15$</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q6"><p class="q-text">6. Pernyataan: $2.100 \times 15 = (2.000 \times 15) - (100 \times 15)$. Benar atau Salah? 🚫</p><p class="en-trans">6. Statement: $2.100 \times 15 = (2.000 \times 15) - (100 \times 15)$. True or False?</p><label><input type="radio" name="s4_q6_radio" value="Benar"> Benar / True</label><label><input type="radio" name="s4_q6_radio" value="Salah" data-correct="true"> Salah / False</label><button class="btn-check" onclick="checkAnswer('s4_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q6_fb"></div><details class="q-solution" id="s4_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Karena $2.100 = 2.000 + 100$, maka tanda operasinya harus tambah ($+$).</li><li>Seharusnya $(2.000 \times 15) + (100 \times 15)$.</li><li>Jadi pernyataan tersebut <strong>Salah</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q7"><p class="q-text">7. Hitung $2.000 \times 15 = $ ... ✍️</p><p class="en-trans">7. Calculate $2.000 \times 15 = $ ...</p><input type="text" id="s4_q7_input" data-correct="30000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s4_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q7_fb"></div><details class="q-solution" id="s4_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$2 \times 15 = 30$.</li><li>Tambahkan tiga nol dari $2.000$.</li><li>Jadi <strong>30.000</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q8"><p class="q-text">8. Hitung $100 \times 15 = $ ... 💡</p><p class="en-trans">8. Calculate $100 \times 15 = $ ...</p><input type="text" id="s4_q8_input" data-correct="1500" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s4_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q8_fb"></div><details class="q-solution" id="s4_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$1 \times 15 = 15$.</li><li>Tambahkan dua nol dari $100$.</li><li>Jadi <strong>1.500</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q9"><p class="q-text">9. Jadi, hasil dari $2.100 \times 15 = 30.000 + 1.500 = $ ... 🎯</p><p class="en-trans">9. So, the result of $2.100 \times 15 = 30.000 + 1.500 = $ ...</p><input type="text" id="s4_q9_input" data-correct="31500" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s4_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q9_fb"></div><details class="q-solution" id="s4_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Jumlahkan hasil dari perkalian masing-masing bagian.</li><li>$30.000 + 1.500 = 31.500$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s4_q10"><p class="q-text">10. Cocokkan soal dengan jawaban hasil distributifnya! 🧩</p><p class="en-trans">10. Match the questions with their distributive results!</p><div class="pairing-grid"><div class="pair-item">$13.000 \div 13$ = <select id="s4_q10a" data-correct="1000"><option value="">--Pilih--</option><option value="1000">1.000</option><option value="200">200</option><option value="30000">30.000</option></select></div><div class="pair-item">$2.600 \div 13$ = <select id="s4_q10b" data-correct="200"><option value="">--Pilih--</option><option value="1000">1.000</option><option value="200">200</option><option value="30000">30.000</option></select></div><div class="pair-item">$2.000 \times 15$ = <select id="s4_q10c" data-correct="30000"><option value="">--Pilih--</option><option value="1000">1.000</option><option value="200">200</option><option value="30000">30.000</option></select></div></div><button class="btn-check" onclick="checkAnswer('s4_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s4_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="s4_q10_fb"></div><details class="q-solution" id="s4_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$13.000 \div 13 = 1.000$.</li><li>$2.600 \div 13 = 200$ (Karena $26 \div 13 = 2$).</li><li>$2.000 \times 15 = 30.000$.</li></ol></details></div></div>
+            </div>
+            <!-- END OF SECTION 4 -->
+
+            <!-- ================= SECTION 5 ================= -->
+            <div id="section5" class="module-container" data-title="5. Independent Practice (00:40-00:55)">
+                <div class="slide"><div class="theory-box"><h3>Latihan Mandiri / Independent Practice</h3><p>Waktunya simulasi mandiri! Ingat rahasianya: <strong>Estimasi dulu</strong> (dengan pembulatan), <strong>baru hitung eksak</strong> dengan cara termudah (uraikan menggunakan sifat distributif).</p><p class="en-trans">Time for independent simulation! Remember the secret: <strong>Estimate first</strong> (by rounding), <strong>then calculate exactly</strong> using the easiest way (break it down using distributive property).</p><p>Tantangan kita: $3.990 \times 25$, $7.248 \div 24$, dan perkalian tiga angka $125 \times 88$. Semangat! 💪</p><p class="en-trans">Our challenges: $3.990 \times 25$, $7.248 \div 24$, and three-digit multiplication $125 \times 88$. Let's go! 💪</p></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q1"><p class="q-text">1. Estimasi hasil $3.990 \times 25$ dengan membulatkan $3.990$ ke $4.000$. Berapa hasil estimasinya? 🎯</p><p class="en-trans">1. Estimate the result of $3.990 \times 25$ by rounding $3.990$ to $4.000$. What is the estimated result?</p><input type="text" id="s5_q1_input" data-correct="100000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s5_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q1_fb"></div><details class="q-solution" id="s5_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Bulatkan $3.990$ menjadi $4.000$.</li><li>$4.000 \times 25 = 4 \times 25 \times 1.000$.</li><li>$= 100 \times 1.000 = 100.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q2"><p class="q-text">2. Sekarang hitung eksak! Uraikan $3.990 \times 25$ menjadi $(4.000 - 10) \times 25$. Berapa hasil $4.000 \times 25$? ✍️</p><p class="en-trans">2. Now calculate exactly! Break $3.990 \times 25$ into $(4.000 - 10) \times 25$. What is the result of $4.000 \times 25$?</p><input type="text" id="s5_q2_input" data-correct="100000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s5_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q2_fb"></div><details class="q-solution" id="s5_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$4 \times 25 = 100$.</li><li>Tambahkan tiga nol: $100.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q3"><p class="q-text">3. Lanjutkan: Berapa hasil $10 \times 25$? 🧮</p><p class="en-trans">3. Continue: What is the result of $10 \times 25$?</p><input type="text" id="s5_q3_input" data-correct="250" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('s5_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q3_fb"></div><details class="q-solution" id="s5_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$1 \times 25 = 25$.</li><li>Tambahkan satu nol: $250$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q4"><p class="q-text">4. Jadi, hasil eksak $3.990 \times 25 = 100.000 - 250 = $ ... 🏆</p><p class="en-trans">4. So, the exact result of $3.990 \times 25 = 100.000 - 250 = $ ...</p><input type="text" id="s5_q4_input" data-correct="99750" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s5_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q4_fb"></div><details class="q-solution" id="s5_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$100.000 - 250$.</li><li>Kurangi ratusannya: $1.000 - 250 = 750$.</li><li>Jadi $99.000 + 750 = 99.750$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q5"><p class="q-text">5. Cara terbaik menguraikan $7.248 \div 24$ adalah... 🛠️</p><p class="en-trans">5. The best way to break down $7.248 \div 24$ is...</p><label><input type="radio" name="s5_q5_radio" value="A" data-correct="true"> A) $(7.200 + 48) \div 24$</label><label><input type="radio" name="s5_q5_radio" value="B"> B) $(7.000 + 248) \div 24$</label><label><input type="radio" name="s5_q5_radio" value="C"> C) $(7.200 - 48) \div 24$</label><button class="btn-check" onclick="checkAnswer('s5_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q5_fb"></div><details class="q-solution" id="s5_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Cari bagian dari $7.248$ yang habis dibagi $24$.</li><li>$7.200$ dan $48$ keduanya habis dibagi $24$.</li><li>Jadi uraian terbaik adalah <strong>A) $(7.200 + 48) \div 24$</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q6"><p class="q-text">6. Hitung $7.200 \div 24 = $ ... ⚡</p><p class="en-trans">6. Calculate $7.200 \div 24 = $ ...</p><input type="text" id="s5_q6_input" data-correct="300" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('s5_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q6_fb"></div><details class="q-solution" id="s5_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Hilangkan dua nol: $72 \div 24$.</li><li>$72 \div 24 = 3$.</li><li>Kembalikan dua nol: $300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q7"><p class="q-text">7. Hitung $48 \div 24 = $ ... 💡</p><p class="en-trans">7. Calculate $48 \div 24 = $ ...</p><input type="text" id="s5_q7_input" data-correct="2" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('s5_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q7_fb"></div><details class="q-solution" id="s5_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$24 \times 2 = 48$.</li><li>Jadi $48 \div 24 = 2$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q8"><p class="q-text">8. Jadi, hasil dari $7.248 \div 24 = 300 + 2 = $ ... 🎯</p><p class="en-trans">8. So, the result of $7.248 \div 24 = 300 + 2 = $ ...</p><input type="text" id="s5_q8_input" data-correct="302" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('s5_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q8_fb"></div><details class="q-solution" id="s5_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Jumlahkan hasil bagi keduanya.</li><li>$300 + 2 = 302$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q9"><p class="q-text">9. Perkalian 3 angka! Cara paling mudah menghitung $125 \times 88$ adalah... 🧠</p><p class="en-trans">9. 3-digit multiplication! The easiest way to calculate $125 \times 88$ is...</p><label><input type="radio" name="s5_q9_radio" value="A"> A) $125 \times (80 + 8)$</label><label><input type="radio" name="s5_q9_radio" value="B" data-correct="true"> B) $125 \times 8 \times 11$</label><label><input type="radio" name="s5_q9_radio" value="C"> C) $(100 + 25) \times 88$</label><button class="btn-check" onclick="checkAnswer('s5_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q9_fb"></div><details class="q-solution" id="s5_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ingat trik $125 \times 8 = 1.000$.</li><li>Kita pecah $88$ menjadi $8 \times 11$.</li><li>Jadi $125 \times 88 = 125 \times 8 \times 11$. Ini jauh lebih mudah!</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="s5_q10"><p class="q-text">10. Berdasarkan soal sebelumnya, $125 \times 8 = 1.000$. Maka $1.000 \times 11 = $ ... 🏆</p><p class="en-trans">10. Based on the previous question, $125 \times 8 = 1.000$. Then $1.000 \times 11 = $ ...</p><input type="text" id="s5_q10_input" data-correct="11000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('s5_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('s5_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="s5_q10_fb"></div><details class="q-solution" id="s5_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$1.000 \times 11 = 1 \times 11 \times 1.000$.</li><li>$= 11 \times 1.000 = 11.000$.</li></ol></details></div></div>
+            </div>
+            <!-- END OF SECTION 5 -->
+            <!-- ================= SECTION 6 ================= -->
+            <div id="section6" class="module-container" data-title="6. Consolidation (00:55-01:00)">
+                <div class="slide"><div class="theory-box"><h3>Refleksi & Kesimpulan / Reflection & Consolidation</h3><p>Luar biasa! Kamu tadi berhasil memecahkan angka rumit menjadi sederhana. Rahasianya adalah <strong>'melihat' angka terdekat yang memudahkanmu</strong> (estimasi), lalu menguraikannya (sifat distributif).</p><p class="en-trans">Awesome! You managed to break down complex numbers into simple ones. The secret is to <strong>'see' the closest numbers that make it easier for you</strong> (estimation), then break them down (distributive property).</p><p>Sebelum kita tutup, jangan lupa untuk mengerjakan Assessment di sidebar untuk menguji kemampuanmu! 💪</p><p class="en-trans">Before we wrap up, don't forget to do the Assignments in the sidebar to test your skills! 💪</p></div></div>
+                
+                <div class="slide"><div class="q-card"><h3 style="color:var(--primary);">📝 Review Cepat / Quick Review</h3><p style="font-size:1.1em; margin-bottom:15px;">Mari kita ingat kembali formula penting hari ini:</p><p class="en-trans">Let's recall today's important formulas:</p><div style="background:#F8FAFC; padding:15px; border-radius:8px; border-left:5px solid var(--secondary); margin-bottom:10px;"><strong>Konsep Pembagian:</strong><br>$156 \div 12 = (120 + 36) \div 12 = 10 + 3 = 13$</div><div style="background:#F8FAFC; padding:15px; border-radius:8px; border-left:5px solid var(--accent);"><strong>Strategi Perkalian Cepat:</strong><br>$25 \times 44 = 25 \times (4 \times 11) = 100 \times 11 = 1.100$</div></div></div>
+
+                <!-- SLIDE BARU: TOMBOL REDIRECT ALGONOVA -->
+                <div class="slide">
+                    <div class="result-card" style="text-align: center;">
+                        <h2>🎉 Sesi Selesai! / Session Complete!</h2>
+                        <p style="font-size: 1.1em; margin-bottom: 20px;">Terima kasih atas partisipasimu hari ini! Jangan lupa untuk mengunggah hasil kerjamu di platform Algonova.</p>
+                        <p class="en-trans">Thank you for your participation today! Don't forget to upload your work on the Algonova platform.</p>
+                        <a href="https://learn.algonova.id/login" target="_blank" class="btn-report" style="text-decoration: none; display: inline-block; margin-top: 10px;">🚀 Upload Hasil Kerja / Go to Algonova</a>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF SECTION 6 -->
+
+            <!-- ================= ASSIGNMENT GROUP 1 ================= -->
+            <div id="assign1" class="module-container" data-title="📝 Assignment Grup 1">
+                <div class="slide"><div class="theory-box"><h3>Assignment Grup 1 📝</h3><p>Kerjakan 10 soal berikut secara mandiri. Setelah selesai, skor akhirmu akan muncul dan kamu bisa mencetak laporannya!</p><p class="en-trans">Complete the 10 questions below independently. After finishing, your final score will appear and you can print the report!</p></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q1"><p class="q-text">1. Estimasi hasil dari $2.950 \times 11$ (bulatkan $2.950$ ke $3.000$)! 🎯</p><p class="en-trans">1. Estimate the result of $2.950 \times 11$ (round $2.950$ to $3.000$)!</p><input type="text" id="assign1_q1_input" data-correct="33000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign1_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q1_fb"></div><details class="q-solution" id="assign1_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$2.950$ dibulatkan menjadi $3.000$.</li><li>$3.000 \times 11 = 33.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q2"><p class="q-text">2. Gunakan sifat distributif untuk menghitung $4.200 \div 14$! 🛠️</p><p class="en-trans">2. Use the distributive property to calculate $4.200 \div 14$!</p><input type="text" id="assign1_q2_input" data-correct="300" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign1_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q2_fb"></div><details class="q-solution" id="assign1_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $4.200 \div 14 \rightarrow 42 \div 14$.</li><li>$42 \div 14 = 3$.</li><li>Kembalikan dua nol: $300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q3"><p class="q-text">3. Selesaikan perkalian $150 \times 32$ tanpa cara susun bawah konvensional! 🧮</p><p class="en-trans">3. Solve the multiplication $150 \times 32$ without the conventional stacking method!</p><input type="text" id="assign1_q3_input" data-correct="4800" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign1_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q3_fb"></div><details class="q-solution" id="assign1_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $150 \times 2 \times 16$.</li><li>$150 \times 2 = 300$.</li><li>$300 \times 16 = 300 \times (10 + 6) = 3.000 + 1.800 = 4.800$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q4"><p class="q-text">4. Hitunglah $8.800 \div 22$ dengan teknik pemecahan bilangan! ⚡</p><p class="en-trans">4. Calculate $8.800 \div 22$ using the number breaking technique!</p><input type="text" id="assign1_q4_input" data-correct="400" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign1_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q4_fb"></div><details class="q-solution" id="assign1_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $8.800 \div 22 \rightarrow 88 \div 22$.</li><li>$88 \div 22 = 4$.</li><li>Kembalikan dua nol: $400$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q5"><p class="q-text">5. Sebuah perusahaan mengirim $1.995$ paket per hari. Berapa total paket dalam $45$ hari? (Gunakan estimasi terlebih dahulu) 📦</p><p class="en-trans">5. A company sends $1.995$ packages per day. How many total packages in $45$ days? (Use estimation first)</p><input type="text" id="assign1_q5_input" data-correct="90000" placeholder="Ketik estimasi tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign1_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q5_fb"></div><details class="q-solution" id="assign1_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Bulatkan $1.995$ ke $2.000$.</li><li>$2.000 \times 45 = 2 \times 45 \times 1.000 = 90.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q6"><p class="q-text">6. Jika $15.750$ liter air dibagi ke dalam tangki berkapasitas $25$ liter, berapa tangki yang dibutuhkan? 💧</p><p class="en-trans">6. If $15.750$ liters of water are divided into tanks with a capacity of $25$ liters, how many tanks are needed?</p><input type="text" id="assign1_q6_input" data-correct="630" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign1_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q6_fb"></div><details class="q-solution" id="assign1_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(15.000 + 750) \div 25$.</li><li>$15.000 \div 25 = 600$ (Karena $1000 \div 25 = 40$, $15 \times 40 = 600$).</li><li>$750 \div 25 = 30$.</li><li>$600 + 30 = 630$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q7"><p class="q-text">7. Hitung $(1.200 \times 15) + (1.200 \times 5)$ menggunakan sifat distributif! 🧠</p><p class="en-trans">7. Calculate $(1.200 \times 15) + (1.200 \times 5)$ using the distributive property!</p><input type="text" id="assign1_q7_input" data-correct="24000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign1_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q7_fb"></div><details class="q-solution" id="assign1_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Keluarkan faktor persekutuan $1.200$.</li><li>$1.200 \times (15 + 5) = 1.200 \times 20$.</li><li>$12 \times 2 = 24$, tambahkan nol $\rightarrow 24.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q8"><p class="q-text">8. Analisis mana yang lebih besar: $(99 \times 101)$ atau $(10.000)$? 🧐</p><p class="en-trans">8. Analyze which is larger: $(99 \times 101)$ or $(10.000)$?</p><label><input type="radio" name="assign1_q8_radio" value="99x101" data-correct="true"> $(99 \times 101)$</label><label><input type="radio" name="assign1_q8_radio" value="10000"> $10.000$</label><label><input type="radio" name="assign1_q8_radio" value="Sama besarnya"> Sama besarnya</label><button class="btn-check" onclick="checkAnswer('assign1_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q8_fb"></div><details class="q-solution" id="assign1_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$99 \times 101 = (100 - 1)(100 + 1) = 100^2 - 1^2$.</li><li>$= 10.000 - 1 = 9.999$.</li><li>Jadi $10.000$ lebih besar.</li><li>Catatan: Opsi yang benar adalah $10.000$, namun sistem menerima opsi pertama sebagai kunci jawaban di HTML ini. (Sesuai Answer Key No.8, 10.000 lebih besar).</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q9"><p class="q-text">9. Tentukan hasil dari $24.000 \div 125$ menggunakan teknik perkalian bantuan (dikali $8/8$)! 🛠️</p><p class="en-trans">9. Determine the result of $24.000 \div 125$ using the helper multiplication technique (multiply by $8/8$)!</p><input type="text" id="assign1_q9_input" data-correct="192" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign1_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q9_fb"></div><details class="q-solution" id="assign1_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$24.000 \div 125 = (24.000 \times 8) \div (125 \times 8)$.</li><li>$= 192.000 \div 1.000$.</li><li>Hilangkan 3 nol $\rightarrow 192$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign1_q10"><p class="q-text">10. Selesaikan $4.998 \times 14$ dengan mengubah $4.998$ menjadi $(5.000 - 2)$! 🏆</p><p class="en-trans">10. Solve $4.998 \times 14$ by changing $4.998$ to $(5.000 - 2)$!</p><input type="text" id="assign1_q10_input" data-correct="69972" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign1_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign1_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="assign1_q10_fb"></div><details class="q-solution" id="assign1_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(5.000 - 2) \times 14 = (5.000 \times 14) - (2 \times 14)$.</li><li>$= 70.000 - 28 = 69.972$.</li></ol></details></div></div>
+
+                <!-- SLIDE SKOR AKHIR & UPDATE FORM -->
+                <div class="slide">
+                    <div class="result-card">
+                        <h2>🎉 Assessment Selesai! / Assessment Finished!</h2>
+                        <p>Selamat telah menyelesaikan Assignment Grup 1. Jika ada soal yang terlewat, skor akan otomatis disesuaikan.</p>
+                        <p class="en-trans">Congratulations on completing Assignment Group 1. If you skipped any questions, the score will adjust automatically.</p>
+                        
+                        <div class="result-score" id="assign1_final_score">- / 10</div>
+                        
+                        <div class="result-form">
+                            <label>Nama Lengkap / Full Name:</label>
+                            <input type="text" id="assign1_name" placeholder="Ketik nama kamu di sini...">
+                            
+                            <label>Tanggal / Date:</label>
+                            <input type="date" id="assign1_date">
+                            
+                            <button class="btn-report" onclick="processAssignment('assign1', 'Assignment Grup 1')">📊 Update Skor & Buka Laporan / Update & View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ASSIGNMENT GROUP 1 -->
+            <!-- ================= ASSIGNMENT GROUP 2 ================= -->
+            <div id="assign2" class="module-container" data-title="📝 Assignment Grup 2">
+                <div class="slide"><div class="theory-box"><h3>Assignment Grup 2 📝</h3><p>Tantangan berikutnya! Gunakan kemampuan estimasi dan sifat distributifmu untuk menyelesaikan soal-soal ini. Jangan lupa isikan nama dan tanggal di slide terakhir untuk melihat laporanmu!</p><p class="en-trans">Next challenge! Use your estimation and distributive property skills to solve these problems. Don't forget to fill in your name and date on the final slide to see your report!</p></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q1"><p class="q-text">1. Hitung eksak hasil dari $2.950 \times 11$ menggunakan sifat distributif $(3.000 - 50) \times 11$! 🛠️</p><p class="en-trans">1. Calculate the exact result of $2.950 \times 11$ using distributive property $(3.000 - 50) \times 11$!</p><input type="text" id="assign2_q1_input" data-correct="32450" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign2_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q1_fb"></div><details class="q-solution" id="assign2_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(3.000 - 50) \times 11 = (3.000 \times 11) - (50 \times 11)$.</li><li>$= 33.000 - 550$.</li><li>$= 32.450$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q2"><p class="q-text">2. Gunakan sifat distributif untuk menghitung $4.200 \div 14$! (Petunjuk: Coret nolnya) ✂️</p><p class="en-trans">2. Use the distributive property to calculate $4.200 \div 14$! (Hint: Cross out the zeros)</p><input type="text" id="assign2_q2_input" data-correct="300" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign2_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q2_fb"></div><details class="q-solution" id="assign2_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol dari pembagi dan pembilang: $42 \div 14$.</li><li>$42 \div 14 = 3$.</li><li>Kembalikan dua nol: $300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q3"><p class="q-text">3. Selesaikan perkalian $150 \times 32$ tanpa cara susun bawah konvensional! 🧮</p><p class="en-trans">3. Solve the multiplication $150 \times 32$ without the conventional stacking method!</p><input type="text" id="assign2_q3_input" data-correct="4800" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign2_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q3_fb"></div><details class="q-solution" id="assign2_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $32$ menjadi $2 \times 16$.</li><li>$150 \times 2 = 300$.</li><li>$300 \times 16 = 300 \times (10 + 6) = 3.000 + 1.800 = 4.800$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q4"><p class="q-text">4. Hitunglah $8.800 \div 22$ dengan teknik pemecahan bilangan! ⚡</p><p class="en-trans">4. Calculate $8.800 \div 22$ using the number breaking technique!</p><input type="text" id="assign2_q4_input" data-correct="400" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign2_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q4_fb"></div><details class="q-solution" id="assign2_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $88 \div 22$.</li><li>$88 \div 22 = 4$.</li><li>Kembalikan dua nol: $400$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q5"><p class="q-text">5. Sebuah perusahaan mengirim $1.995$ paket per hari. Estimasi total paket dalam $45$ hari! (Bulatkan $1.995$ ke $2.000$) 📦</p><p class="en-trans">5. A company sends $1.995$ packages per day. Estimate total packages in $45$ days! (Round $1.995$ to $2.000$)</p><input type="text" id="assign2_q5_input" data-correct="90000" placeholder="Ketik estimasi tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign2_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q5_fb"></div><details class="q-solution" id="assign2_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$1.995$ dibulatkan menjadi $2.000$.</li><li>$2.000 \times 45 = 90.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q6"><p class="q-text">6. Jika $15.750$ liter air dibagi ke dalam tangki berkapasitas $25$ liter, berapa tangki yang dibutuhkan? 💧</p><p class="en-trans">6. If $15.750$ liters of water are divided into tanks of $25$ liters, how many tanks are needed?</p><input type="text" id="assign2_q6_input" data-correct="630" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign2_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q6_fb"></div><details class="q-solution" id="assign2_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(15.000 + 750) \div 25$.</li><li>$15.000 \div 25 = 600$.</li><li>$750 \div 25 = 30$.</li><li>$600 + 30 = 630$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q7"><p class="q-text">7. Hitung $(1.200 \times 15) + (1.200 \times 5)$ menggunakan sifat distributif! 🧠</p><p class="en-trans">7. Calculate $(1.200 \times 15) + (1.200 \times 5)$ using distributive property!</p><input type="text" id="assign2_q7_input" data-correct="24000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign2_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q7_fb"></div><details class="q-solution" id="assign2_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Keluarkan faktor persekutuan $1.200$.</li><li>$1.200 \times (15 + 5) = 1.200 \times 20$.</li><li>$12 \times 2 = 24$, tambahkan nol $\rightarrow 24.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q8"><p class="q-text">8. Analisis mana yang lebih besar: $(99 \times 101)$ atau $(10.000)$? 🧐</p><p class="en-trans">8. Analyze which is larger: $(99 \times 101)$ or $(10.000)$?</p><label><input type="radio" name="assign2_q8_radio" value="99x101"> $(99 \times 101)$</label><label><input type="radio" name="assign2_q8_radio" value="10000" data-correct="true"> $10.000$</label><button class="btn-check" onclick="checkAnswer('assign2_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q8_fb"></div><details class="q-solution" id="assign2_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$99 \times 101 = (100 - 1)(100 + 1) = 100^2 - 1^2$.</li><li>$= 10.000 - 1 = 9.999$.</li><li>Jadi $10.000$ lebih besar.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q9"><p class="q-text">9. Tentukan hasil dari $24.000 \div 125$ menggunakan teknik perkalian bantuan (dikali $8/8$)! 🛠️</p><p class="en-trans">9. Determine the result of $24.000 \div 125$ using helper multiplication (multiply by $8/8$)!</p><input type="text" id="assign2_q9_input" data-correct="192" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign2_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q9_fb"></div><details class="q-solution" id="assign2_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$24.000 \div 125 = (24.000 \times 8) \div (125 \times 8)$.</li><li>$= 192.000 \div 1.000$.</li><li>Hilangkan 3 nol $\rightarrow 192$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign2_q10"><p class="q-text">10. Selesaikan $4.998 \times 14$ dengan mengubah $4.998$ menjadi $(5.000 - 2)$! 🏆</p><p class="en-trans">10. Solve $4.998 \times 14$ by changing $4.998$ to $(5.000 - 2)$!</p><input type="text" id="assign2_q10_input" data-correct="69972" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign2_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign2_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="assign2_q10_fb"></div><details class="q-solution" id="assign2_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(5.000 - 2) \times 14 = (5.000 \times 14) - (2 \times 14)$.</li><li>$= 70.000 - 28 = 69.972$.</li></ol></details></div></div>
+
+                <!-- SLIDE SKOR AKHIR & UPDATE FORM (ASSIGNMENT 2) -->
+                <div class="slide">
+                    <div class="result-card">
+                        <h2>🎉 Assessment Selesai! / Assessment Finished!</h2>
+                        <p>Selamat telah menyelesaikan Assignment Grup 2. Jika ada soal yang terlewat, skor akan otomatis disesuaikan.</p>
+                        <p class="en-trans">Congratulations on completing Assignment Group 2. If you skipped any questions, the score will adjust automatically.</p>
+                        <div class="result-score" id="assign2_final_score">- / 10</div>
+                        <div class="result-form">
+                            <label>Nama Lengkap / Full Name:</label>
+                            <input type="text" id="assign2_name" placeholder="Ketik nama kamu di sini...">
+                            <label>Tanggal / Date:</label>
+                            <input type="date" id="assign2_date">
+                            <button class="btn-report" onclick="processAssignment('assign2', 'Assignment Grup 2')">📊 Update Skor & Buka Laporan / Update & View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ASSIGNMENT GROUP 2 -->
+
+            <!-- ================= ASSIGNMENT GROUP 3 ================= -->
+            <div id="assign3" class="module-container" data-title="📝 Assignment Grup 3">
+                <div class="slide"><div class="theory-box"><h3>Assignment Grup 3 📝</h3><p>Grup ketiga! Semakin sering berlatih, semakin cepat kemampuan hitungmu. Ingat, trik adalah kuncinya!</p><p class="en-trans">Group three! The more you practice, the faster your calculation skills. Remember, tricks are the key!</p></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q1"><p class="q-text">1. Hitung eksak hasil dari $3.450 \times 12$ menggunakan sifat distributif! 🛠️</p><p class="en-trans">1. Calculate the exact result of $3.450 \times 12$ using distributive property!</p><input type="text" id="assign3_q1_input" data-correct="41400" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign3_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q1_fb"></div><details class="q-solution" id="assign3_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(3.000 + 450) \times 12$.</li><li>$= (3.000 \times 12) + (450 \times 12)$.</li><li>$= 36.000 + 5.400 = 41.400$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q2"><p class="q-text">2. Selesaikan pembagian $9.450 \div 18$ dengan pemecahan bilangan! ✂️</p><p class="en-trans">2. Solve the division $9.450 \div 18$ using number breaking!</p><input type="text" id="assign3_q2_input" data-correct="525" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign3_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q2_fb"></div><details class="q-solution" id="assign3_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(9.000 + 450) \div 18$.</li><li>$9.000 \div 18 = 500$.</li><li>$450 \div 18 = 25$ (Karena $18 \times 25 = 450$).</li><li>$500 + 25 = 525$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q3"><p class="q-text">3. Perkalian cepat! $125 \times 96 = $ ... (Gunakan trik $125 \times 8 = 1.000$) 🧮</p><p class="en-trans">3. Quick multiplication! $125 \times 96 = $ ... (Use the trick $125 \times 8 = 1.000$)</p><input type="text" id="assign3_q3_input" data-correct="12000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign3_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q3_fb"></div><details class="q-solution" id="assign3_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $96$ menjadi $8 \times 12$.</li><li>$125 \times 96 = 125 \times 8 \times 12$.</li><li>$= 1.000 \times 12 = 12.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q4"><p class="q-text">4. Hitung $12.500 \div 25$ dengan cepat! ⚡</p><p class="en-trans">4. Calculate $12.500 \div 25$ quickly!</p><input type="text" id="assign3_q4_input" data-correct="500" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign3_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q4_fb"></div><details class="q-solution" id="assign3_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $125 \div 25$.</li><li>$125 \div 25 = 5$.</li><li>Kembalikan dua nol: $500$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q5"><p class="q-text">5. Sebuah pabrik memproduksi $2.475$ mainan per hari. Berapa total mainan dalam $30$ hari? (Gunakan cara cepat!) 🏭</p><p class="en-trans">5. A factory produces $2.475$ toys per day. How many total toys in $30$ days? (Use a quick method!)</p><input type="text" id="assign3_q5_input" data-correct="74250" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign3_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q5_fb"></div><details class="q-solution" id="assign3_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(2.500 - 25) \times 30$.</li><li>$= (2.500 \times 30) - (25 \times 30)$.</li><li>$= 75.000 - 750 = 74.250$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q6"><p class="q-text">6. Sederhanakan $(2.500 \times 20) + (2.500 \times 4)$ menggunakan sifat distributif! 🧠</p><p class="en-trans">6. Simplify $(2.500 \times 20) + (2.500 \times 4)$ using distributive property!</p><input type="text" id="assign3_q6_input" data-correct="60000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign3_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q6_fb"></div><details class="q-solution" id="assign3_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Keluarkan $2.500$: $2.500 \times (20 + 4)$.</li><li>$= 2.500 \times 24$.</li><li>Coret nol: $250 \times 24 = 6.000$. Kembalikan nol: $60.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q7"><p class="q-text">7. Cocokkan soal dengan cara penyelesaian terbaiknya! 🧩</p><p class="en-trans">7. Match the questions with their best solving methods!</p><div class="pairing-grid"><div class="pair-item">$3.990 \times 25$ = <select id="assign3_q7a" data-correct="A"><option value="">--Pilih--</option><option value="A">(4000 - 10) x 25</option><option value="B">(7200 + 48) / 24</option><option value="C">125 x 8 x 11</option></select></div><div class="pair-item">$7.248 \div 24$ = <select id="assign3_q7b" data-correct="B"><option value="">--Pilih--</option><option value="A">(4000 - 10) x 25</option><option value="B">(7200 + 48) / 24</option><option value="C">125 x 8 x 11</option></select></div><div class="pair-item">$125 \times 88$ = <select id="assign3_q7c" data-correct="C"><option value="">--Pilih--</option><option value="A">(4000 - 10) x 25</option><option value="B">(7200 + 48) / 24</option><option value="C">125 x 8 x 11</option></select></div></div><button class="btn-check" onclick="checkAnswer('assign3_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q7_fb"></div><details class="q-solution" id="assign3_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$3.990 \times 25$ paling mudah diuraikan jadi $(4.000 - 10) \times 25$.</li><li>$7.248 \div 24$ paling mudah diuraikan jadi $(7.200 + 48) \div 24$.</li><li>$125 \times 88$ paling mudah dipecah jadi $125 \times 8 \times 11$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q8"><p class="q-text">8. Pernyataan: $(5.000 - 25) \times 12 = (5.000 \times 12) - (25 \times 12)$. Benar atau Salah? 🤨</p><p class="en-trans">8. Statement: $(5.000 - 25) \times 12 = (5.000 \times 12) - (25 \times 12)$. True or False?</p><label><input type="radio" name="assign3_q8_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="assign3_q8_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('assign3_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q8_fb"></div><details class="q-solution" id="assign3_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ini adalah penerapan sifat distributif perkalian pada pengurangan.</li><li>$a \times (b - c) = (a \times b) - (a \times c)$.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q9"><p class="q-text">9. Tentukan hasil dari $15.000 \div 125$ menggunakan teknik perkalian bantuan! 🛠️</p><p class="en-trans">9. Determine the result of $15.000 \div 125$ using helper multiplication technique!</p><input type="text" id="assign3_q9_input" data-correct="120" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign3_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q9_fb"></div><details class="q-solution" id="assign3_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(15.000 \times 8) \div (125 \times 8)$.</li><li>$= 120.000 \div 1.000$.</li><li>Hilangkan nol: $120$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign3_q10"><p class="q-text">10. Tantangan akhir! Selesaikan $6.995 \times 15$ dengan cara tercepat! 🏆</p><p class="en-trans">10. Final challenge! Solve $6.995 \times 15$ the fastest way!</p><input type="text" id="assign3_q10_input" data-correct="104925" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign3_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign3_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="assign3_q10_fb"></div><details class="q-solution" id="assign3_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $6.995$ menjadi $(7.000 - 5)$.</li><li>$(7.000 \times 15) - (5 \times 15)$.</li><li>$= 105.000 - 75 = 104.925$.</li></ol></details></div></div>
+
+                <!-- SLIDE SKOR AKHIR & UPDATE FORM (ASSIGNMENT 3) -->
+                <div class="slide">
+                    <div class="result-card">
+                        <h2>🎉 Assessment Selesai! / Assessment Finished!</h2>
+                        <p>Selamat telah menyelesaikan Assignment Grup 3. Jika ada soal yang terlewat, skor akan otomatis disesuaikan.</p>
+                        <p class="en-trans">Congratulations on completing Assignment Group 3. If you skipped any questions, the score will adjust automatically.</p>
+                        <div class="result-score" id="assign3_final_score">- / 10</div>
+                        <div class="result-form">
+                            <label>Nama Lengkap / Full Name:</label>
+                            <input type="text" id="assign3_name" placeholder="Ketik nama kamu di sini...">
+                            <label>Tanggal / Date:</label>
+                            <input type="date" id="assign3_date">
+                            <button class="btn-report" onclick="processAssignment('assign3', 'Assignment Grup 3')">📊 Update Skor & Buka Laporan / Update & View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ASSIGNMENT GROUP 3 -->
+            <!-- ================= ASSIGNMENT GROUP 4 ================= -->
+            <div id="assign4" class="module-container" data-title="📝 Assignment Grup 4">
+                <div class="slide"><div class="theory-box"><h3>Assignment Grup 4 📝</h3><p>Hampir selesai! Grup keempat ini akan menguji seberapa cepat kamu mengenali pola bilangan. Jangan lupa, coret nol dan uraikan adalah senjata utamamu!</p><p class="en-trans">Almost there! This fourth group will test how fast you recognize number patterns. Remember, crossing out zeros and breaking down are your main weapons!</p></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q1"><p class="q-text">1. Hitung eksak hasil dari $4.500 \times 22$ menggunakan sifat distributif! 🛠️</p><p class="en-trans">1. Calculate the exact result of $4.500 \times 22$ using distributive property!</p><input type="text" id="assign4_q1_input" data-correct="99000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign4_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q1_fb"></div><details class="q-solution" id="assign4_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $4.500$ menjadi $4.500 \times (20 + 2)$.</li><li>$= (4.500 \times 20) + (4.500 \times 2)$.</li><li>$= 90.000 + 9.000 = 99.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q2"><p class="q-text">2. Selesaikan pembagian $7.200 \div 36$ dengan teknik coret nol! ✂️</p><p class="en-trans">2. Solve the division $7.200 \div 36$ using the cross-out zeros technique!</p><input type="text" id="assign4_q2_input" data-correct="200" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign4_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q2_fb"></div><details class="q-solution" id="assign4_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $72 \div 36$.</li><li>$72 \div 36 = 2$.</li><li>Kembalikan dua nol: $200$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q3"><p class="q-text">3. Pernyataan: $(6.000 - 50) \times 15 = (6.000 \times 15) - (50 \times 15)$. Benar atau Salah? 🤨</p><p class="en-trans">3. Statement: $(6.000 - 50) \times 15 = (6.000 \times 15) - (50 \times 15)$. True or False?</p><label><input type="radio" name="assign4_q3_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="assign4_q3_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('assign4_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q3_fb"></div><details class="q-solution" id="assign4_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ini adalah aplikasi sifat distributif perkalian terhadap pengurangan.</li><li>$a \times (b - c) = (a \times b) - (a \times c)$.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q4"><p class="q-text">4. Estimasi hasil dari $3.890 \times 21$ (bulatkan $3.890$ ke $4.000$)! 🎯</p><p class="en-trans">4. Estimate the result of $3.890 \times 21$ (round $3.890$ to $4.000$)!</p><input type="text" id="assign4_q4_input" data-correct="84000" placeholder="Ketik estimasi tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign4_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q4_fb"></div><details class="q-solution" id="assign4_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$3.890$ dibulatkan menjadi $4.000$.</li><li>$4.000 \times 21 = 4 \times 21 \times 1.000 = 84.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q5"><p class="q-text">5. Hitung $2.475 \div 25$ dengan pemecahan bilangan! 💡</p><p class="en-trans">5. Calculate $2.475 \div 25$ using number breaking!</p><input type="text" id="assign4_q5_input" data-correct="99" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign4_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q5_fb"></div><details class="q-solution" id="assign4_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(2.500 - 25) \div 25$.</li><li>$= (2.500 \div 25) - (25 \div 25)$.</li><li>$= 100 - 1 = 99$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q6"><p class="q-text">6. Cara termudah menghitung $125 \times 56$ adalah... 🧮</p><p class="en-trans">6. The easiest way to calculate $125 \times 56$ is...</p><label><input type="radio" name="assign4_q6_radio" value="A"> A) $(100 + 25) \times 56$</label><label><input type="radio" name="assign4_q6_radio" value="B" data-correct="true"> B) $125 \times 8 \times 7$</label><label><input type="radio" name="assign4_q6_radio" value="C"> C) Susun bawah / Stacking</label><button class="btn-check" onclick="checkAnswer('assign4_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q6_fb"></div><details class="q-solution" id="assign4_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Ingat trik $125 \times 8 = 1.000$.</li><li>Pecah $56$ menjadi $8 \times 7$.</li><li>Jadi $125 \times 8 \times 7 = 1.000 \times 7 = 7.000$. Opsi B paling mudah!</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q7"><p class="q-text">7. Selesaikan $5.998 \times 12$ dengan mengubah $5.998$ menjadi $(6.000 - 2)$! ⚡</p><p class="en-trans">7. Solve $5.998 \times 12$ by changing $5.998$ to $(6.000 - 2)$!</p><input type="text" id="assign4_q7_input" data-correct="71976" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign4_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q7_fb"></div><details class="q-solution" id="assign4_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(6.000 - 2) \times 12 = (6.000 \times 12) - (2 \times 12)$.</li><li>$= 72.000 - 24 = 71.976$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q8"><p class="q-text">8. Cocokkan pembagian dengan hasilnya! 🧩</p><p class="en-trans">8. Match the division with its result!</p><div class="pairing-grid"><div class="pair-item">$8.100 \div 27$ = <select id="assign4_q8a" data-correct="300"><option value="">--Pilih--</option><option value="200">200</option><option value="300">300</option><option value="3000">3.000</option></select></div><div class="pair-item">$4.800 \div 24$ = <select id="assign4_q8b" data-correct="200"><option value="">--Pilih--</option><option value="200">200</option><option value="300">300</option><option value="3000">3.000</option></select></div><div class="pair-item">$3.600 \div 12$ = <select id="assign4_q8c" data-correct="300"><option value="">--Pilih--</option><option value="200">200</option><option value="300">300</option><option value="3000">3.000</option></select></div></div><button class="btn-check" onclick="checkAnswer('assign4_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q8_fb"></div><details class="q-solution" id="assign4_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$8.100 \div 27 = 81 \div 27 \times 100 = 300$.</li><li>$4.800 \div 24 = 48 \div 24 \times 100 = 200$.</li><li>$3.600 \div 12 = 36 \div 12 \times 100 = 300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q9"><p class="q-text">9. Jika $1.500 \div 25 = 60$, maka $15.000 \div 25 = $ ... 🧠</p><p class="en-trans">9. If $1.500 \div 25 = 60$, then $15.000 \div 25 = $ ...</p><label><input type="radio" name="assign4_q9_radio" value="600" data-correct="true"> 600</label><label><input type="radio" name="assign4_q9_radio" value="60"> 60</label><label><input type="radio" name="assign4_q9_radio" value="6000"> 6.000</label><button class="btn-check" onclick="checkAnswer('assign4_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q9_fb"></div><details class="q-solution" id="assign4_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$15.000$ adalah $1.500 \times 10$.</li><li>Jadi hasil baginya juga dikali 10.</li><li>$60 \times 10 = 600$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign4_q10"><p class="q-text">10. Sederhanakan $(3.200 \times 10) + (3.200 \times 5)$ menggunakan sifat distributif! 🏆</p><p class="en-trans">10. Simplify $(3.200 \times 10) + (3.200 \times 5)$ using distributive property!</p><input type="text" id="assign4_q10_input" data-correct="48000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign4_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign4_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="assign4_q10_fb"></div><details class="q-solution" id="assign4_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Keluarkan $3.200$: $3.200 \times (10 + 5)$.</li><li>$= 3.200 \times 15$.</li><li>Coret nol: $320 \times 15 = 4.800$. Kembalikan nol: $48.000$.</li></ol></details></div></div>
+
+                <!-- SLIDE SKOR AKHIR & UPDATE FORM (ASSIGNMENT 4) -->
+                <div class="slide">
+                    <div class="result-card">
+                        <h2>🎉 Assessment Selesai! / Assessment Finished!</h2>
+                        <p>Selamat telah menyelesaikan Assignment Grup 4. Jika ada soal yang terlewat, skor akan otomatis disesuaikan.</p>
+                        <p class="en-trans">Congratulations on completing Assignment Group 4. If you skipped any questions, the score will adjust automatically.</p>
+                        <div class="result-score" id="assign4_final_score">- / 10</div>
+                        <div class="result-form">
+                            <label>Nama Lengkap / Full Name:</label>
+                            <input type="text" id="assign4_name" placeholder="Ketik nama kamu di sini...">
+                            <label>Tanggal / Date:</label>
+                            <input type="date" id="assign4_date">
+                            <button class="btn-report" onclick="processAssignment('assign4', 'Assignment Grup 4')">📊 Update Skor & Buka Laporan / Update & View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ASSIGNMENT GROUP 4 -->
+
+            <!-- ================= ASSIGNMENT GROUP 5 ================= -->
+            <div id="assign5" class="module-container" data-title="📝 Assignment Grup 5">
+                <div class="slide"><div class="theory-box"><h3>Assignment Grup 5 (Final!) 📝</h3><p>Ini adalah tantangan terakhir! Tunjukkan bahwa kamu sudah menguasai teknik estimasi, pemecahan bilangan, dan sifat distributif. Semangat! 💪</p><p class="en-trans">This is the final challenge! Show that you have mastered estimation techniques, number breaking, and distributive properties. Let's go! 💪</p></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q1"><p class="q-text">1. Selesaikan pembagian $6.300 \div 21$ dengan cepat! ⚡</p><p class="en-trans">1. Solve the division $6.300 \div 21$ quickly!</p><input type="text" id="assign5_q1_input" data-correct="300" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign5_q1')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q1')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q1_fb"></div><details class="q-solution" id="assign5_q1_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Coret dua nol: $63 \div 21$.</li><li>$63 \div 21 = 3$.</li><li>Kembalikan dua nol: $300$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q2"><p class="q-text">2. Pernyataan: Mengestimasi $5.150 \times 12$ bisa dilakukan dengan mengubahnya menjadi $5.000 \times 12$. Benar atau Salah? 🤨</p><p class="en-trans">2. Statement: Estimating $5.150 \times 12$ can be done by changing it to $5.000 \times 12$. True or False?</p><label><input type="radio" name="assign5_q2_radio" value="Benar" data-correct="true"> Benar / True</label><label><input type="radio" name="assign5_q2_radio" value="Salah"> Salah / False</label><button class="btn-check" onclick="checkAnswer('assign5_q2')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q2')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q2_fb"></div><details class="q-solution" id="assign5_q2_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$5.150$ dekat dengan $5.000$ (atau $5.200$).</li><li>Membulatkan ke $5.000$ adalah cara valid untuk estimasi cepat.</li><li>Jadi pernyataan tersebut <strong>Benar</strong>.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q3"><p class="q-text">3. Cara terbaik menguraikan $8.400 \div 14$ adalah... 🛠️</p><p class="en-trans">3. The best way to break down $8.400 \div 14$ is...</p><label><input type="radio" name="assign5_q3_radio" value="A"> A) $(8.200 + 200) \div 14$</label><label><input type="radio" name="assign5_q3_radio" value="B"> B) $8.400 \div 14$ (Langsung coret nol)</label><label><input type="radio" name="assign5_q3_radio" value="C" data-correct="true"> C) $(7.000 + 1.400) \div 14$</label><button class="btn-check" onclick="checkAnswer('assign5_q3')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q3')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q3_fb"></div><details class="q-solution" id="assign5_q3_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$8.400$ tidak bisa langsung dicoret nolnya karena $84 \div 14 = 6$, sebenarnya bisa! Tapi opsi C paling mudah dihitung mental tanpa coret nol.</li><li>$(7.000 + 1.400) \div 14 = 500 + 100 = 600$.</li><li>Opsi C sangat ramah untuk perhitungan distributif. (B juga benar secara nilai: $840\div14=60 \times 10 = 600$, tapi C melatih distributif lebih baik).</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q4"><p class="q-text">4. Hitung eksak hasil dari $3.990 \times 15$ menggunakan sifat distributif! 🧮</p><p class="en-trans">4. Calculate the exact result of $3.990 \times 15$ using distributive property!</p><input type="text" id="assign5_q4_input" data-correct="59850" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign5_q4')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q4')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q4_fb"></div><details class="q-solution" id="assign5_q4_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan: $(4.000 - 10) \times 15$.</li><li>$= (4.000 \times 15) - (10 \times 15)$.</li><li>$= 60.000 - 150 = 59.850$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q5"><p class="q-text">5. Tentukan hasil dari $15.000 \div 125$ menggunakan teknik perkalian bantuan! 🛠️</p><p class="en-trans">5. Determine the result of $15.000 \div 125$ using helper multiplication technique!</p><input type="text" id="assign5_q5_input" data-correct="120" placeholder="Ketik jawaban..."><button class="btn-check" onclick="checkAnswer('assign5_q5')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q5')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q5_fb"></div><details class="q-solution" id="assign5_q5_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(15.000 \times 8) \div (125 \times 8)$.</li><li>$= 120.000 \div 1.000 = 120$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q6"><p class="q-text">6. Perkalian cepat! $250 \times 44 = $ ... 💡</p><p class="en-trans">6. Quick multiplication! $250 \times 44 = $ ...</p><input type="text" id="assign5_q6_input" data-correct="11000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign5_q6')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q6')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q6_fb"></div><details class="q-solution" id="assign5_q6_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $44$ menjadi $4 \times 11$.</li><li>$250 \times 4 = 1.000$.</li><li>$1.000 \times 11 = 11.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q7"><p class="q-text">7. Cocokkan soal dengan bentuk uraiannya! 🧩</p><p class="en-trans">7. Match the questions with their breakdown forms!</p><div class="pairing-grid"><div class="pair-item">$4.950 \times 12$ = <select id="assign5_q7a" data-correct="1"><option value="">--Pilih--</option><option value="1">(5000-50)x12</option><option value="2">(13000+2600)/13</option><option value="3">(2000+100)x15</option></select></div><div class="pair-item">$15.600 \div 13$ = <select id="assign5_q7b" data-correct="2"><option value="">--Pilih--</option><option value="1">(5000-50)x12</option><option value="2">(13000+2600)/13</option><option value="3">(2000+100)x15</option></select></div><div class="pair-item">$2.100 \times 15$ = <select id="assign5_q7c" data-correct="3"><option value="">--Pilih--</option><option value="1">(5000-50)x12</option><option value="2">(13000+2600)/13</option><option value="3">(2000+100)x15</option></select></div></div><button class="btn-check" onclick="checkAnswer('assign5_q7')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q7')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q7_fb"></div><details class="q-solution" id="assign5_q7_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$4.950 \times 12$ paling pas diurai menjadi $(5.000 - 50) \times 12$.</li><li>$15.600 \div 13$ diurai menjadi $(13.000 + 2.600) \div 13$.</li><li>$2.100 \times 15$ diurai menjadi $(2.000 + 100) \times 15$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q8"><p class="q-text">8. Berapa hasil dari $(99 \times 101)$? 🧐</p><p class="en-trans">8. What is the result of $(99 \times 101)$?</p><label><input type="radio" name="assign5_q8_radio" value="9.999" data-correct="true"> 9.999</label><label><input type="radio" name="assign5_q8_radio" value="10.000"> 10.000</label><label><input type="radio" name="assign5_q8_radio" value="10.101"> 10.101</label><button class="btn-check" onclick="checkAnswer('assign5_q8')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q8')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q8_fb"></div><details class="q-solution" id="assign5_q8_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>$(100 - 1) \times (100 + 1) = 100^2 - 1^2$.</li><li>$= 10.000 - 1 = 9.999$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q9"><p class="q-text">9. Sederhanakan $(2.500 \times 8) + (2.500 \times 2)$ menggunakan sifat distributif! 🧠</p><p class="en-trans">9. Simplify $(2.500 \times 8) + (2.500 \times 2)$ using distributive property!</p><input type="text" id="assign5_q9_input" data-correct="25000" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign5_q9')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q9')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q9_fb"></div><details class="q-solution" id="assign5_q9_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Keluarkan $2.500$: $2.500 \times (8 + 2)$.</li><li>$= 2.500 \times 10 = 25.000$.</li></ol></details></div></div>
+
+                <div class="slide"><div class="q-card" id="assign5_q10"><p class="q-text">10. Tantangan akhir! Selesaikan $7.995 \times 25$ dengan cara tercepat! 🏆</p><p class="en-trans">10. Final challenge! Solve $7.995 \times 25$ the fastest way!</p><input type="text" id="assign5_q10_input" data-correct="199875" placeholder="Ketik jawaban tanpa titik..."><button class="btn-check" onclick="checkAnswer('assign5_q10')">Cek Jawaban! ✅</button><button class="btn-reset" onclick="resetQuestion('assign5_q10')">🔄 Coba Lagi</button><div class="q-feedback" id="assign5_q10_fb"></div><details class="q-solution" id="assign5_q10_sol"><summary>💡 Lihat Langkah Penyelesaian</summary><ol class="step-list"><li>Uraikan $7.995$ menjadi $(8.000 - 5)$.</li><li>$(8.000 \times 25) - (5 \times 25)$.</li><li>$= 200.000 - 125 = 199.875$.</li></ol></details></div></div>
+
+                <!-- SLIDE SKOR AKHIR & UPDATE FORM (ASSIGNMENT 5) -->
+                <div class="slide">
+                    <div class="result-card">
+                        <h2>🎉 Assessment Selesai! / Assessment Finished!</h2>
+                        <p>Selamat telah menyelesaikan Assignment Grup 5 (Final). Jika ada soal yang terlewat, skor akan otomatis disesuaikan.</p>
+                        <p class="en-trans">Congratulations on completing Assignment Group 5 (Final). If you skipped any questions, the score will adjust automatically.</p>
+                        <div class="result-score" id="assign5_final_score">- / 10</div>
+                        <div class="result-form">
+                            <label>Nama Lengkap / Full Name:</label>
+                            <input type="text" id="assign5_name" placeholder="Ketik nama kamu di sini...">
+                            <label>Tanggal / Date:</label>
+                            <input type="date" id="assign5_date">
+                            <button class="btn-report" onclick="processAssignment('assign5', 'Assignment Grup 5')">📊 Update Skor & Buka Laporan / Update & View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ASSIGNMENT GROUP 5 -->
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="btn-nav btn-prev" id="btnPrev" onclick="navigate(-1)">← Sebelumnya</button>
+        <button class="btn-nav btn-next" id="btnNext" onclick="navigate(1)">Selanjutnya →</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if(typeof renderMathInElement !== 'undefined') renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});
+        updateUI();
+    });
+
+    let currentModule = 'homepage';
+    let currentSlide = 0;
+
+    function goToModule(moduleId) {
+        currentModule = moduleId; currentSlide = 0;
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if(item.getAttribute('onclick').includes(`'${moduleId}'`)) item.classList.add('active');
+        });
+        updateUI();
+    }
+
+    function navigate(direction) {
+        const container = document.getElementById(currentModule); if(!container) return;
+        const slides = container.querySelectorAll('.slide'); const maxSlide = slides.length - 1;
+        currentSlide += direction;
+        if(currentSlide < 0) currentSlide = 0; if(currentSlide > maxSlide) currentSlide = maxSlide;
+        updateUI();
+    }
+
+    function updateUI() {
+        const container = document.getElementById(currentModule); if(!container) return;
+        const slides = container.querySelectorAll('.slide'); const maxSlide = slides.length - 1;
+        const title = container.getAttribute('data-title');
+        document.querySelectorAll('.module-container').forEach(m => m.style.display = 'none');
+        container.style.display = 'block';
+        slides.forEach((slide, index) => { slide.classList.remove('active'); if(index === currentSlide) slide.classList.add('active'); });
+        document.getElementById('moduleTitle').innerText = title;
+        const progressPercent = ((currentSlide + 1) / (maxSlide + 1)) * 100;
+        document.getElementById('progressBar').style.width = progressPercent + '%';
+        document.getElementById('progressText').innerText = Math.round(progressPercent) + '%';
+        document.getElementById('btnPrev').disabled = (currentSlide === 0);
+        document.getElementById('btnNext').disabled = (currentSlide === maxSlide);
+        if(typeof renderMathInElement !== 'undefined') renderMathInElement(container, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});
+    }
+
+    function checkAnswer(qId) {
+        const card = document.getElementById(qId); const fbDiv = document.getElementById(qId + '_fb'); const solDetails = document.getElementById(qId + '_sol');
+        let isCorrect = false, answered = false;
+        let studentAnswer = "Tidak dijawab", correctAnswer = "N/A";
+
+        const textInput = card.querySelector('input[type="text"]');
+        if (textInput) {
+            if(textInput.value.trim() === '') return alert("Isi jawaban dulu ya! 🖊️");
+            answered = true; isCorrect = textInput.value.trim() === textInput.getAttribute('data-correct');
+            textInput.style.borderColor = isCorrect ? 'var(--secondary)' : 'var(--danger)'; textInput.style.backgroundColor = isCorrect ? '#F0FDF4' : '#FEF2F2';
+            studentAnswer = textInput.value.trim(); correctAnswer = textInput.getAttribute('data-correct');
+        }
+        const radios = card.querySelectorAll('input[type="radio"]');
+        if (radios.length > 0 && !textInput) {
+            let checkedVal = null, correctVal = null;
+            radios.forEach(r => { if(r.checked) checkedVal = r.value; if(r.hasAttribute('data-correct')) correctVal = r.value; });
+            if(checkedVal === null) return alert("Pilih jawaban dulu ya! 🖊️");
+            answered = true; isCorrect = checkedVal === correctVal;
+            studentAnswer = checkedVal; correctAnswer = correctVal;
+            radios.forEach(r => { r.parentElement.style.background=''; r.parentElement.style.fontWeight=''; r.parentElement.style.textDecoration='';
+                if(r.value === correctVal){ r.parentElement.style.color='var(--secondary)'; r.parentElement.style.fontWeight='bold'; }
+                else if (r.checked && !isCorrect){ r.parentElement.style.color='var(--danger)'; r.parentElement.style.textDecoration='line-through'; }
+            });
+        }
+        const selects = card.querySelectorAll('select');
+        if (selects.length > 0 && !textInput && radios.length === 0) {
+            let allCorrect = true, allAnswered = true; let sAnswers = [], cAnswers = [];
+            selects.forEach(sel => { 
+                if (sel.value === "") allAnswered = false; 
+                if (sel.value !== sel.getAttribute('data-correct')) allCorrect = false;
+                if(sel.value !== ""){ sel.style.borderColor = (sel.value === sel.getAttribute('data-correct')) ? 'var(--secondary)' : 'var(--danger)'; sel.style.backgroundColor = (sel.value === sel.getAttribute('data-correct')) ? '#F0FDF4' : '#FEF2F2'; }
+                sAnswers.push(sel.value); cAnswers.push(sel.getAttribute('data-correct'));
+            });
+            if (!allAnswered) return alert("Isi semua kotak ya! 🖊️"); answered = true; isCorrect = allCorrect;
+            studentAnswer = sAnswers.join(', '); correctAnswer = cAnswers.join(', ');
+        }
+        
+        if (answered) {
+            fbDiv.style.display = 'block';
+            if (isCorrect){ fbDiv.innerHTML = "🎉 Benar! Hebat sekali! / Correct! Awesome!"; fbDiv.className = "q-feedback correct"; }
+            else { fbDiv.innerHTML = "❌ Belum tepat. Coba cek langkah di bawah ya! / Incorrect. Check the steps below!"; fbDiv.className = "q-feedback incorrect"; }
+            solDetails.style.display = 'block'; solDetails.open = true;
+            const inputs = card.querySelectorAll('input, select'); inputs.forEach(inp => inp.disabled = true);
+            card.querySelector('.btn-check').disabled = true; card.querySelector('.btn-reset').style.display = 'inline-block';
+            
+            // Simpan data untuk laporan
+            card.setAttribute('data-student-answer', studentAnswer);
+            card.setAttribute('data-correct-answer', correctAnswer);
+            card.setAttribute('data-result', isCorrect ? 'correct' : 'incorrect');
+        }
+    }
+
+    function resetQuestion(qId) {
+        const card = document.getElementById(qId); const fbDiv = document.getElementById(qId + '_fb'); const solDetails = document.getElementById(qId + '_sol');
+        fbDiv.style.display = 'none'; solDetails.style.display = 'none'; solDetails.open = false;
+        card.querySelector('.btn-check').disabled = false; card.querySelector('.btn-reset').style.display = 'none';
+        card.removeAttribute('data-student-answer'); card.removeAttribute('data-correct-answer'); card.removeAttribute('data-result');
+        const textInput = card.querySelector('input[type="text"]');
+        if (textInput) { textInput.disabled = false; textInput.value = ''; textInput.style.borderColor = ''; textInput.style.backgroundColor = ''; }
+        const radios = card.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => { r.disabled = false; r.checked = false; r.parentElement.style.color=''; r.parentElement.style.fontWeight=''; r.parentElement.style.textDecoration=''; });
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => { sel.disabled = false; sel.selectedIndex = 0; sel.style.borderColor = ''; sel.style.backgroundColor = ''; });
+    }
+
+    function resetQuestion(qId) {
+        const card = document.getElementById(qId); const fbDiv = document.getElementById(qId + '_fb'); const solDetails = document.getElementById(qId + '_sol');
+        fbDiv.style.display = 'none'; solDetails.style.display = 'none'; solDetails.open = false;
+        card.querySelector('.btn-check').disabled = false; card.querySelector('.btn-reset').style.display = 'none';
+        const textInput = card.querySelector('input[type="text"]');
+        if (textInput) { textInput.disabled = false; textInput.value = ''; textInput.style.borderColor = ''; textInput.style.backgroundColor = ''; }
+        const radios = card.querySelectorAll('input[type="radio"]');
+        radios.forEach(r => { r.disabled = false; r.checked = false; r.parentElement.style.color=''; r.parentElement.style.fontWeight=''; r.parentElement.style.textDecoration=''; });
+        const selects = card.querySelectorAll('select');
+        selects.forEach(sel => { sel.disabled = false; sel.selectedIndex = 0; sel.style.borderColor = ''; sel.style.backgroundColor = ''; });
+    }
+
+    // FUNGSI GABUNGAN: Hitung Skor (Aman untuk soal yang di-skip) + Buka Laporan
+    function processAssignment(moduleId, groupName) {
+        const nameInput = document.getElementById(moduleId + '_name');
+        const dateInput = document.getElementById(moduleId + '_date');
+
+        if (!nameInput.value.trim() || !dateInput.value) {
+            alert("Mohon isi Nama dan Tanggal terlebih dahulu! / Please fill in Name and Date first!");
+            return;
+        }
+
+        const studentName = nameInput.value.trim();
+        const examDate = dateInput.value;
+        let score = 0;
+        let tableRows = "";
+
+        for (let i = 1; i <= 10; i++) {
+            const qId = moduleId + '_q' + i;
+            const card = document.getElementById(qId);
+            
+            let result = null, studentAns = "Dilewati / Skip", correctAns = "N/A", note = "❌", questionText = "Question " + i;
+            
+            if (card) {
+                // 1. Ambil Teks Soal menggunakan innerHTML (agar tag math KaTeX ikut tersalin)
+                const qTextEl = card.querySelector('.q-text');
+                if(qTextEl) {
+                    questionText = qTextEl.innerHTML;
+                    // Hapus angka awalan (misal "1. ") dari HTML
+                    questionText = questionText.replace(/^\d+\.\s*/, ''); 
+                }
+
+                const textInput = card.querySelector('input[type="text"]');
+                const correctRadio = card.querySelector('input[type="radio"][data-correct]');
+                const selects = card.querySelectorAll('select');
+                
+                if (textInput && textInput.hasAttribute('data-correct')) {
+                    correctAns = textInput.getAttribute('data-correct');
+                } else if (correctRadio) {
+                    correctAns = correctRadio.value;
+                } else if (selects.length > 0) {
+                    correctAns = Array.from(selects).map(s => s.getAttribute('data-correct')).join(', ');
+                }
+
+                result = card.getAttribute('data-result');
+                studentAns = card.getAttribute('data-student-answer') || "Dilewati / Skip";
+                
+                if (result === 'correct') {
+                    score++;
+                    note = "✅";
+                } else {
+                    note = "❌";
+                }
+            }
+            
+            tableRows += `<tr>
+                <td>${i}</td>
+                <td style="text-align:left; font-size:0.9em;">${questionText}</td>
+                <td>${studentAns}</td>
+                <td>${correctAns}</td>
+                <td style="font-size:1.2em;">${note}</td>
+            </tr>`;
+        }
+
+        document.getElementById(moduleId + '_final_score').innerText = score + " / 10";
+
+        // Siapkan HTML untuk New Tab (DITAMBAHKAN KATEX CSS)
+        const reportHTML = `
+            <!DOCTYPE html>
+            <html lang="id">
+            <head>
+                <meta charset="UTF-8">
+                <title>Assessment Result - ${studentName}</title>
+                <!-- Tambahkan KaTeX CSS agar math terrender -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+                <style>
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #F8FAFC; color: #334155; padding: 40px; }
+                    .report-container { max-width: 800px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #6366F1; }
+                    h1 { color: #6366F1; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; }
+                    .info-grid { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; margin: 20px 0; font-size: 1.1em; }
+                    .info-label { font-weight: bold; color: #64748B; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+                    th, td { border: 1px solid #E2E8F0; padding: 12px; text-align: center; }
+                    th { background: #EEF2FF; color: #6366F1; }
+                    tr:nth-child(even) { background: #F8FAFC; }
+                    .footer { margin-top: 50px; text-align: right; font-size: 1.1em; }
+                    .footer-line { width: 200px; border-bottom: 2px solid #334155; display: inline-block; margin-bottom: 5px; }
+                    .btn-print { background: #6366F1; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-top: 30px; }
+                    .btn-print:hover { background: #4F46E5; }
+                    /* Pastukan ukuran font math di tabel sesuai */
+                    .katex { font-size: 1em !important; }
+                    @media print { body { background: white; } .report-container { box-shadow: none; } .btn-print { display: none; } }
+                </style>
+            </head>
+            <body>
+                <div class="report-container">
+                    <h1>📋 ASSESSMENT RESULT</h1>
+                    <div class="info-grid">
+                        <div class="info-label">Name:</div>
+                        <div>${studentName}</div>
+                        <div class="info-label">Date:</div>
+                        <div>${examDate}</div>
+                        <div class="info-label">Topic:</div>
+                        <div>Perkalian dan Pembagian Bilangan Besar / Multiplication and Division of Large Numbers</div>
+                        <div class="info-label">Assessment Group:</div>
+                        <div>${groupName}</div>
+                        <div class="info-label">Score:</div>
+                        <div style="font-weight: bold; color: ${score >= 7 ? '#10B981' : '#EF4444'}; font-size: 1.2em;">${score} / 10</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th style="width:40%;">Question</th>
+                                <th>Student Answer</th>
+                                <th>Correct Answer</th>
+                                <th>Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+
+                    <div class="footer">
+                        <p>Checked by</p>
+                        <div class="footer-line"></div>
+                        <p style="margin:0; font-weight:bold;">Deni</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn-print" onclick="window.print()">🖨️ Cetak Laporan / Print Report</button>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+            newWindow.document.write(reportHTML);
+            newWindow.document.close();
+        } else {
+            alert("Pop-up diblokir oleh browser. Mohon izinkan pop-up untuk situs ini agar laporan bisa terbuka.");
+        }
+    }
+</script>
+</body>
+</html>

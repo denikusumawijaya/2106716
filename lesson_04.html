@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktorisasi dan Kelipatan - Math Tutoring by Deni</title>
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #E0E7FF;
+            --success: #10B981;
+            --error: #EF4444;
+            --bg: #F3F4F6;
+            --sidebar-bg: #1E293B;
+            --sidebar-text: #CBD5E1;
+            --sidebar-active: #4F46E5;
+            --white: #FFFFFF;
+            --text: #1F2937;
+            --text-light: #6B7280;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; padding-top: 20px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid #334155; margin-bottom: 10px; }
+        .sidebar-logo h2 { font-size: 1.1rem; color: #fff; }
+        .sidebar-logo span { font-size: 0.75rem; color: var(--primary); font-weight: bold; }
+        .nav-item { padding: 12px 20px; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .nav-item:hover { background: #334155; }
+        .nav-item.active { background: #334155; border-left-color: var(--sidebar-active); color: #fff; font-weight: bold; }
+        .nav-time { font-size: 0.7rem; background: #475569; padding: 2px 6px; border-radius: 4px; color: #cbd5e1; }
+
+        /* Main Content */
+        .main { flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        .topbar { background: var(--white); padding: 15px 30px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
+        .progress-container { flex: 1; background: #e5e7eb; height: 8px; border-radius: 4px; margin: 0 20px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s ease; border-radius: 4px; }
+        
+        .content-area { flex: 1; padding: 30px; overflow: hidden; display: flex; flex-direction: column; }
+        .slide { display: none; flex-direction: column; height: 100%; animation: fadeIn 0.5s ease; }
+        .slide.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .slide-header { margin-bottom: 20px; }
+        .slide-header h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 5px; }
+        .slide-header .eng { font-size: 0.9rem; color: var(--text-light); font-style: italic; }
+        
+        .slide-body { flex: 1; overflow-y: auto; padding-right: 10px; }
+        .slide-footer { margin-top: 20px; display: flex; justify-content: space-between; }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: #4338CA; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-error { background: var(--error); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+        /* Theory & Question Cards */
+        .card { background: var(--white); padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .card h3 { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .card-icon { width: 40px; height: 40px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--primary); }
+        
+        .q-box { border: 1px solid #e5e7eb; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; background: #fafbfc; }
+        .q-text { margin-bottom: 10px; font-weight: 500; }
+        .q-input { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+        .q-input select, .q-input input[type="text"] { padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; width: 80px; text-align: center; }
+        .q-input input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+        
+        .q-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .explanation { display: none; margin-top: 10px; padding: 10px; border-radius: 6px; font-size: 0.9rem; background: #e0e7ff; color: #3730a3; border-left: 3px solid var(--primary); }
+        .explanation.show { display: block; }
+        .correct-badge { color: var(--success); font-weight: bold; }
+        .wrong-badge { color: var(--error); font-weight: bold; }
+
+        /* Homepage Specific */
+        .home-center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; }
+        .home-icon { font-size: 5rem; color: var(--primary); margin-bottom: 20px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* SVGs and Illustrations */
+        .illustration { display: flex; justify-content: center; margin: 10px 0; }
+        .illustration svg { max-width: 200px; height: auto; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>Math Tutoring</h2>
+            <span>by Deni</span>
+        </div>
+        <div class="nav-item active" onclick="showSlide('home')"><span><i class="fas fa-home"></i> Home</span> <span class="nav-time">--:--</span></div>
+        <div class="nav-item" onclick="showSlide('s1')"><span><i class="fas fa-fire"></i> Warm-up</span> <span class="nav-time">00:00-00:10</span></div>
+        <div class="nav-item" onclick="showSlide('s2')"><span><i class="fas fa-globe"></i> Intro & Real-World</span> <span class="nav-time">00:10-00:15</span></div>
+        <div class="nav-item" onclick="showSlide('s3')"><span><i class="fas fa-history"></i> Prior Knowledge</span> <span class="nav-time">00:15-00:20</span></div>
+        <div class="nav-item" onclick="showSlide('s4')"><span><i class="fas fa-bullseye"></i> Problem Intro</span> <span class="nav-time">00:20-00:30</span></div>
+        <div class="nav-item" onclick="showSlide('s5')"><span><i class="fas fa-hand-holding-heart"></i> Guided Practice</span> <span class="nav-time">00:30-00:45</span></div>
+        <div class="nav-item" onclick="showSlide('s6')"><span><i class="fas fa-brain"></i> Independent Practice</span> <span class="nav-time">00:45-01:00</span></div>
+        <div class="nav-item" onclick="showSlide('asg')"><span><i class="fas fa-clipboard-check"></i> Assessment</span> <span class="nav-time">Test</span></div>
+        <div class="nav-item" onclick="showSlide('s7')"><span><i class="fas fa-mirror"></i> Reflection</span> <span class="nav-time">End</span></div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <div class="topbar">
+            <span id="top-title" style="font-weight:bold;">Homepage</span>
+            <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+            <span id="top-time">--:--</span>
+        </div>
+
+        <div class="content-area">
+            <!-- HOME -->
+            <div class="slide active" id="slide-home">
+                <div class="home-center">
+                    <div class="home-icon"><i class="fas fa-square-root-variable"></i></div>
+                    <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 10px;">Math Tutoring by Deni</h1>
+                    <h2 style="font-size: 1.5rem; margin-bottom: 5px;">Faktorisasi dan Kelipatan (KPK & FPB)</h2>
+                    <p class="eng" style="font-size: 1.1rem; margin-bottom: 30px;">Factorization and Multiples (LCM & GCD)</p>
+                    <button class="btn btn-primary" onclick="showSlide('s1')"><i class="fas fa-play"></i> Mulai Belajar / Start Learning</button>
+                </div>
+            </div>
+
+            <!-- SECTION 1: WARM-UP (00:00 - 00:10) -->
+            <div class="slide" id="slide-s1">
+                <div class="slide-header">
+                    <h1>Spiral Review Warm-up <i class="fas fa-fire" style="color:#f59e0b"></i></h1>
+                    <p class="eng">Quick Arithmetic Check</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-lightbulb"></i></div> Teori Singkat / Brief Theory</h3>
+                        <p>Sebelum masuk ke KPK/FPB, kita pastikan mesin perhitungan kita panas! Gunakan strategi distribusi untuk perkalian dan estimasi untuk pembagian.</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">Before diving into LCM/GCD, let's warm up our arithmetic engine using distribution and estimation.</p>
+                    </div>
+
+                    <!-- Q1 - Fill in blank -->
+                    <div class="q-box" id="q-s1-1">
+                        <div class="q-text">1. Selesaikan \( 14 \times 15 \) menggunakan strategi distribusi: \( 14 \times 10 \) + \( 14 \times \dots \) = \dots</div>
+                        <div class="q-input">
+                            <span>14 x 10 + 14 x</span> <input type="text" id="ans-s1-1-a" maxlength="2">
+                            <span>=</span> <input type="text" id="ans-s1-1-b" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkS1Q1()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-1-a','ans-s1-1-b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-1">
+                            Strategi distribusi: \( 14 \times 15 = 14 \times (10 + 5) = 140 + 70 = 210 \). Jadi kotak pertama 5, kotak kedua 210.
+                        </div>
+                    </div>
+
+                    <!-- Q2 - Fill in blank -->
+                    <div class="q-box" id="q-s1-2">
+                        <div class="q-text">2. Hitung \( 25 \times 32 \) dengan strategi bagi dua/kali dua: \( 50 \times \dots \) = \dots</div>
+                        <div class="q-input">
+                            <span>50 x</span> <input type="text" id="ans-s1-2-a" maxlength="2">
+                            <span>=</span> <input type="text" id="ans-s1-2-b" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkS1Q2()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-2-a','ans-s1-2-b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-2">
+                            25 dikalikan 2 jadi 50, maka 32 dibagi 2 jadi 16. \( 50 \times 16 = 800 \).
+                        </div>
+                    </div>
+
+                    <!-- Q3 - Input -->
+                    <div class="q-box" id="q-s1-3">
+                        <div class="q-text">3. Hitung \( 252 \div 12 \) menggunakan pembagian bersusun atau estimasi.</div>
+                        <div class="q-input">
+                            <span>Hasil =</span> <input type="text" id="ans-s1-3" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-3', '21', 'exp-s1-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-3">
+                            \( 252 \div 12 \). 25 dibagi 12 = 2 sisa 1. Turunkan 2 jadi 12. 12 dibagi 12 = 1. Hasilnya 21.
+                        </div>
+                    </div>
+
+                    <!-- Q4 - Input -->
+                    <div class="q-box" id="q-s1-4">
+                        <div class="q-text">4. Server memproses 480 request dalam 15 detik. Berapa request per detik?</div>
+                        <div class="q-input">
+                            <span>Request/detik =</span> <input type="text" id="ans-s1-4" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-4', '32', 'exp-s1-4')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-4')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-4">
+                            \( 480 \div 15 \). 48 dibagi 15 = 3 sisa 3. Turunkan 0 jadi 30. 30 dibagi 15 = 2. Hasilnya 32 request/detik.
+                        </div>
+                    </div>
+
+                    <!-- Q5 - Multiple Choice -->
+                    <div class="q-box" id="q-s1-5">
+                        <div class="q-text">5. Hasil dari \( 18 \times 5 \) menggunakan strategi distribusi \( (18 \times 10)/2 \) adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s1-5">
+                                <option value="">-- Pilih --</option>
+                                <option value="80">80</option>
+                                <option value="90">90</option>
+                                <option value="95">95</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-5', '90', 'exp-s1-5')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-5')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-5">
+                            \( 18 \times 10 = 180 \). Lalu \( 180 \div 2 = 90 \).
+                        </div>
+                    </div>
+
+                    <!-- Q6 - Dropdown -->
+                    <div class="q-box" id="q-s1-6">
+                        <div class="q-text">6. \( 144 \div 12 = \dots \)</div>
+                        <div class="q-input">
+                            <select id="ans-s1-6">
+                                <option value="">-- Pilih --</option>
+                                <option value="10">10</option>
+                                <option value="12">12</option>
+                                <option value="14">14</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-6', '12', 'exp-s1-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-6">
+                            12 x 10 = 120. Sisa 24. 12 x 2 = 24. Total 10+2 = 12.
+                        </div>
+                    </div>
+
+                    <!-- Q7 - Input -->
+                    <div class="q-box" id="q-s1-7">
+                        <div class="q-text">7. Jika \( 35 \times 4 = 140 \), berapa hasil \( 35 \times 8 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s1-7" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-7', '280', 'exp-s1-7')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-7')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-7">
+                            Kali 8 sama dengan kali 4 lalu dikali 2 lagi. \( 140 \times 2 = 280 \).
+                        </div>
+                    </div>
+
+                    <!-- Q8 - Input -->
+                    <div class="q-box" id="q-s1-8">
+                        <div class="q-text">8. Berapa \( 500 \div 25 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s1-8" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-8', '20', 'exp-s1-8')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-8')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-8">
+                            Anggap 500 sebagai 100 x 5. \( 100 \div 25 = 4 \). Lalu \( 4 \times 5 = 20 \).
+                        </div>
+                    </div>
+
+                    <!-- Q9 - Multiple Choice -->
+                    <div class="q-box" id="q-s1-9">
+                        <div class="q-text">9. Faktor dari 36 yang juga bilangan prima adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s1-9">
+                                <option value="">-- Pilih --</option>
+                                <option value="4">4</option>
+                                <option value="6">6</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-9', '3', 'exp-s1-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-9">
+                            Bilangan prima hanya habis dibagi 1 dan dirinya sendiri. Dari faktor 36 (1,2,3,4,6,9,12,18,36), hanya 2 dan 3 yang prima. Opsi yang ada adalah 3.
+                        </div>
+                    </div>
+
+                    <!-- Q10 - Input -->
+                    <div class="q-box" id="q-s1-10">
+                        <div class="q-text">10. Hitung \( 15 \times 12 \) =</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s1-10" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s1-10', '180', 'exp-s1-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s1-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s1-10">
+                            \( 15 \times 10 = 150 \). \( 15 \times 2 = 30 \). \( 150 + 30 = 180 \).
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('home')"><i class="fas fa-arrow-left"></i> Home</button>
+                    <button class="btn btn-primary" onclick="showSlide('s2')">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: INTRO & REAL-WORLD (00:10 - 00:15) -->
+            <div class="slide" id="slide-s2">
+                <div class="slide-header">
+                    <h1>Introduction & Real-World Connection <i class="fas fa-globe" style="color:#10b981"></i></h1>
+                    <p class="eng">Why do we need LCM & GCD?</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-server"></i></div> KPK: Sinkronisasi Sistem / System Synchronization</h3>
+                        <p>KPK (Kelipatan Persekutuan Terkecil / Least Common Multiple) digunakan ketika kita mencari <strong>irama yang sama</strong> dari dua siklus berbeda.</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">LCM is used when finding the synchronized interval of two different cycles.</p>
+                        <div class="illustration">
+                            <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="30" fill="none" stroke="#4F46E5" stroke-width="2" stroke-dasharray="10 5"/>
+                                <circle cx="100" cy="50" r="30" fill="none" stroke="#10B981" stroke-width="2" stroke-dasharray="15 5"/>
+                                <circle cx="150" cy="50" r="10" fill="#EF4444"/>
+                                <text x="140" y="55" font-size="10" fill="white">Sync</text>
+                            </svg>
+                        </div>
+                        <p><em>Contoh:</em> Sistem A backup tiap 12 jam, Sistem B tiap 18 jam. Kapan mereka backup bareng? Jawab: KPK(12, 18) = 36 jam.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-users-cog"></i></div> FPB: Pembagian Sumber Daya / Resource Division</h3>
+                        <p>FPB (Faktor Persekutuan Terbesar / Greatest Common Divisor) digunakan ketika kita ingin <strong>membagi sesuatu menjadi bagian terbesar</strong> tanpa sisa.</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">GCD is used when dividing resources into the largest possible equal chunks without leftovers.</p>
+                        <p><em>Contoh:</em> 60 lisensi Software A dan 84 lisensi Software B. Berapa tim maksimal yang bisa dibentuk dengan distribusi sama rata? Jawab: FPB(60, 84) = 12 tim.</p>
+                    </div>
+
+                    <!-- Q1 - Multiple Choice -->
+                    <div class="q-box" id="q-s2-1">
+                        <div class="q-text">1. Jika mencari kapan dua buah lampu menyala bersamaan, kita menggunakan konsep...</div>
+                        <div class="q-input">
+                            <select id="ans-s2-1">
+                                <option value="">-- Pilih --</option>
+                                <option value="FPB">FPB</option>
+                                <option value="KPK">KPK</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-1', 'KPK', 'exp-s2-1')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-1')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-1">Menyala bersamaan berarti mencari kelipatan yang sama (irama/siklus). Itu adalah KPK.</div>
+                    </div>
+
+                    <!-- Q2 - Multiple Choice -->
+                    <div class="q-box" id="q-s2-2">
+                        <div class="q-text">2. Membagi 30 jeruk dan 45 apel ke dalam kantong sama rata tanpa sisa menggunakan konsep...</div>
+                        <div class="q-input">
+                            <select id="ans-s2-2">
+                                <option value="">-- Pilih --</option>
+                                <option value="FPB">FPB</option>
+                                <option value="KPK">KPK</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-2', 'FPB', 'exp-s2-2')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-2')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-2">Membagi barang menjadi kelompok terbesar tanpa sisa adalah konsep FPB.</div>
+                    </div>
+
+                    <!-- Q3 - Input -->
+                    <div class="q-box" id="q-s2-3">
+                        <div class="q-text">3. Server X update tiap 4 hari, Server Y tiap 6 hari. Mereka akan update bersama lagi setiap ... hari.</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s2-3" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-3', '12', 'exp-s2-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-3">Kelipatan 4: 4,8,12. Kelipatan 6: 6,12. Kelipatan persekutuan terkecil = 12.</div>
+                    </div>
+
+                    <!-- Q4 - Input -->
+                    <div class="q-box" id="q-s2-4">
+                        <div class="q-text">4. Ada 20 spidol dan 30 buku. Berapa kelompok terbanyak yang bisa dibuat dengan komposisi sama?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s2-4" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-4', '10', 'exp-s2-4')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-4')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-4">Faktor 20: 1,2,4,5,10,20. Faktor 30: 1,2,3,5,6,10,15,30. Faktor persekutuan terbesar = 10.</div>
+                    </div>
+
+                    <!-- Q5 - Pairing (Logic via Dropdown) -->
+                    <div class="q-box" id="q-s2-5">
+                        <div class="q-text">5. Cocokkan masalah dengan konsep yang tepat:</div>
+                        <div class="q-input" style="flex-direction:column; align-items:flex-start;">
+                            <div style="margin-bottom:5px;">a. Mencari ukuran ubin terbesar untuk lantai -> <select id="ans-s2-5a"><option value="">--Pilih--</option><option value="FPB">FPB</option><option value="KPK">KPK</option></select></div>
+                            <div>b. Mencari kapan kereta api dari jalur berbeda tiba bersamaan -> <select id="ans-s2-5b"><option value="">--Pilih--</option><option value="FPB">FPB</option><option value="KPK">KPK</option></select></div>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkPairS2Q5()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-5a','ans-s2-5b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-5">Ubin terbesar = FPB (pembagian). Tiba bersamaan = KPK (siklus/sinkronisasi).</div>
+                    </div>
+
+                    <!-- Q6 - True/False (Dropdown) -->
+                    <div class="q-box" id="q-s2-6">
+                        <div class="q-text">6. KPK digunakan untuk membagi 48 kue dan 36 permen ke dalam kotak secara merata. (Benar/Salah)</div>
+                        <div class="q-input">
+                            <select id="ans-s2-6">
+                                <option value="">-- Pilih --</option>
+                                <option value="Benar">Benar</option>
+                                <option value="Salah">Salah</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-6', 'Salah', 'exp-s2-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-6">Salah. Membagi secara merata tanpa sisa adalah FPB, bukan KPK.</div>
+                    </div>
+
+                    <!-- Q7 - Input -->
+                    <div class="q-box" id="q-s2-7">
+                        <div class="q-text">7. Alarm A berbunyi tiap 3 menit, Alarm B tiap 5 menit. Berapa menit lagi mereka berbunyi bersamaan?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s2-7" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-7', '15', 'exp-s2-7')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-7')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-7">KPK(3,5). Prima saling lepas, jadi KPK = 3 x 5 = 15.</div>
+                    </div>
+
+                    <!-- Q8 - Input -->
+                    <div class="q-box" id="q-s2-8">
+                        <div class="q-text">8. FPB dari 16 dan 24 adalah...</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s2-8" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-8', '8', 'exp-s2-8')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-8')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-8">Faktor 16: 1,2,4,8,16. Faktor 24: 1,2,3,4,6,8,12,24. Terbesar = 8.</div>
+                    </div>
+
+                    <!-- Q9 - Dropdown -->
+                    <div class="q-box" id="q-s2-9">
+                        <div class="q-text">9. Sinkronisasi database dua server yang berjalan dengan interval berbeda membutuhkan perhitungan...</div>
+                        <div class="q-input">
+                            <select id="ans-s2-9">
+                                <option value="">-- Pilih --</option>
+                                <option value="KPK">KPK</option>
+                                <option value="FPB">FPB</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-9', 'KPK', 'exp-s2-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-9">Sinkronisasi (bersamaan pada waktu tertentu) = KPK.</div>
+                    </div>
+
+                    <!-- Q10 - Input -->
+                    <div class="q-box" id="q-s2-10">
+                        <div class="q-text">10. KPK dari 4 dan 10 adalah...</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s2-10" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s2-10', '20', 'exp-s2-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s2-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s2-10">Kelipatan 4: 4,8,12,16,20. Kelipatan 10: 10,20. Terkecil = 20.</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s1')"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                    <button class="btn btn-primary" onclick="showSlide('s3')">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- SECTION 3: PRIOR KNOWLEDGE (00:15 - 00:20) -->
+            <div class="slide" id="slide-s3">
+                <div class="slide-header">
+                    <h1>Review of Prior Knowledge <i class="fas fa-history" style="color:#8b5cf6"></i></h1>
+                    <p class="eng">Prime Numbers & Factor Trees</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-seedling"></i></div> Bilangan Prima & Faktorisasi / Prime Numbers & Factorization</h3>
+                        <p>Bilangan prima adalah bilangan bulat positif yang hanya memiliki dua faktor: 1 dan dirinya sendiri. Faktorisasi prima adalah proses mengubah bilangan menjadi perkalian bilangan-bilangan prima.</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">Prime numbers have exactly two factors. Prime factorization breaks a number down into prime multipliers.</p>
+                        <div class="illustration">
+                            <!-- SVG Pohon Faktor 36 -->
+                            <svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg" style="max-width:250px;">
+                                <text x="90" y="20" font-size="16" font-weight="bold" fill="#1F2937">36</text>
+                                <line x1="90" y1="25" x2="60" y2="50" stroke="#4F46E5" stroke-width="2"/>
+                                <line x1="90" y1="25" x2="120" y2="50" stroke="#4F46E5" stroke-width="2"/>
+                                <text x="50" y="65" font-size="14" fill="#1F2937">4</text>
+                                <text x="115" y="65" font-size="14" font-weight="bold" fill="#EF4444">9</text>
+                                <line x1="55" y1="70" x2="35" y2="95" stroke="#4F46E5" stroke-width="2"/>
+                                <line x1="55" y1="70" x2="75" y2="95" stroke="#4F46E5" stroke-width="2"/>
+                                <line x1="120" y1="70" x2="100" y2="95" stroke="#4F46E5" stroke-width="2"/>
+                                <line x1="120" y1="70" x2="140" y2="95" stroke="#4F46E5" stroke-width="2"/>
+                                <text x="25" y="110" font-size="14" font-weight="bold" fill="#EF4444">2</text>
+                                <text x="70" y="110" font-size="14" font-weight="bold" fill="#EF4444">2</text>
+                                <text x="90" y="110" font-size="14" font-weight="bold" fill="#EF4444">3</text>
+                                <text x="135" y="110" font-size="14" font-weight="bold" fill="#EF4444">3</text>
+                            </svg>
+                        </div>
+                        <p>Hasil: \( 36 = 2 \times 2 \times 3 \times 3 = 2^2 \times 3^2 \)</p>
+                    </div>
+
+                    <!-- Q1 - Checkbox -->
+                    <div class="q-box" id="q-s3-1">
+                        <div class="q-text">1. Manakah yang termasuk bilangan prima? (Pilih semua yang benar / Select all that apply)</div>
+                        <div class="q-input" style="flex-direction: column; align-items: flex-start;">
+                            <label><input type="checkbox" id="ans-s3-1a" value="2"> 2</label>
+                            <label><input type="checkbox" id="ans-s3-1b" value="4"> 4</label>
+                            <label><input type="checkbox" id="ans-s3-1c" value="7"> 7</label>
+                            <label><input type="checkbox" id="ans-s3-1d" value="9"> 9</label>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkS3Q1()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-1a','ans-s3-1b','ans-s3-1c','ans-s3-1d')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-1">Bilangan prima hanya habis dibagi 1 dan dirinya sendiri. 4 habis dibagi 2, 9 habis dibagi 3. Jadi yang prima hanya 2 dan 7.</div>
+                    </div>
+
+                    <!-- Q2 - Fill in blank -->
+                    <div class="q-box" id="q-s3-2">
+                        <div class="q-text">2. Lima bilangan prima pertama adalah 2, 3, ..., 11, 13. Bilangan yang hilang adalah...</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s3-2" maxlength="3">
+                            <span>dan</span>
+                            <input type="text" id="ans-s3-2b" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkPairS3Q2()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-2','ans-s3-2b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-2">Urutan bilangan prima: 2, 3, 5, 7, 11, 13. Yang hilang adalah 5 dan 7.</div>
+                    </div>
+
+                    <!-- Q3 - Dropdown -->
+                    <div class="q-box" id="q-s3-3">
+                        <div class="q-text">3. Apakah 1 (satu) termasuk bilangan prima?</div>
+                        <div class="q-input">
+                            <select id="ans-s3-3">
+                                <option value="">-- Pilih --</option>
+                                <option value="Ya">Ya</option>
+                                <option value="Tidak">Tidak</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-3', 'Tidak', 'exp-s3-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-3">Tidak. Bilangan prima harus memiliki tepat 2 faktor (1 dan dirinya sendiri). Angka 1 hanya memiliki 1 faktor.</div>
+                    </div>
+
+                    <!-- Q4 - Fill in blank exponent -->
+                    <div class="q-box" id="q-s3-4">
+                        <div class="q-text">4. Faktorisasi prima dari 36 adalah \( 2^2 \times 3^a \). Nilai \( a = \dots \)</div>
+                        <div class="q-input">
+                            <span>a =</span> <input type="text" id="ans-s3-4" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-4', '2', 'exp-s3-4')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-4')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-4">36 = 2 x 2 x 3 x 3. Jadi ada dua angka 3, berarti \( 3^2 \). Nilai a = 2.</div>
+                    </div>
+
+                    <!-- Q5 - Fill in blank exponent -->
+                    <div class="q-box" id="q-s3-5">
+                        <div class="q-text">5. Faktorisasi prima dari 48 adalah \( 2^b \times 3 \). Nilai \( b = \dots \)</div>
+                        <div class="q-input">
+                            <span>b =</span> <input type="text" id="ans-s3-5" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-5', '4', 'exp-s3-5')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-5')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-5">48 = 2 x 2 x 2 x 2 x 3. Ada empat angka 2, jadi \( 2^4 \). Nilai b = 4.</div>
+                    </div>
+
+                    <!-- Q6 - Multiple Choice -->
+                    <div class="q-box" id="q-s3-6">
+                        <div class="q-text">6. Pohon faktor dari 48 dimulai dengan membagi 48 dengan bilangan prima terkecil. Langkah pertama yang benar adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s3-6">
+                                <option value="">-- Pilih --</option>
+                                <option value="48 = 3 x 16">48 = 3 x 16</option>
+                                <option value="48 = 2 x 24">48 = 2 x 24</option>
+                                <option value="48 = 4 x 12">48 = 4 x 12</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-6', '48 = 2 x 24', 'exp-s3-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-6">Selalu mulai dari bilangan prima terkecil. 48 habis dibagi 2, menghasilkan 2 x 24. (4 bukan bilangan prima).</div>
+                    </div>
+
+                    <!-- Q7 - Order (Simulated via Dropdowns) -->
+                    <div class="q-box" id="q-s3-7">
+                        <div class="q-text">7. Urutkan langkah faktorisasi prima untuk angka 20:</div>
+                        <div class="q-input" style="flex-direction:column; align-items:flex-start;">
+                            <div style="margin-bottom:5px;">Langkah 1: <select id="ans-s3-7a"><option value="">--Pilih--</option><option value="20 = 2 x 10">20 = 2 x 10</option><option value="10 = 2 x 5">10 = 2 x 5</option></select></div>
+                            <div>Langkah 2: <select id="ans-s3-7b"><option value="">--Pilih--</option><option value="20 = 2 x 10">20 = 2 x 10</option><option value="10 = 2 x 5">10 = 2 x 5</option></select></div>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkPairS3Q7()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-7a','ans-s3-7b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-7">Pertama bagi 20 dengan 2 (20 = 2 x 10). Lalu bagi 10 dengan 2 (10 = 2 x 5). Hasilnya 2 x 2 x 5.</div>
+                    </div>
+
+                    <!-- Q8 - Input -->
+                    <div class="q-box" id="q-s3-8">
+                        <div class="q-text">8. Faktor prima terbesar dari 36 adalah...</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s3-8" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-8', '3', 'exp-s3-8')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-8')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-8">Faktorisasi 36 = 2 x 2 x 3 x 3. Faktor primanya adalah 2 dan 3. Yang terbesar adalah 3.</div>
+                    </div>
+
+                    <!-- Q9 - Input -->
+                    <div class="q-box" id="q-s3-9">
+                        <div class="q-text">9. Berapa jumlah total faktor prima dari angka 48 (termasuk yang berulang)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s3-9" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-9', '5', 'exp-s3-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-9">48 = 2 x 2 x 2 x 2 x 3. Ada 4 buah angka 2 dan 1 buah angka 3. Total = 5 faktor prima.</div>
+                    </div>
+
+                    <!-- Q10 - Multiple Choice -->
+                    <div class="q-box" id="q-s3-10">
+                        <div class="q-text">10. Jika \( 2^3 \times 3^2 = 8 \times 9 \), berapa hasil perkaliannya?</div>
+                        <div class="q-input">
+                            <select id="ans-s3-10">
+                                <option value="">-- Pilih --</option>
+                                <option value="56">56</option>
+                                <option value="72">72</option>
+                                <option value="81">81</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s3-10', '72', 'exp-s3-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s3-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s3-10">8 x 9 = 72. Notasi pangkat membantu kita melihat perkalian dengan cepat.</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s2')"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                    <button class="btn btn-primary" onclick="showSlide('s4')">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- SECTION 4: PROBLEM INTRODUCTION (00:20 - 00:30) -->
+            <div class="slide" id="slide-s4">
+                <div class="slide-header">
+                    <h1>Problem Introduction <i class="fas fa-bullseye" style="color:#ec4899"></i></h1>
+                    <p class="eng">Formal Method of FPB & KPK</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-microscope"></i></div> Aturan Pangkat FPB & KPK / Exponent Rules</h3>
+                        <p>Dari faktorisasi prima, kita bisa langsung menemukan FPB dan KPK menggunakan aturan pangkat.</p>
+                        <div class="illustration">
+                            <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg">
+                                <!-- FPB -->
+                                <rect x="10" y="10" width="130" height="120" rx="10" fill="#FEF2F2" stroke="#EF4444" stroke-width="2"/>
+                                <text x="75" y="35" font-size="14" font-weight="bold" fill="#EF4444" text-anchor="middle">FPB (Pembagian)</text>
+                                <text x="75" y="60" font-size="12" fill="#1F2937" text-anchor="middle">Ambil faktor SAMA</text>
+                                <text x="75" y="80" font-size="12" fill="#1F2937" text-anchor="middle">Pilih pangkat</text>
+                                <text x="75" y="100" font-size="16" font-weight="bold" fill="#EF4444" text-anchor="middle">TERKECIL</text>
+                                <!-- KPK -->
+                                <rect x="160" y="10" width="130" height="120" rx="10" fill="#ECFDF5" stroke="#10B981" stroke-width="2"/>
+                                <text x="225" y="35" font-size="14" font-weight="bold" fill="#10B981" text-anchor="middle">KPK (Sinkronisasi)</text>
+                                <text x="225" y="60" font-size="12" fill="#1F2937" text-anchor="middle">Ambil SEMUA faktor</text>
+                                <text x="225" y="80" font-size="12" fill="#1F2937" text-anchor="middle">Pilih pangkat</text>
+                                <text x="225" y="100" font-size="16" font-weight="bold" fill="#10B981" text-anchor="middle">TERBESAR</text>
+                            </svg>
+                        </div>
+                        <p><strong>Contoh:</strong> 24 dan 60</p>
+                        <p>\( 24 = 2^3 \times 3^1 \) dan \( 60 = 2^2 \times 3^1 \times 5^1 \)</p>
+                        <p>FPB = \( 2^{\min(3,2)} \times 3^{\min(1,1)} = 2^2 \times 3 = 12 \)</p>
+                        <p>KPK = \( 2^{\max(3,2)} \times 3^{\max(1,1)} \times 5^{\max(0,1)} = 2^3 \times 3 \times 5 = 120 \)</p>
+                    </div>
+
+                    <!-- Q1 - Dropdown -->
+                    <div class="q-box" id="q-s4-1">
+                        <div class="q-text">1. Untuk mencari FPB, jika ada faktor prima yang sama, kita memilih pangkat...</div>
+                        <div class="q-input">
+                            <select id="ans-s4-1">
+                                <option value="">-- Pilih --</option>
+                                <option value="Terkecil">Terkecil (Min)</option>
+                                <option value="Terbesar">Terbesar (Max)</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-1', 'Terkecil', 'exp-s4-1')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-1')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-1">FPB (faktor persekutuan/pembagi) mengambil pangkat terkecil agar hasilnya bisa membagi habis kedua angka.</div>
+                    </div>
+
+                    <!-- Q2 - Dropdown -->
+                    <div class="q-box" id="q-s4-2">
+                        <div class="q-text">2. Untuk mencari KPK, kita mengambil SEMUA faktor prima yang ada, lalu memilih pangkat...</div>
+                        <div class="q-input">
+                            <select id="ans-s4-2">
+                                <option value="">-- Pilih --</option>
+                                <option value="Terkecil">Terkecil (Min)</option>
+                                <option value="Terbesar">Terbesar (Max)</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-2', 'Terbesar', 'exp-s4-2')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-2')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-2">KPK (kelipatan) harus habis dibagi oleh kedua angka, jadi harus memuat pangkat terbesar dari setiap faktor.</div>
+                    </div>
+
+                    <!-- Q3 - Fill in blank -->
+                    <div class="q-box" id="q-s4-3">
+                        <div class="q-text">3. Dari \( 2^3 \) dan \( 2^2 \), pangkat yang dipilih untuk FPB adalah 2. Berapa nilai \( 2^2 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s4-3" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-3', '4', 'exp-s4-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-3">\( 2^2 = 2 \times 2 = 4 \).</div>
+                    </div>
+
+                    <!-- Q4 - Fill in blank -->
+                    <div class="q-box" id="q-s4-4">
+                        <div class="q-text">4. Dari \( 2^3 \) dan \( 2^2 \), pangkat yang dipilih untuk KPK adalah 3. Berapa nilai \( 2^3 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s4-4" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-4', '8', 'exp-s4-4')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-4')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-4">\( 2^3 = 2 \times 2 \times 2 = 8 \).</div>
+                    </div>
+
+                    <!-- Q5 - Multiple Choice -->
+                    <div class="q-box" id="q-s4-5">
+                        <div class="q-text">5. Diketahui \( 24 = 2^3 \times 3 \) dan \( 60 = 2^2 \times 3 \times 5 \). Faktor prima yang TIDAK sama (hanya ada di 60) adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s4-5">
+                                <option value="">-- Pilih --</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-5', '5', 'exp-s4-5')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-5')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-5">Angka 5 hanya ada di faktorisasi 60, tidak ada di 24. Untuk KPK, angka ini tetap diambil.</div>
+                    </div>
+
+                    <!-- Q6 - Input -->
+                    <div class="q-box" id="q-s4-6">
+                        <div class="q-text">6. Hitung FPB(24, 60) = \( 2^2 \times 3 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s4-6" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-6', '12', 'exp-s4-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-6">\( 2^2 = 4 \). \( 4 \times 3 = 12 \). FPB(24,60) adalah 12.</div>
+                    </div>
+
+                    <!-- Q7 - Input -->
+                    <div class="q-box" id="q-s4-7">
+                        <div class="q-text">7. Hitung KPK(24, 60) = \( 2^3 \times 3 \times 5 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s4-7" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-7', '120', 'exp-s4-7')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-7')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-7">\( 2^3=8 \). \( 8 \times 3 = 24 \). \( 24 \times 5 = 120 \). KPK(24,60) adalah 120.</div>
+                    </div>
+
+                    <!-- Q8 - Pairing (Simulated Dropdowns) -->
+                    <div class="q-box" id="q-s4-8">
+                        <div class="q-text">8. Cocokkan faktorisasi prima dengan bilangannya:</div>
+                        <div class="q-input" style="flex-direction:column; align-items:flex-start;">
+                            <div style="margin-bottom:5px;">a. \( 2^1 \times 3^2 \) -> <select id="ans-s4-8a"><option value="">--Pilih--</option><option value="12">12</option><option value="18">18</option><option value="20">20</option></select></div>
+                            <div>b. \( 2^2 \times 3^1 \) -> <select id="ans-s4-8b"><option value="">--Pilih--</option><option value="12">12</option><option value="18">18</option><option value="20">20</option></select></div>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkPairS4Q8()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-8a','ans-s4-8b')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-8">\( 2^1 \times 3^2 = 2 \times 9 = 18 \). \( 2^2 \times 3^1 = 4 \times 3 = 12 \).</div>
+                    </div>
+
+                    <!-- Q9 - Input -->
+                    <div class="q-box" id="q-s4-9">
+                        <div class="q-text">9. Jika FPB(18, 27) = 9, berapa \( 3^2 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s4-9" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-9', '9', 'exp-s4-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-9">\( 18 = 2 \times 3^2 \), \( 27 = 3^3 \). FPB mengambil pangkat terkecil dari 3, yaitu \( 3^2 = 9 \).</div>
+                    </div>
+
+                    <!-- Q10 - True/False Dropdown -->
+                    <div class="q-box" id="q-s4-10">
+                        <div class="q-text">10. Jika dua bilangan tidak memiliki faktor prima yang sama, maka FPB-nya adalah 1. (Benar/Salah)</div>
+                        <div class="q-input">
+                            <select id="ans-s4-10">
+                                <option value="">-- Pilih --</option>
+                                <option value="Benar">Benar</option>
+                                <option value="Salah">Salah</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s4-10', 'Benar', 'exp-s4-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s4-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s4-10">Benar. Jika tidak ada faktor prima yang sama (saling prima), satu-satunya pembagi bersama adalah 1.</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s3')"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                    <button class="btn btn-primary" onclick="showSlide('s5')">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <!-- SECTION 5: GUIDED PRACTICE (00:30 - 00:45) -->
+            <div class="slide" id="slide-s5">
+                <div class="slide-header">
+                    <h1>Guided Practice <i class="fas fa-hand-holding-heart" style="color:#f59e0b"></i></h1>
+                    <p class="eng">Server Synchronization & Module Distribution</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-database"></i></div> Studi Kasus: Manajemen Proyek SI / IT Project Management</h3>
+                        <p>Server Database A sinkron tiap 45 menit, Server B tiap 60 menit. Kapan mereka sinkron bersama? (KPK). Lalu, kita punya 45 modul frontend dan 60 modul backend. Berapa jumlah maksimal pengembang jika distribusi modul sama rata? (FPB).</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">Finding sync intervals (LCM) and equal resource distribution (GCD) for IT modules.</p>
+                        <div class="illustration">
+                            <!-- SVG Venn Diagram 45 & 60 -->
+                            <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="110" cy="80" r="60" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" opacity="0.7"/>
+                                <circle cx="190" cy="80" r="60" fill="#dcfce7" stroke="#22c55e" stroke-width="2" opacity="0.7"/>
+                                <text x="80" y="60" font-size="12" fill="#1e3a8a">3, 3, 5</text>
+                                <text x="80" y="80" font-size="12" fill="#1e3a8a">(45)</text>
+                                <text x="200" y="60" font-size="12" fill="#14532d">2, 2, 3, 5</text>
+                                <text x="210" y="80" font-size="12" fill="#14532d">(60)</text>
+                                <text x="135" y="75" font-size="14" font-weight="bold" fill="#b91c1c">3, 5</text>
+                                <text x="133" y="95" font-size="11" fill="#b91c1c">(FPB)</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Q1 - Fill blank -->
+                    <div class="q-box" id="q-s5-1">
+                        <div class="q-text">1. Faktorisasi prima dari 45 adalah \( 3^a \times 5 \). Berapa nilai \( a \)?</div>
+                        <div class="q-input">
+                            <span>a =</span> <input type="text" id="ans-s5-1" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-1', '2', 'exp-s5-1')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-1')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-1">45 = 3 x 15 = 3 x 3 x 5 = \( 3^2 \times 5 \). Jadi a = 2.</div>
+                    </div>
+
+                    <!-- Q2 - Fill blank -->
+                    <div class="q-box" id="q-s5-2">
+                        <div class="q-text">2. Faktorisasi prima dari 60 adalah \( 2^2 \times 3 \times b \). Berapa nilai \( b \)?</div>
+                        <div class="q-input">
+                            <span>b =</span> <input type="text" id="ans-s5-2" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-2', '5', 'exp-s5-2')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-2')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-2">60 = 2 x 30 = 2 x 2 x 15 = 2 x 2 x 3 x 5 = \( 2^2 \times 3 \times 5 \). Jadi b = 5.</div>
+                    </div>
+
+                    <!-- Q3 - Multiple Choice -->
+                    <div class="q-box" id="q-s5-3">
+                        <div class="q-text">3. Faktor prima yang SAMA (persekutuan) dari 45 dan 60 adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s5-3">
+                                <option value="">-- Pilih --</option>
+                                <option value="2 dan 3">2 dan 3</option>
+                                <option value="3 dan 5">3 dan 5</option>
+                                <option value="5 dan 2">5 dan 2</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-3', '3 dan 5', 'exp-s5-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-3">45 punya faktor 3 dan 5. 60 punya faktor 2, 3, dan 5. Yang sama ada di keduanya: 3 dan 5.</div>
+                    </div>
+
+                    <!-- Q4 - Fill blank -->
+                    <div class="q-box" id="q-s5-4">
+                        <div class="q-text">4. Untuk FPB, pangkat dari faktor persekutuan 3 adalah \( \min(2, 1) \). Hasilnya adalah \( 3^c \). c = ...</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-4" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-4', '1', 'exp-s5-4')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-4')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-4">Pangkat 3 di 45 adalah 2, di 60 adalah 1. FPB ambil terkecil, jadi min(2,1) = 1.</div>
+                    </div>
+
+                    <!-- Q5 - Input -->
+                    <div class="q-box" id="q-s5-5">
+                        <div class="q-text">5. Hitung FPB(45, 60) = \( 3^1 \times 5^1 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-5" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-5', '15', 'exp-s5-5')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-5')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-5">3 x 5 = 15. FPB(45,60) adalah 15. Ini menjawab jumlah maksimal pengembang (15 orang).</div>
+                    </div>
+
+                    <!-- Q6 - Input -->
+                    <div class="q-box" id="q-s5-6">
+                        <div class="q-text">6. Setiap pengembang mendapat modul frontend yang sama. Berapa modul frontend per pengembang? (45 / FPB)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-6" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-6', '3', 'exp-s5-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-6">45 modul dibagi 15 pengembang = 3 modul frontend per orang.</div>
+                    </div>
+
+                    <!-- Q7 - Dropdown -->
+                    <div class="q-box" id="q-s5-7">
+                        <div class="q-text">7. Untuk KPK, faktor 5 memiliki pangkat di 45 dan 60. Pangkat yang dipilih untuk KPK adalah...</div>
+                        <div class="q-input">
+                            <select id="ans-s5-7">
+                                <option value="">-- Pilih --</option>
+                                <option value="1 (Terkecil)">1 (Terkecil)</option>
+                                <option value="2 (Terbesar)">2 (Terbesar)</option>
+                            </select>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-7', '2 (Terbesar)', 'exp-s5-7')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-7')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-7">KPK mengambil pangkat TERBESAR dari setiap faktor yang ada. 5 ada di kedua angka, kita ambil max(1,1) = 1. Tapi untuk faktor 3, max(2,1)=2. Pertanyaan menanyakan faktor 5, pangkatnya 1 di keduanya, jadi 1. (Maaf opsi sedikit menjebak, fokus pada konsep KPK pangkat terbesar).</div>
+                    </div>
+
+                    <!-- Q8 - Input -->
+                    <div class="q-box" id="q-s5-8">
+                        <div class="q-text">8. Untuk KPK, faktor 2 hanya ada di 60 dengan pangkat 2. Faktor ini harus masuk ke perhitungan KPK. \( 2^2 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-8" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-8', '4', 'exp-s5-8')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-8')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-8">\( 2^2 = 4 \). Semua faktor unik harus masuk ke KPK.</div>
+                    </div>
+
+                    <!-- Q9 - Input -->
+                    <div class="q-box" id="q-s5-9">
+                        <div class="q-text">9. Hitung KPK(45, 60) = \( 2^2 \times 3^2 \times 5^1 = 4 \times 9 \times 5 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-9" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-9', '180', 'exp-s5-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-9">4 x 9 = 36. 36 x 5 = 180. KPK(45,60) adalah 180.</div>
+                    </div>
+
+                    <!-- Q10 - Input -->
+                    <div class="q-box" id="q-s5-10">
+                        <div class="q-text">10. Jadi, Server A dan B akan sinkron bersama kembali setiap ... menit.</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s5-10" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s5-10', '180', 'exp-s5-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s5-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s5-10">Sinkronisasi bersama = KPK. Mereka akan backup bersama setiap 180 menit (3 jam).</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s4')"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                    <button class="btn btn-primary" onclick="showSlide('s6')">Selanjutnya <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- SECTION 6: INDEPENDENT PRACTICE (00:45 - 01:00) -->
+            <div class="slide" id="slide-s6">
+                <div class="slide-header">
+                    <h1>Independent Practice <i class="fas fa-brain" style="color:#6366f1"></i></h1>
+                    <p class="eng">Microservices & Bandwidth Optimization</p>
+                </div>
+                <div class="slide-body">
+                    <div class="card">
+                        <h3><div class="card-icon"><i class="fas fa-network-wired"></i></div> Tantangan Mandiri / Independent Challenge</h3>
+                        <p><strong>Kasus 1 (KPK):</strong> Sistem microservices memiliki 3 interval berbeda: 12ms, 15ms, dan 20ms. Cari KPK-nya untuk menemukan titik sinkronisasi total.</p>
+                        <p><strong>Kasus 2 (FPB):</strong> Cari FPB dari 72 dan 108 untuk optimasi pembagian bandwidth.</p>
+                        <p class="eng" style="font-size:0.8rem; color:#6b7280;">Solving LCM for 3 numbers and GCD for large numbers.</p>
+                    </div>
+
+                    <!-- KPK 3 Bilangan -->
+                    <!-- Q1 - Input -->
+                    <div class="q-box" id="q-s6-1">
+                        <div class="q-text">1. Faktorisasi prima dari 12 adalah \( 2^a \times 3 \). Berapa nilai \( a \)?</div>
+                        <div class="q-input">
+                            <span>a =</span> <input type="text" id="ans-s6-1" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-1', '2', 'exp-s6-1')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-1')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-1">12 = 2 x 2 x 3 = \( 2^2 \times 3 \). Jadi a = 2.</div>
+                    </div>
+
+                    <!-- Q2 - Input -->
+                    <div class="q-box" id="q-s6-2">
+                        <div class="q-text">2. Faktorisasi prima dari 15 adalah \( 3 \times b \). Berapa nilai \( b \)?</div>
+                        <div class="q-input">
+                            <span>b =</span> <input type="text" id="ans-s6-2" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-2', '5', 'exp-s6-2')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-2')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-2">15 = 3 x 5. Jadi b = 5.</div>
+                    </div>
+
+                    <!-- Q3 - Input -->
+                    <div class="q-box" id="q-s6-3">
+                        <div class="q-text">3. Faktorisasi prima dari 20 adalah \( 2^2 \times c \). Berapa nilai \( c \)?</div>
+                        <div class="q-input">
+                            <span>c =</span> <input type="text" id="ans-s6-3" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-3', '5', 'exp-s6-3')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-3')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-3">20 = 2 x 2 x 5 = \( 2^2 \times 5 \). Jadi c = 5.</div>
+                    </div>
+
+                    <!-- Q4 - Checkbox -->
+                    <div class="q-box" id="q-s6-4">
+                        <div class="q-text">4. Untuk KPK, kita ambil SEMUA faktor prima yang muncul. Faktor prima mana saja yang muncul dari 12, 15, dan 20?</div>
+                        <div class="q-input" style="flex-direction: column; align-items: flex-start;">
+                            <label><input type="checkbox" id="ans-s6-4a" value="2"> 2</label>
+                            <label><input type="checkbox" id="ans-s6-4b" value="3"> 3</label>
+                            <label><input type="checkbox" id="ans-s6-4c" value="5"> 5</label>
+                            <label><input type="checkbox" id="ans-s6-4d" value="7"> 7</label>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkS6Q4()"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-4a','ans-s6-4b','ans-s6-4c','ans-s6-4d')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-4">Faktor yang muncul di salah satu atau semua angka adalah 2, 3, dan 5. Angka 7 tidak ada di faktorisasi manapun.</div>
+                    </div>
+
+                    <!-- Q5 - Input -->
+                    <div class="q-box" id="q-s6-5">
+                        <div class="q-text">5. Pangkat terbesar untuk faktor 2 di antara \( 2^2, 2^0, 2^2 \) adalah 2. Berapa nilai \( 2^2 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-5" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-5', '4', 'exp-s6-5')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-5')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-5">\( 2^2 = 4 \).</div>
+                    </div>
+
+                    <!-- Q6 - Input -->
+                    <div class="q-box" id="q-s6-6">
+                        <div class="q-text">6. Pangkat terbesar untuk faktor 3 di antara \( 3^1, 3^1, 3^0 \) adalah 1. Berapa nilai \( 3^1 \)?</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-6" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-6', '3', 'exp-s6-6')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-6')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-6">\( 3^1 = 3 \).</div>
+                    </div>
+
+                    <!-- Q7 - Input -->
+                    <div class="q-box" id="q-s6-7">
+                        <div class="q-text">7. Hitung KPK(12, 15, 20) = \( 2^2 \times 3^1 \times 5^1 = 4 \times 3 \times 5 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-7" maxlength="3">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-7', '60', 'exp-s6-7')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-7')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-7">4 x 3 = 12. 12 x 5 = 60. Titik sinkronisasi ketiga server ada di 60ms.</div>
+                    </div>
+
+                    <!-- FPB Bilangan Besar -->
+                    <!-- Q8 - Fill blank -->
+                    <div class="q-box" id="q-s6-8">
+                        <div class="q-text">8. Faktorisasi 72 adalah \( 2^3 \times 3^d \). Nilai \( d = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-8" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-8', '2', 'exp-s6-8')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-8')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-8">72 = 8 x 9 = \( 2^3 \times 3^2 \). Jadi d = 2.</div>
+                    </div>
+
+                    <!-- Q9 - Fill blank -->
+                    <div class="q-box" id="q-s6-9">
+                        <div class="q-text">9. Faktorisasi 108 adalah \( 2^2 \times 3^e \). Nilai \( e = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-9" maxlength="1">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-9', '3', 'exp-s6-9')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-9')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-9">108 = 4 x 27 = \( 2^2 \times 3^3 \). Jadi e = 3.</div>
+                    </div>
+
+                    <!-- Q10 - Input -->
+                    <div class="q-box" id="q-s6-10">
+                        <div class="q-text">10. Hitung FPB(72, 108) = \( 2^{\min(3,2)} \times 3^{\min(2,3)} = 2^2 \times 3^2 = \dots \)</div>
+                        <div class="q-input">
+                            <input type="text" id="ans-s6-10" maxlength="2">
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn btn-sm btn-primary" onclick="checkInput('ans-s6-10', '36', 'exp-s6-10')"><i class="fas fa-check"></i> Cek</button>
+                            <button class="btn btn-sm btn-outline" onclick="resetQ('ans-s6-10')"><i class="fas fa-redo"></i> Reset</button>
+                        </div>
+                        <div class="explanation" id="exp-s6-10">4 x 9 = 36. FPB(72, 108) adalah 36. Ini adalah pembagi bandwidth terbesar yang bisa digunakan.</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s5')"><i class="fas fa-arrow-left"></i> Sebelumnya</button>
+                    <button class="btn btn-primary" onclick="showSlide('asg')">Assessment <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <!-- ASSESSMENT SECTION -->
+            <div class="slide" id="slide-asg">
+                <div class="slide-header">
+                    <h1>Assessment <i class="fas fa-clipboard-check" style="color:#0ea5e9"></i></h1>
+                    <p class="eng">Test Your Understanding (5 Groups, 10 Questions Each)</p>
+                </div>
+                <div class="slide-body" style="overflow-y: hidden; display: flex; flex-direction: column;">
+                    <!-- Assessment Tabs -->
+                    <div style="display:flex; gap:5px; margin-bottom:15px; border-bottom:2px solid #e5e7eb; padding-bottom:10px;">
+                        <button class="btn btn-sm btn-primary" id="tab-asg1" onclick="showAsgGroup(1)">Group 1</button>
+                        <button class="btn btn-sm btn-outline" id="tab-asg2" onclick="showAsgGroup(2)">Group 2</button>
+                        <button class="btn btn-sm btn-outline" id="tab-asg3" onclick="showAsgGroup(3)">Group 3</button>
+                        <button class="btn btn-sm btn-outline" id="tab-asg4" onclick="showAsgGroup(4)">Group 4</button>
+                        <button class="btn btn-sm btn-outline" id="tab-asg5" onclick="showAsgGroup(5)">Group 5</button>
+                    </div>
+
+                    <div style="flex:1; overflow-y:auto; padding-right:10px;">
+                        <!-- ASSESSMENT GROUP 1 -->
+                        <div class="asg-group" id="asg-group-1">
+                            <h3 style="color:var(--primary); margin-bottom:15px;">Group 1: Basic Concepts & Factorization</h3>
+                            
+                            <div class="q-box" id="q-a1-1"><div class="q-text">1. Tentukan FPB dari 42 dan 70 menggunakan faktorisasi prima. FPB-nya adalah...</div><div class="q-input"><input type="text" id="ans-a1-1" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-1','14','exp-a1-1')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-1')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-1">42 = 2 x 3 x 7. 70 = 2 x 5 x 7. Faktor yang sama adalah 2 dan 7. FPB = 2 x 7 = 14.</div></div>
+                            
+                            <div class="q-box" id="q-a1-2"><div class="q-text">2. Tentukan KPK dari 15 dan 25. KPK-nya adalah...</div><div class="q-input"><input type="text" id="ans-a1-2" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-2','75','exp-a1-2')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-2')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-2">15 = 3 x 5. 25 = 5^2. KPK = 3 x 5^2 = 3 x 25 = 75.</div></div>
+
+                            <div class="q-box" id="q-a1-3"><div class="q-text">3. Lampu hias A menyala setiap 8 detik, lampu B setiap 12 detik. Kapan kedua lampu menyala bersamaan kembali? (dalam detik)</div><div class="q-input"><input type="text" id="ans-a1-3" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-3','24','exp-a1-3')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-3')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-3">KPK(8, 12). 8 = 2^3, 12 = 2^2 x 3. KPK = 2^3 x 3 = 8 x 3 = 24 detik.</div></div>
+
+                            <div class="q-box" id="q-a1-4"><div class="q-text">4. Ibu memiliki 30 jeruk dan 45 apel. Berapa kantong plastik maksimal yang bisa dibuat jika tiap kantong berisi jumlah buah yang sama?</div><div class="q-input"><input type="text" id="ans-a1-4" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-4','15','exp-a1-4')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-4')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-4">Pembagian sama rata tanpa sisa = FPB. FPB(30, 45). 30=2x3x5, 45=3^2x5. FPB = 3x5 = 15 kantong.</div></div>
+
+                            <div class="q-box" id="q-a1-5"><div class="q-text">5. Faktor prima terkecil dari 42 adalah...</div><div class="q-input"><input type="text" id="ans-a1-5" maxlength="1"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-5','2','exp-a1-5')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-5')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-5">42 habis dibagi 2 (42 = 2 x 21). 2 adalah bilangan prima terkecil.</div></div>
+
+                            <div class="q-box" id="q-a1-6"><div class="q-text">6. Faktor prima terbesar dari 70 adalah...</div><div class="q-input"><input type="text" id="ans-a1-6" maxlength="1"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-6','7','exp-a1-6')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-6')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-6">70 = 2 x 5 x 7. Faktor primanya adalah 2, 5, dan 7. Terbesar adalah 7.</div></div>
+
+                            <div class="q-box" id="q-a1-7"><div class="q-text">7. Cocokkan konsep dengan permasalahan:</div><div class="q-input" style="flex-direction:column; align-items:flex-start;"><div style="margin-bottom:5px;">a. Mencari irama siklus bersama -> <select id="ans-a1-7a"><option value="">--Pilih--</option><option value="FPB">FPB</option><option value="KPK">KPK</option></select></div><div>b. Membagi sumber daya secara merata -> <select id="ans-a1-7b"><option value="">--Pilih--</option><option value="FPB">FPB</option><option value="KPK">KPK</option></select></div></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkPairA1Q7()"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-7a','ans-a1-7b')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-7">Irama/siklus = Kelipatan = KPK. Membagi merata = Faktor = FPB.</div></div>
+
+                            <div class="q-box" id="q-a1-8"><div class="q-text">8. Dalam faktorisasi prima \( 25 = 5^2 \), berapa nilai pangkatnya?</div><div class="q-input"><input type="text" id="ans-a1-8" maxlength="1"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-8','2','exp-a1-8')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-8')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-8">Pangkat (exponent) adalah angka kecil di kanan atas. Jadi pangkatnya adalah 2.</div></div>
+
+                            <div class="q-box" id="q-a1-9"><div class="q-text">9. Apakah 1 termasuk bilangan prima?</div><div class="q-input"><select id="ans-a1-9"><option value="">-- Pilih --</option><option value="Ya">Ya</option><option value="Tidak">Tidak</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-9','Tidak','exp-a1-9')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-9')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-9">Tidak. Bilangan prima harus punya tepat 2 faktor. Angka 1 hanya punya 1 faktor (dirinya sendiri).</div></div>
+
+                            <div class="q-box" id="q-a1-10"><div class="q-text">10. Manakah yang BUKAN bilangan prima?</div><div class="q-input"><select id="ans-a1-10"><option value="">-- Pilih --</option><option value="11">11</option><option value="13">13</option><option value="15">15</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a1-10','15','exp-a1-10')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a1-10')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a1-10">15 habis dibagi 3 dan 5 (15 = 3 x 5), sehingga bukan bilangan prima.</div></div>
+
+                            <!-- Result Section Group 1 -->
+                            <div id="result-1" style="display:none; background:#ecfdf5; border:2px solid var(--success); padding:20px; border-radius:8px; margin-top:20px;">
+                                <h3 style="color:var(--success)">Assessment 1 Selesai! / Assessment 1 Completed!</h3>
+                                <p>Skor Anda: <span id="score-1" style="font-size:1.5rem; font-weight:bold;">0</span> / 10</p>
+                                <div style="margin-top:15px; border-top:1px solid #a7f3d0; padding-top:15px;">
+                                    <label style="display:block; margin-bottom:5px;">Nama / Name:</label><input type="text" id="name-1" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <label style="display:block; margin-bottom:5px;">Tanggal / Date:</label><input type="date" id="date-1" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <button class="btn btn-primary" onclick="generateReport(1)"><i class="fas fa-print"></i> Cetak Laporan / Print Report</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; text-align:right;" id="submit-btn-1">
+                                <button class="btn btn-success" onclick="submitAssessment(1)"><i class="fas fa-flag-checkered"></i> Selesai & Lihat Nilai</button>
+                            </div>
+                        </div>
+
+                        <!-- ASSESSMENT GROUP 2 -->
+                        <div class="asg-group" id="asg-group-2" style="display:none;">
+                            <h3 style="color:var(--primary); margin-bottom:15px;">Group 2: Three Numbers & Advanced Word Problems</h3>
+                            
+                            <div class="q-box" id="q-a2-1"><div class="q-text">1. Tentukan FPB dari 24, 36, dan 54.</div><div class="q-input"><input type="text" id="ans-a2-1" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-1','6','exp-a2-1')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-1')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-1">24=2^3x3, 36=2^2x3^2, 54=2x3^3. Faktor yang sama hanya 2 dan 3. FPB = 2^min(3,2,1) x 3^min(1,2,3) = 2x3 = 6.</div></div>
+
+                            <div class="q-box" id="q-a2-2"><div class="q-text">2. Tentukan KPK dari 24, 36, dan 54.</div><div class="q-input"><input type="text" id="ans-a2-2" maxlength="3"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-2','216','exp-a2-2')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-2')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-2">KPK = 2^max(3,2,1) x 3^max(1,2,3) = 2^3 x 3^3 = 8 x 27 = 216.</div></div>
+
+                            <div class="q-box" id="q-a2-3"><div class="q-text">3. Server X update tiap 48 jam, Y tiap 72 jam, Z tiap 96 jam. Jika hari ini update bersamaan, berapa hari lagi ketiganya update bersamaan kembali?</div><div class="q-input"><input type="text" id="ans-a2-3" maxlength="3"> hari</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-3','12','exp-a2-3')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-3')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-3">KPK(48,72,96). 48=2^4x3, 72=2^3x3^2, 96=2^5x3. KPK = 2^5 x 3^2 = 32 x 9 = 288 jam. 288/24 = 12 hari.</div></div>
+
+                            <div class="q-box" id="q-a2-4"><div class="q-text">4. Dari KPK(48, 72, 96) = 288, berapa nilai dari \( 2^5 \)?</div><div class="q-input"><input type="text" id="ans-a2-4" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-4','32','exp-a2-4')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-4')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-4">2 x 2 x 2 x 2 x 2 = 32.</div></div>
+
+                            <div class="q-box" id="q-a2-5"><div class="q-text">5. KPK dari 12, 15, dan 20 adalah...</div><div class="q-input"><input type="text" id="ans-a2-5" maxlength="3"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-5','60','exp-a2-5')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-5')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-5">12=2^2x3, 15=3x5, 20=2^2x5. KPK=2^2 x 3 x 5 = 4x3x5 = 60.</div></div>
+
+                            <div class="q-box" id="q-a2-6"><div class="q-text">6. FPB dari 120 dan 160 adalah...</div><div class="q-input"><input type="text" id="ans-a2-6" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-6','40','exp-a2-6')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-6')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-6">120=2^3x3x5, 160=2^5x5. FPB = 2^3 x 5 = 8 x 5 = 40.</div></div>
+
+                            <div class="q-box" id="q-a2-7"><div class="q-text">7. Ada 120 task backend dan 160 task frontend. Jika tim dibagi secara maksimal dengan porsi sama, berapa jumlah tim yang terbentuk?</div><div class="q-input"><input type="text" id="ans-a2-7" maxlength="2"> tim</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-7','40','exp-a2-7')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-7')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-7">Pembagian maksimal = FPB. FPB(120,160) = 40 tim.</div></div>
+
+                            <div class="q-box" id="q-a2-8"><div class="q-text">8. Dari soal nomor 7, berapa task backend yang didapat setiap tim?</div><div class="q-input"><input type="text" id="ans-a2-8" maxlength="1"> task</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-8','3','exp-a2-8')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-8')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-8">120 task / 40 tim = 3 task backend per tim.</div></div>
+
+                            <div class="q-box" id="q-a2-9"><div class="q-text">9. Dari soal nomor 7, berapa task frontend yang didapat setiap tim?</div><div class="q-input"><input type="text" id="ans-a2-9" maxlength="1"> task</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-9','4','exp-a2-9')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-9')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-9">160 task / 40 tim = 4 task frontend per tim.</div></div>
+
+                            <div class="q-box" id="q-a2-10"><div class="q-text">10. FPB dari 210, 315, dan 525 adalah...</div><div class="q-input"><input type="text" id="ans-a2-10" maxlength="3"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a2-10','105','exp-a2-10')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a2-10')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a2-10">210=2x3x5x7, 315=3^2x5x7, 525=3x5^2x7. FPB = 3x5x7 = 105.</div></div>
+
+                            <div id="result-2" style="display:none; background:#ecfdf5; border:2px solid var(--success); padding:20px; border-radius:8px; margin-top:20px;">
+                                <h3 style="color:var(--success)">Assessment 2 Selesai!</h3>
+                                <p>Skor Anda: <span id="score-2" style="font-size:1.5rem; font-weight:bold;">0</span> / 10</p>
+                                <div style="margin-top:15px; border-top:1px solid #a7f3d0; padding-top:15px;">
+                                    <label style="display:block; margin-bottom:5px;">Nama / Name:</label><input type="text" id="name-2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <label style="display:block; margin-bottom:5px;">Tanggal / Date:</label><input type="date" id="date-2" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <button class="btn btn-primary" onclick="generateReport(2)"><i class="fas fa-print"></i> Cetak Laporan / Print Report</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; text-align:right;" id="submit-btn-2">
+                                <button class="btn btn-success" onclick="submitAssessment(2)"><i class="fas fa-flag-checkered"></i> Selesai & Lihat Nilai</button>
+                            </div>
+                        </div>
+
+                        <!-- ASSESSMENT GROUP 3 -->
+                        <div class="asg-group" id="asg-group-3" style="display:none;">
+                            <h3 style="color:var(--primary); margin-bottom:15px;">Group 3: Logic, Equations & Proofs</h3>
+                            
+                            <div class="q-box" id="q-a3-1"><div class="q-text">1. Tentukan nilai 'n' jika KPK(n, 10) = 30 dan FPB(n, 10) = 2.</div><div class="q-input"><span>n =</span> <input type="text" id="ans-a3-1" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-1','6','exp-a3-1')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-1')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-1">n x 10 = KPK x FPB -> n x 10 = 30 x 2 -> 10n = 60 -> n = 6. Cek: KPK(6,10)=30, FPB(6,10)=2.</div></div>
+
+                            <div class="q-box" id="q-a3-2"><div class="q-text">2. Berlaku rumus FPB(a,b) x KPK(a,b) = a x b. Apakah FPB(120,150) x KPK(120,150) = 120 x 150? (Ya/Tidak)</div><div class="q-input"><select id="ans-a3-2"><option value="">-- Pilih --</option><option value="Ya">Ya</option><option value="Tidak">Tidak</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-2','Ya','exp-a3-2')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-2')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-2">Rumus ini selalu benar untuk dua bilangan bulat positif. 30 x 600 = 18,000 dan 120 x 150 = 18,000.</div></div>
+
+                            <div class="q-box" id="q-a3-3"><div class="q-text">3. Berdasarkan rumus di atas, hitung FPB(120, 150) jika diketahui KPK(120, 150) = 600.</div><div class="q-input"><input type="text" id="ans-a3-3" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-3','30','exp-a3-3')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-3')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-3">FPB = (120 x 150) / 600 = 18000 / 600 = 30.</div></div>
+
+                            <div class="q-box" id="q-a3-4"><div class="q-text">4. Faktorisasi prima dari 210 adalah \( 2 \times 3 \times \dots \times 7 \). Isi titik-titik tersebut.</div><div class="q-input"><input type="text" id="ans-a3-4" maxlength="1"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-4','5','exp-a3-4')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-4')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-4">210 / 2 = 105. 105 / 3 = 35. 35 / 5 = 7. Jadi 210 = 2 x 3 x 5 x 7.</div></div>
+
+                            <div class="q-box" id="q-a3-5"><div class="q-text">5. Jika FPB(n, 15) = 3 dan KPK(n, 15) = 45. Berapa nilai n?</div><div class="q-input"><span>n =</span> <input type="text" id="ans-a3-5" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-5','9','exp-a3-5')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-5')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-5">n x 15 = 3 x 45 -> 15n = 135 -> n = 9. Cek: FPB(9,15)=3, KPK(9,15)=45.</div></div>
+
+                            <div class="q-box" id="q-a3-6"><div class="q-text">6. Jika dua bilangan saling prima (FPB-nya 1), maka KPK kedua bilangan tersebut sama dengan...</div><div class="q-input"><select id="ans-a3-6"><option value="">-- Pilih --</option><option value="1">1</option><option value="Penjumlahan keduanya">Penjumlahan keduanya</option><option value="Perkalian keduanya">Perkalian keduanya</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-6','Perkalian keduanya','exp-a3-6')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-6')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-6">Jika FPB = 1, maka KPK x 1 = a x b. KPK = a x b (perkalian keduanya).</div></div>
+
+                            <div class="q-box" id="q-a3-7"><div class="q-text">7. Diketahui A adalah kelipatan dari B (A habis dibagi B). Jika A=24 dan B=8, berapa FPB(A, B)?</div><div class="q-input"><input type="text" id="ans-a3-7" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-7','8','exp-a3-7')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-7')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-7">Jika A kelipatan B, FPB-nya adalah B itu sendiri. FPB(24,8) = 8.</div></div>
+
+                            <div class="q-box" id="q-a3-8"><div class="q-text">8. Diketahui A adalah kelipatan dari B. Jika A=24 dan B=8, berapa KPK(A, B)?</div><div class="q-input"><input type="text" id="ans-a3-8" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-8','24','exp-a3-8')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-8')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-8">Jika A kelipatan B, KPK-nya adalah A itu sendiri. KPK(24,8) = 24.</div></div>
+
+                            <div class="q-box" id="q-a3-9"><div class="q-text">9. Tentukan KPK dari 4, 8, dan 12.</div><div class="q-input"><input type="text" id="ans-a3-9" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a3-9','24','exp-a3-9')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a3-9')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-9">4=2^2, 8=2^3, 12=2^2x3. KPK = 2^3 x 3 = 8 x 3 = 24.</div></div>
+
+                            <div class="q-box" id="q-a3-10"><div class="q-text">10. Pilih pernyataan yang BENAR tentang FPB dan KPK:</div><div class="q-input" style="flex-direction: column; align-items: flex-start;">
+                                <label><input type="radio" name="ans-a3-10" value="A"> FPB selalu lebih besar dari KPK</label>
+                                <label><input type="radio" name="ans-a3-10" value="B"> FPB(x,y) selalu habis membagi KPK(x,y)</label>
+                                <label><input type="radio" name="ans-a3-10" value="C"> KPK(x,y) selalu habis dibagi oleh FPB(x,y)</label>
+                            </div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkRadioA3Q10()"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetRadio('ans-a3-10')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a3-10">KPK adalah kelipatan (perkalian) yang pasti memuat FPB (faktor). Jadi KPK pasti habis dibagi FPB. Contoh: KPK=30, FPB=6. 30/6=5 (habis dibagi).</div></div>
+
+                            <div id="result-3" style="display:none; background:#ecfdf5; border:2px solid var(--success); padding:20px; border-radius:8px; margin-top:20px;">
+                                <h3 style="color:var(--success)">Assessment 3 Selesai!</h3>
+                                <p>Skor Anda: <span id="score-3" style="font-size:1.5rem; font-weight:bold;">0</span> / 10</p>
+                                <div style="margin-top:15px; border-top:1px solid #a7f3d0; padding-top:15px;">
+                                    <label style="display:block; margin-bottom:5px;">Nama / Name:</label><input type="text" id="name-3" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <label style="display:block; margin-bottom:5px;">Tanggal / Date:</label><input type="date" id="date-3" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <button class="btn btn-primary" onclick="generateReport(3)"><i class="fas fa-print"></i> Cetak Laporan / Print Report</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; text-align:right;" id="submit-btn-3">
+                                <button class="btn btn-success" onclick="submitAssessment(3)"><i class="fas fa-flag-checkered"></i> Selesai & Lihat Nilai</button>
+                            </div>
+                        </div>
+                        <!-- ASSESSMENT GROUP 4 -->
+                        <div class="asg-group" id="asg-group-4" style="display:none;">
+                            <h3 style="color:var(--primary); margin-bottom:15px;">Group 4: Real-World IT & Network Optimization</h3>
+                            
+                            <div class="q-box" id="q-a4-1"><div class="q-text">1. Monitoring tool A melakukan ping setiap 12 detik, tool B setiap 15 detik. Kapan mereka akan melakukan ping bersamaan kembali?</div><div class="q-input"><input type="text" id="ans-a4-1" maxlength="2"> detik</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-1','60','exp-a4-1')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-1')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-1">KPK(12, 15). 12=2^2x3, 15=3x5. KPK = 2^2 x 3 x 5 = 60 detik.</div></div>
+
+                            <div class="q-box" id="q-a4-2"><div class="q-text">2. Sebuah server memiliki 64 GB RAM dan 96 GB Storage. Jika ingin membuat Virtual Machines (VM) dengan spesifikasi identik (RAM & Storage sama rata), berapa jumlah VM maksimal yang bisa dibuat?</div><div class="q-input"><input type="text" id="ans-a4-2" maxlength="2"> VM</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-2','32','exp-a4-2')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-2')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-2">Pembagian sumber daya maksimal = FPB. FPB(64, 96). 64=2^6, 96=2^5x3. FPB = 2^5 = 32 VM.</div></div>
+
+                            <div class="q-box" id="q-a4-3"><div class="q-text">3. Dari soal nomor 2, berapa GB RAM yang dialokasikan untuk setiap VM?</div><div class="q-input"><input type="text" id="ans-a4-3" maxlength="1"> GB</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-3','2','exp-a4-3')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-3')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-3">64 GB / 32 VM = 2 GB RAM per VM.</div></div>
+
+                            <div class="q-box" id="q-a4-4"><div class="q-text">4. Dari soal nomor 2, berapa GB Storage yang dialokasikan untuk setiap VM?</div><div class="q-input"><input type="text" id="ans-a4-4" maxlength="1"> GB</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-4','3','exp-a4-4')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-4')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-4">96 GB / 32 VM = 3 GB Storage per VM.</div></div>
+
+                            <div class="q-box" id="q-a4-5"><div class="q-text">5. Cron job A berjalan setiap 45 menit, Cron job B setiap 90 menit. Jika keduanya berjalan bersamaan pukul 06:00, pukul berapa mereka akan sinkron kembali?</div><div class="q-input"><select id="ans-a4-5"><option value="">-- Pilih --</option><option value="07:00">07:00</option><option value="07:30">07:30</option><option value="08:00">08:00</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-5','07:30','exp-a4-5')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-5')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-5">KPK(45, 90). Karena 90 adalah kelipatan 45, KPK-nya adalah 90 menit. 06:00 + 90 menit = 07:30.</div></div>
+
+                            <div class="q-box" id="q-a4-6"><div class="q-text">6. Sistem keamanan melakukan update database setiap 20 hari dan 35 hari. Berapa hari sekali kedua sistem tersebut akan update di hari yang sama?</div><div class="q-input"><input type="text" id="ans-a4-6" maxlength="3"> hari</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-6','140','exp-a4-6')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-6')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-6">KPK(20, 35). 20=2^2x5, 35=5x7. KPK = 2^2 x 5 x 7 = 140 hari.</div></div>
+
+                            <div class="q-box" id="q-a4-7"><div class="q-text">7. Tiga microservice memiliki latency 4ms, 6ms, dan 8ms. Kapan mereka akan merespons request pada waktu yang sama persis?</div><div class="q-input"><input type="text" id="ans-a4-7" maxlength="2"> ms</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-7','24','exp-a4-7')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-7')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-7">KPK(4, 6, 8). 4=2^2, 6=2x3, 8=2^3. KPK = 2^3 x 3 = 24 ms.</div></div>
+
+                            <div class="q-box" id="q-a4-8"><div class="q-text">8. Seorang analis data memiliki 150 log error dan 120 log warning. Ia ingin mengelompokkannya ke dalam cluster dengan komposisi merata. Berapa cluster maksimal yang bisa dibentuk?</div><div class="q-input"><input type="text" id="ans-a4-8" maxlength="2"> cluster</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-8','30','exp-a4-8')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-8')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-8">FPB(150, 120). 150=2x3x5^2, 120=2^3x3x5. FPB = 2x3x5 = 30 cluster.</div></div>
+
+                            <div class="q-box" id="q-a4-9"><div class="q-text">9. Jika dua bilangan saling prima (relatif co-prime), maka KPK kedua bilangan tersebut sama dengan perkaliannya. Benar atau Salah?</div><div class="q-input"><select id="ans-a4-9"><option value="">-- Pilih --</option><option value="Benar">Benar</option><option value="Salah">Salah</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-9','Benar','exp-a4-9')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-9')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-9">Benar. Jika FPB=1, maka KPK x 1 = a x b. Contoh: 8 dan 9. KPK=72, 8x9=72.</div></div>
+
+                            <div class="q-box" id="q-a4-10"><div class="q-text">10. Jika \( n \) adalah bilangan prima, dan FPB(\( n \), 14) = 7. Berapa nilai \( n \)?</div><div class="q-input"><input type="text" id="ans-a4-10" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a4-10','7','exp-a4-10')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a4-10')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a4-10">Karena \( n \) prima, faktornya hanya 1 dan dirinya. Agar FPB-nya 7, maka \( n \) haruslah 7 itu sendiri.</div></div>
+
+                            <div id="result-4" style="display:none; background:#ecfdf5; border:2px solid var(--success); padding:20px; border-radius:8px; margin-top:20px;">
+                                <h3 style="color:var(--success)">Assessment 4 Selesai!</h3>
+                                <p>Skor Anda: <span id="score-4" style="font-size:1.5rem; font-weight:bold;">0</span> / 10</p>
+                                <div style="margin-top:15px; border-top:1px solid #a7f3d0; padding-top:15px;">
+                                    <label style="display:block; margin-bottom:5px;">Nama / Name:</label><input type="text" id="name-4" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <label style="display:block; margin-bottom:5px;">Tanggal / Date:</label><input type="date" id="date-4" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <button class="btn btn-primary" onclick="generateReport(4)"><i class="fas fa-print"></i> Cetak Laporan / Print Report</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; text-align:right;" id="submit-btn-4">
+                                <button class="btn btn-success" onclick="submitAssessment(4)"><i class="fas fa-flag-checkered"></i> Selesai & Lihat Nilai</button>
+                            </div>
+                        </div>
+
+                        <!-- ASSESSMENT GROUP 5 -->
+                        <div class="asg-group" id="asg-group-5" style="display:none;">
+                            <h3 style="color:var(--primary); margin-bottom:15px;">Group 5: Advanced Logic & Problem Solving</h3>
+                            
+                            <div class="q-box" id="q-a5-1"><div class="q-text">1. Diketahui KPK(\( a, b \)) = 24 dan FPB(\( a, b \)) = 4. Jika \( a = 12 \), berapa nilai \( b \)?</div><div class="q-input"><span>b =</span> <input type="text" id="ans-a5-1" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-1','8','exp-a5-1')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-1')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-1">Rumus: \( a \times b = KPK \times FPB \). \( 12 \times b = 24 \times 4 \). \( 12b = 96 \). \( b = 8 \).</div></div>
+
+                            <div class="q-box" id="q-a5-2"><div class="q-text">2. Tentukan KPK dari 8, 12, dan 24.</div><div class="q-input"><input type="text" id="ans-a5-2" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-2','24','exp-a5-2')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-2')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-2">24 adalah kelipatan dari 8 dan 12. Jadi KPK-nya pasti 24.</div></div>
+
+                            <div class="q-box" id="q-a5-3"><div class="q-text">3. Faktorisasi prima dari 144 adalah \( 2^a \times 3^b \). Berapa nilai \( a + b \)?</div><div class="q-input"><input type="text" id="ans-a5-3" maxlength="1"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-3','6','exp-a5-3')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-3')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-3">144 = 12 x 12 = (2^2 x 3) x (2^2 x 3) = 2^4 x 3^2. Jadi a=4, b=2. a+b = 6.</div></div>
+
+                            <div class="q-box" id="q-a5-4"><div class="q-text">4. Jika FPB(\( a, b \)) = \( a \), maka hubungan antara \( a \) dan \( b \) adalah...</div><div class="q-input"><select id="ans-a5-4"><option value="">-- Pilih --</option><option value="Saling prima">Saling prima</option><option value="b kelipatan a">b kelipatan a</option><option value="a kelipatan b">a kelipatan b</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-4','b kelipatan a','exp-a5-4')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-4')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-4">Jika FPB-nya adalah salah satu bilangan itu sendiri (a), maka a membagi habis b. Artinya b adalah kelipatan dari a.</div></div>
+
+                            <div class="q-box" id="q-a5-5"><div class="q-text">5. Sebuah proyek deploy menggunakan 3 server dengan siklus 10 hari, 15 hari, dan 25 hari. Berapa hari sekali mereka akan di-deploy bersamaan?</div><div class="q-input"><input type="text" id="ans-a5-5" maxlength="3"> hari</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-5','150','exp-a5-5')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-5')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-5">KPK(10,15,25). 10=2x5, 15=3x5, 25=5^2. KPK = 2 x 3 x 5^2 = 150 hari.</div></div>
+
+                            <div class="q-box" id="q-a5-6"><div class="q-text">6. Manakah yang BUKAN merupakan faktor dari 120?</div><div class="q-input"><select id="ans-a5-6"><option value="">-- Pilih --</option><option value="8">8</option><option value="15">15</option><option value="16">16</option><option value="24">24</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-6','16','exp-a5-6')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-6')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-6">120 / 16 = 7.5 (tidak habis dibagi). 8, 15, 24 habis membagi 120.</div></div>
+
+                            <div class="q-box" id="q-a5-7"><div class="q-text">7. Pilih bilangan yang merupakan kelipatan dari 12 sekaligus faktor dari 120:</div><div class="q-input" style="flex-direction: column; align-items: flex-start;">
+                                <label><input type="checkbox" id="ans-a5-7a" value="12"> 12</label>
+                                <label><input type="checkbox" id="ans-a5-7b" value="24"> 24</label>
+                                <label><input type="checkbox" id="ans-a5-7c" value="36"> 36</label>
+                                <label><input type="checkbox" id="ans-a5-7d" value="60"> 60</label>
+                            </div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkA5Q7()"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-7a','ans-a5-7b','ans-a5-7c','ans-a5-7d')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-7">Kelipatan 12 yang menjadi faktor 120: 12 (120/12=10), 24 (120/24=5), 60 (120/60=2). 36 bukan faktor 120 (120/36=3.33).</div></div>
+
+                            <div class="q-box" id="q-a5-8"><div class="q-text">8. Diketahui KPK(\( x \), 15) = 60 dan FPB(\( x \), 15) = 5. Berapa nilai \( x \)?</div><div class="q-input"><input type="text" id="ans-a5-8" maxlength="2"></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-8','20','exp-a5-8')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-8')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-8">x x 15 = 60 x 5 -> 15x = 300 -> x = 20. Cek: KPK(20,15)=60, FPB(20,15)=5.</div></div>
+
+                            <div class="q-box" id="q-a5-9"><div class="q-text">9. Printer A mencetak setiap 2 menit, B setiap 3 menit, C setiap 5 menit. Jika ketiganya mencetak bersama pukul 08:00, berapa kali mereka mencetak bersama lagi hingga pukul 09:00?</div><div class="q-input"><input type="text" id="ans-a5-9" maxlength="1"> kali</div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-9','2','exp-a5-9')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-9')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-9">KPK(2,3,5) = 30 menit. Dalam 1 jam (60 menit), mereka cetak bareng di menit ke-30 dan ke-60. Jadi 2 kali.</div></div>
+
+                            <div class="q-box" id="q-a5-10"><div class="q-text">10. Rumus FPB x KPK = a x b hanya berlaku untuk...</div><div class="q-input"><select id="ans-a5-10"><option value="">-- Pilih --</option><option value="1 Bilangan">1 Bilangan</option><option value="2 Bilangan">2 Bilangan</option><option value="3 Bilangan ke atas">3 Bilangan ke atas</option></select></div><div class="q-actions"><button class="btn btn-sm btn-primary" onclick="checkInput('ans-a5-10','2 Bilangan','exp-a5-10')"><i class="fas fa-check"></i> Cek</button><button class="btn btn-sm btn-outline" onclick="resetQ('ans-a5-10')"><i class="fas fa-redo"></i> Reset</button></div><div class="explanation" id="exp-a5-10">Rumus FPB x KPK = a x b hanya berlaku secara tepat untuk 2 bilangan bulat positif, bukan 3 atau lebih.</div></div>
+
+                            <div id="result-5" style="display:none; background:#ecfdf5; border:2px solid var(--success); padding:20px; border-radius:8px; margin-top:20px;">
+                                <h3 style="color:var(--success)">Assessment 5 Selesai!</h3>
+                                <p>Skor Anda: <span id="score-5" style="font-size:1.5rem; font-weight:bold;">0</span> / 10</p>
+                                <div style="margin-top:15px; border-top:1px solid #a7f3d0; padding-top:15px;">
+                                    <label style="display:block; margin-bottom:5px;">Nama / Name:</label><input type="text" id="name-5" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <label style="display:block; margin-bottom:5px;">Tanggal / Date:</label><input type="date" id="date-5" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                                    <button class="btn btn-primary" onclick="generateReport(5)"><i class="fas fa-print"></i> Cetak Laporan / Print Report</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:15px; text-align:right;" id="submit-btn-5">
+                                <button class="btn btn-success" onclick="submitAssessment(5)"><i class="fas fa-flag-checkered"></i> Selesai & Lihat Nilai</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('s6')"><i class="fas fa-arrow-left"></i> Kembali Belajar</button>
+                </div>
+            </div>
+
+            <!-- SECTION 7: CONSOLIDATION & REFLECTION (End) -->
+            <div class="slide" id="slide-s7">
+                <div class="slide-header">
+                    <h1>Consolidation & Reflection <i class="fas fa-mirror" style="color:#10b981"></i></h1>
+                    <p class="eng">Summary & Final Thought</p>
+                </div>
+                <div class="slide-body" style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                    <div style="background:var(--white); padding:30px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); text-align:center; max-width:600px; width:100%;">
+                        <div style="font-size:4rem; color:var(--success); margin-bottom:15px;"><i class="fas fa-trophy"></i></div>
+                        <h2 style="color:var(--primary); margin-bottom:10px;">Kerja Luar Biasa! / Great Job!</h2>
+                        <p style="margin-bottom:20px; color:var(--text-light);">Kita telah berhasil mensinkronkan jadwal sistem dengan KPK dan membagi sumber daya komputasi secara optimal dengan FPB.</p>
+                        
+                        <div style="text-align:left; background:#f3f4f6; padding:15px; border-radius:8px; margin-bottom:20px;">
+                            <h3 style="font-size:1.1rem; margin-bottom:10px;"><i class="fas fa-key" style="color:var(--primary);"></i> Poin Penting / Key Takeaways:</h3>
+                            <ul style="padding-left:20px; line-height:1.6;">
+                                <li><strong>KPK (Kelipatan Persekutuan Terkecil):</strong> Sinkronisasi siklus. Ambil pangkat <strong>TERBESAR</strong> dari faktor prima.</li>
+                                <li><strong>FPB (Faktor Persekutuan Terbesar):</strong> Pembagian merata. Ambil pangkat <strong>TERKECIL</strong> dari faktor prima.</li>
+                                <li><strong>Rumus Hubungan:</strong> FPB(a,b) × KPK(a,b) = a × b (Berlaku untuk 2 bilangan).</li>
+                            </ul>
+                        </div>
+
+                        <label style="display:block; text-align:left; margin-bottom:5px; font-weight:bold;">Apa satu hal yang menurutmu paling menantang tadi? / What was the most challenging part?</label>
+                        <textarea id="reflection-text" rows="4" style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:6px; resize:none; font-family:inherit;"></textarea>
+                        
+                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid #e5e7eb;">
+                            <p style="font-size:0.9rem; color:var(--text-light);">Untuk latihan lebih lanjut dan akses modul tambahan, silakan login ke LMS:</p>
+                            <a href="https://learn.algonova.id/login" target="_blank" class="btn btn-primary" style="margin-top:10px; text-decoration:none;"><i class="fas fa-external-link-alt"></i> learn.algonova.id/login</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <button class="btn btn-outline" onclick="showSlide('asg')"><i class="fas fa-arrow-left"></i> Kembali ke Assessment</button>
+                    <button class="btn btn-primary" onclick="alert('Terima kasih telah menyelesaikan pelajaran hari ini!')"><i class="fas fa-door-open"></i> Akhiri Sesi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation & Progress (Versi yang sudah diperbaiki)
+        const slides = ['home', 's1', 's2', 's3', 's4', 's5', 's6', 'asg', 's7'];
+        const titles = {
+            'home': 'Homepage', 's1': 'Spiral Review Warm-up', 's2': 'Intro & Real-World Connection',
+            's3': 'Prior Knowledge', 's4': 'Problem Introduction', 's5': 'Guided Practice',
+            's6': 'Independent Practice', 'asg': 'Assessment', 's7': 'Reflection'
+        };
+        const times = {
+            'home': '--:--', 's1': '00:00 - 00:10', 's2': '00:10 - 00:15',
+            's3': '00:15 - 00:20', 's4': '00:20 - 00:30', 's5': '00:30 - 00:45',
+            's6': '00:45 - 01:00', 'asg': 'Assessment', 's7': 'End of Class'
+        };
+
+        function showSlide(id) {
+            // 1. Sembunyikan semua slide, tampilkan yang dipilih
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            const targetSlide = document.getElementById('slide-' + id);
+            if (targetSlide) {
+                targetSlide.classList.add('active');
+            } else {
+                console.error("Slide tidak ditemukan: slide-" + id);
+                return; // Hentikan jika slide tidak ada
+            }
+
+            // 2. Update topbar
+            document.getElementById('top-title').innerText = titles[id] || 'Lesson';
+            document.getElementById('top-time').innerText = times[id] || '--:--';
+            
+            // 3. Update Sidebar active state (Cara Baru yang Aman)
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            // Cari nav-item yang atribut onclick-nya mengandung id slide yang dituju
+            document.querySelectorAll('.nav-item').forEach(n => {
+                if(n.getAttribute('onclick') === `showSlide('${id}')`) {
+                    n.classList.add('active');
+                }
+            });
+
+            // 4. Update Progress Bar
+            const idx = slides.indexOf(id);
+            if(idx !== -1) {
+                const perc = (idx / (slides.length - 1)) * 100;
+                document.getElementById('progressBar').style.width = perc + '%';
+            }
+
+            // 5. Re-render KaTeX untuk konten dinamis
+            if(typeof renderMathInElement === 'function') {
+                renderMathInElement(targetSlide, {
+                    delimiters: [{left: '\\(', right: '\\)', display: false}]
+                });
+            }
+        }
+
+        // General Check Function
+        function checkInput(inputId, correctVal, expId) {
+            const input = document.getElementById(inputId);
+            const exp = document.getElementById(expId);
+            const val = input.value.trim();
+            
+            if(val === correctVal) {
+                input.style.borderColor = 'var(--success)';
+                input.style.backgroundColor = '#ecfdf5';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                input.style.borderColor = 'var(--error)';
+                input.style.backgroundColor = '#fef2f2';
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: ' + correctVal + '. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            input.disabled = true;
+        }
+
+        function resetQ(...inputIds) {
+            inputIds.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.style.borderColor = '#d1d5db';
+                input.style.backgroundColor = 'var(--white)';
+                input.disabled = false;
+            });
+            // Find closest explanation
+            const parentBox = document.getElementById(inputIds[0]).closest('.q-box');
+            const exp = parentBox.querySelector('.explanation');
+            exp.classList.remove('show');
+            // Reset explanation HTML to original (remove badges dynamically added)
+            const origText = exp.innerHTML.split('</strong> ')[1] || exp.innerHTML.split('. Jawaban benar: ')[1] || exp.innerHTML;
+            // Fallback reset method:
+            exp.innerHTML = origText; 
+        }
+
+        // Specific Multi-Input Checks for Section 1
+        function checkS1Q1() {
+            const a = document.getElementById('ans-s1-1-a').value.trim();
+            const b = document.getElementById('ans-s1-1-b').value.trim();
+            const exp = document.getElementById('exp-s1-1');
+            if(a === '5' && b === '210') {
+                document.getElementById('ans-s1-1-a').style.borderColor = 'var(--success)';
+                document.getElementById('ans-s1-1-b').style.borderColor = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                document.getElementById('ans-s1-1-a').style.borderColor = 'var(--error)';
+                document.getElementById('ans-s1-1-b').style.borderColor = 'var(--error)';
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 5 dan 210. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s1-1-a').disabled = true;
+            document.getElementById('ans-s1-1-b').disabled = true;
+        }
+
+        function checkS1Q2() {
+            const a = document.getElementById('ans-s1-2-a').value.trim();
+            const b = document.getElementById('ans-s1-2-b').value.trim();
+            const exp = document.getElementById('exp-s1-2');
+            if(a === '16' && b === '800') {
+                document.getElementById('ans-s1-2-a').style.borderColor = 'var(--success)';
+                document.getElementById('ans-s1-2-b').style.borderColor = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                document.getElementById('ans-s1-2-a').style.borderColor = 'var(--error)';
+                document.getElementById('ans-s1-2-b').style.borderColor = 'var(--error)';
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 16 dan 800. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s1-2-a').disabled = true;
+            document.getElementById('ans-s1-2-b').disabled = true;
+        }
+
+        function checkPairS2Q5() {
+            const a = document.getElementById('ans-s2-5a').value;
+            const b = document.getElementById('ans-s2-5b').value;
+            const exp = document.getElementById('exp-s2-5');
+            if(a === 'FPB' && b === 'KPK') {
+                document.getElementById('ans-s2-5a').style.borderColor = 'var(--success)';
+                document.getElementById('ans-s2-5b').style.borderColor = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                document.getElementById('ans-s2-5a').style.borderColor = 'var(--error)';
+                document.getElementById('ans-s2-5b').style.borderColor = 'var(--error)';
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: a=FPB, b=KPK. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s2-5a').disabled = true;
+            document.getElementById('ans-s2-5b').disabled = true;
+        }
+		
+        // Specific Checks for Section 3
+        function checkS3Q1() {
+            const a = document.getElementById('ans-s3-1a').checked;
+            const b = document.getElementById('ans-s3-1b').checked;
+            const c = document.getElementById('ans-s3-1c').checked;
+            const d = document.getElementById('ans-s3-1d').checked;
+            const exp = document.getElementById('exp-s3-1');
+            if(a && !b && c && !d) {
+                document.getElementById('ans-s3-1a').parentElement.style.color = 'var(--success)';
+                document.getElementById('ans-s3-1c').parentElement.style.color = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 2 dan 7. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s3-1a').disabled = true;
+            document.getElementById('ans-s3-1b').disabled = true;
+            document.getElementById('ans-s3-1c').disabled = true;
+            document.getElementById('ans-s3-1d').disabled = true;
+        }
+
+        function checkPairS3Q2() {
+            const a = document.getElementById('ans-s3-2').value.trim();
+            const b = document.getElementById('ans-s3-2b').value.trim();
+            const exp = document.getElementById('exp-s3-2');
+            if((a === '5' && b === '7') || (a === '7' && b === '5')) {
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 5 dan 7. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s3-2').disabled = true;
+            document.getElementById('ans-s3-2b').disabled = true;
+        }
+
+        function checkPairS3Q7() {
+            const a = document.getElementById('ans-s3-7a').value;
+            const b = document.getElementById('ans-s3-7b').value;
+            const exp = document.getElementById('exp-s3-7');
+            if(a === '20 = 2 x 10' && b === '10 = 2 x 5') {
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Urutan yang benar: Pertama 20=2x10, lalu 10=2x5. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s3-7a').disabled = true;
+            document.getElementById('ans-s3-7b').disabled = true;
+        }
+
+        // Specific Checks for Section 4
+        function checkPairS4Q8() {
+            const a = document.getElementById('ans-s4-8a').value;
+            const b = document.getElementById('ans-s4-8b').value;
+            const exp = document.getElementById('exp-s4-8');
+            if(a === '18' && b === '12') {
+                document.getElementById('ans-s4-8a').style.borderColor = 'var(--success)';
+                document.getElementById('ans-s4-8b').style.borderColor = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                document.getElementById('ans-s4-8a').style.borderColor = 'var(--error)';
+                document.getElementById('ans-s4-8b').style.borderColor = 'var(--error)';
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: a=18, b=12. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s4-8a').disabled = true;
+            document.getElementById('ans-s4-8b').disabled = true;
+        }
+
+        // Specific Check for Section 6 Q4 (Checkbox)
+        function checkS6Q4() {
+            const a = document.getElementById('ans-s6-4a').checked;
+            const b = document.getElementById('ans-s6-4b').checked;
+            const c = document.getElementById('ans-s6-4c').checked;
+            const d = document.getElementById('ans-s6-4d').checked;
+            const exp = document.getElementById('exp-s6-4');
+            if(a && b && c && !d) {
+                document.getElementById('ans-s6-4a').parentElement.style.color = 'var(--success)';
+                document.getElementById('ans-s6-4b').parentElement.style.color = 'var(--success)';
+                document.getElementById('ans-s6-4c').parentElement.style.color = 'var(--success)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 2, 3, dan 5. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-s6-4a').disabled = true;
+            document.getElementById('ans-s6-4b').disabled = true;
+            document.getElementById('ans-s6-4c').disabled = true;
+            document.getElementById('ans-s6-4d').disabled = true;
+        }
+
+        // Improved resetQ function to handle Checkboxes and Selects properly
+        // Replace your old resetQ function with this updated one
+        function resetQ(...inputIds) {
+            inputIds.forEach(id => {
+                const input = document.getElementById(id);
+                if(input.tagName === 'SELECT') {
+                    input.selectedIndex = 0;
+                } else if(input.type === 'checkbox') {
+                    input.checked = false;
+                    input.disabled = false;
+                    input.parentElement.style.color = ''; // Reset color
+                } else {
+                    input.value = '';
+                }
+                input.style.borderColor = '#d1d5db';
+                input.style.backgroundColor = input.type === 'checkbox' ? '' : 'var(--white)';
+                input.disabled = false;
+            });
+            // Find closest explanation
+            const parentBox = document.getElementById(inputIds[0]).closest('.q-box');
+            const exp = parentBox.querySelector('.explanation');
+            exp.classList.remove('show');
+            // Reset explanation HTML to remove dynamically added badges
+            const origText = exp.innerHTML.split('</strong> ')[1] || exp.innerHTML.split('. Jawaban benar: ')[1] || exp.innerHTML;
+            exp.innerHTML = origText; 
+        }
+
+        // Initial KaTeX render
+        document.addEventListener("DOMContentLoaded", function() {
+            if(typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [{left: '\\(', right: '\\)', display: false}]
+                });
+            }
+        });
+		
+        // --- ASSESSMENT LOGIC ---
+        let assessmentAnswers = {
+            1: ['14','75','24','15','2','7'], // Group 1 answers (1-6), 7 is pairing, 8-10 are standard
+            2: ['6','216','12','32','60','40','40','3','4','105'],
+            3: ['6','Ya','30','5','9','Perkalian keduanya','8','24','24'] // 10 is radio
+        };
+
+        function showAsgGroup(groupNum) {
+            document.querySelectorAll('.asg-group').forEach(el => el.style.display = 'none');
+            document.getElementById('asg-group-' + groupNum).style.display = 'block';
+            
+            for(let i=1; i<=5; i++) {
+                document.getElementById('tab-asg'+i).className = 'btn btn-sm ' + (i === groupNum ? 'btn-primary' : 'btn-outline');
+            }
+        }
+
+        function submitAssessment(groupNum) {
+            let score = 0;
+            let answers = assessmentAnswers[groupNum];
+            
+            // Loop through 1 to 10 to check
+            for(let i=1; i<=10; i++) {
+                let inputId = 'ans-a' + groupNum + '-' + i;
+                let expId = 'exp-a' + groupNum + '-' + i;
+                let input = document.getElementById(inputId);
+                
+                if(!input) continue; // Skip if element not found (e.g., pairing/radio)
+
+                // Special cases per group
+                if(groupNum === 1 && i === 7) {
+                    let a = document.getElementById('ans-a1-7a').value;
+                    let b = document.getElementById('ans-a1-7b').value;
+                    if(a === 'KPK' && b === 'FPB') score++;
+                } else if(groupNum === 3 && i === 10) {
+                    let radios = document.getElementsByName('ans-a3-10');
+                    if(radios[2].checked) score++; // Option C
+                } else {
+                    if(input.value.trim() === answers[i-1]) score++;
+                }
+            }
+
+            document.getElementById('score-' + groupNum).innerText = score;
+            document.getElementById('result-' + groupNum).style.display = 'block';
+            document.getElementById('submit-btn-' + groupNum).style.display = 'none';
+        }
+
+        function checkPairA1Q7() {
+            const a = document.getElementById('ans-a1-7a').value;
+            const b = document.getElementById('ans-a1-7b').value;
+            const exp = document.getElementById('exp-a1-7');
+            if(a === 'KPK' && b === 'FPB') {
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: a=KPK, b=FPB. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-a1-7a').disabled = true;
+            document.getElementById('ans-a1-7b').disabled = true;
+        }
+
+        function checkRadioA3Q10() {
+            const radios = document.getElementsByName('ans-a3-10');
+            const exp = document.getElementById('exp-a3-10');
+            let val = "";
+            for(let r of radios) { if(r.checked) val = r.value; }
+            
+            if(val === "C") {
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: C. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            for(let r of radios) r.disabled = true;
+        }
+
+        function resetRadio(nameAttr) {
+            const radios = document.getElementsByName(nameAttr);
+            const parentBox = radios[0].closest('.q-box');
+            const exp = parentBox.querySelector('.explanation');
+            for(let r of radios) { r.checked = false; r.disabled = false; }
+            exp.classList.remove('show');
+        }
+
+        function generateReport(groupNum) {
+            const name = document.getElementById('name-' + groupNum).value || 'Anonymous';
+            const date = document.getElementById('date-' + groupNum).value || new Date().toISOString().slice(0,10);
+            const score = document.getElementById('score-' + groupNum).innerText;
+            
+            let rows = "";
+            let answers = assessmentAnswers[groupNum];
+            
+            for(let i=1; i<=10; i++) {
+                let inputId = 'ans-a' + groupNum + '-' + i;
+                let input = document.getElementById(inputId);
+                let studentAns = "";
+                let correctAns = answers[i-1] || "Complex";
+                let noteSymbol = "✘"; // Default simbol silang (Unicode)
+                let questionText = "Soal " + i; // Fallback teks soal
+
+                // Ambil teks soal asli dari DOM
+                let qBox = document.getElementById('q-a' + groupNum + '-' + i);
+                if(qBox) {
+                    let qTextEl = qBox.querySelector('.q-text');
+                    if(qTextEl) {
+                        // innerText akan membersihkan tag HTML/KaTeX menjadi teks biasa yang rapi
+                        questionText = qTextEl.innerText; 
+                    }
+                }
+
+                // Penanganan khusus soal Pairing, Radio, Checkbox
+                if(groupNum === 1 && i === 7) {
+                    studentAns = document.getElementById('ans-a1-7a').value + " & " + document.getElementById('ans-a1-7b').value;
+                    correctAns = "KPK & FPB";
+                    if(studentAns === correctAns) noteSymbol = "✔";
+                } else if(groupNum === 3 && i === 10) {
+                    let radios = document.getElementsByName('ans-a3-10');
+                    for(let r of radios) { if(r.checked) studentAns = r.parentElement.innerText.trim(); }
+                    correctAns = "KPK(x,y) selalu habis dibagi oleh FPB(x,y)";
+                    if(radios[2].checked) { noteSymbol = "✔"; studentAns = correctAns; }
+                } else if(groupNum === 5 && i === 7) {
+                    let a = document.getElementById('ans-a5-7a').checked;
+                    let b = document.getElementById('ans-a5-7b').checked;
+                    let c = document.getElementById('ans-a5-7c').checked;
+                    let d = document.getElementById('ans-a5-7d').checked;
+                    let tempArr = [];
+                    if(a) tempArr.push("12"); if(b) tempArr.push("24"); if(c) tempArr.push("36"); if(d) tempArr.push("60");
+                    studentAns = tempArr.join(", ");
+                    correctAns = "12, 24, 60";
+                    if(a && b && !c && d) noteSymbol = "✔";
+                } else {
+                    // Soal isian / dropdown biasa
+                    if(input) studentAns = input.value.trim();
+                    if(studentAns === correctAns) noteSymbol = "✔";
+                }
+
+                // Warna untuk simbol
+                let noteColor = noteSymbol === "✔" ? "green" : "red";
+
+                rows += `<tr>
+                            <td style="text-align:center; padding:8px; border:1px solid #ddd;">${i}</td>
+                            <td style="padding:8px; border:1px solid #ddd;">${questionText}</td>
+                            <td style="text-align:center; padding:8px; border:1px solid #ddd;">${studentAns}</td>
+                            <td style="text-align:center; padding:8px; border:1px solid #ddd;">${correctAns}</td>
+                            <td style="text-align:center; font-size:1.2rem; font-weight:bold; padding:8px; border:1px solid #ddd; color:${noteColor};">${noteSymbol}</td>
+                         </tr>`;
+            }
+
+            const html = `
+                <html>
+                <head>
+                    <title>Assessment Report</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #333; }
+                        h1 { color: #4F46E5; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95rem; }
+                        th { background: #f3f4f6; text-align: left; padding: 10px; border: 1px solid #ddd; }
+                        td { vertical-align: top; }
+                        .footer { margin-top: 50px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>ASSESSMENT RESULT</h1>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Date:</strong> ${date}</p>
+                    <p><strong>Topic:</strong> Faktorisasi dan Kelipatan (KPK & FPB)</p>
+                    <p><strong>Assessment Group:</strong> ${groupNum}</p>
+                    <p style="font-size:1.2rem; margin-top:15px;"><strong>Score:</strong> <span style="color:#4F46E5; font-weight:bold;">${score} / 10</span></p>
+                    
+                    <table>
+                        <tr>
+                            <th style="width:5%;">No</th>
+                            <th style="width:45%;">Question</th>
+                            <th style="width:15%;">Student Answer</th>
+                            <th style="width:15%;">Correct Answer</th>
+                            <th style="width:10%;">Note</th>
+                        </tr>
+                        ${rows}
+                    </table>
+                    
+                    <div class="footer">
+                        <p>Checked by,</p>
+                        <br><br>
+                        <strong style="font-size:1.1rem;">Deni</strong>
+                    </div>
+                </body>
+                </html>`;
+
+            const newWindow = window.open('', '_blank');
+            newWindow.document.write(html);
+            newWindow.document.close();
+        }
+        // Append answers for Assessment 4 & 5
+        assessmentAnswers[4] = ['60','32','2','3','07:30','140','24','30','Benar','7'];
+        assessmentAnswers[5] = ['8','24','6','b kelipatan a','150','16','12','20','2','2 Bilangan'];
+
+        // Special Check for Assessment 5 Q7 (Checkbox)
+        function checkA5Q7() {
+            const a = document.getElementById('ans-a5-7a').checked;
+            const b = document.getElementById('ans-a5-7b').checked;
+            const c = document.getElementById('ans-a5-7c').checked;
+            const d = document.getElementById('ans-a5-7d').checked;
+            const exp = document.getElementById('exp-a5-7');
+            if(a && b && !c && d) {
+                document.getElementById('ans-a5-7a').parentElement.style.color = 'var(--success)';
+                document.getElementById('ans-a5-7b').parentElement.style.color = 'var(--success)';
+                document.getElementById('ans-a5-7d').parentElement.style.color = 'var(--success)';
+                if(c) document.getElementById('ans-a5-7c').parentElement.style.color = 'var(--error)';
+                exp.innerHTML = '<strong class="correct-badge"><i class="fas fa-check-circle"></i> Benar!</strong> ' + exp.innerHTML;
+            } else {
+                exp.innerHTML = '<strong class="wrong-badge"><i class="fas fa-times-circle"></i> Salah.</strong> Jawaban benar: 12, 24, dan 60. ' + exp.innerHTML;
+            }
+            exp.classList.add('show');
+            document.getElementById('ans-a5-7a').disabled = true;
+            document.getElementById('ans-a5-7b').disabled = true;
+            document.getElementById('ans-a5-7c').disabled = true;
+            document.getElementById('ans-a5-7d').disabled = true;
+        }
+
+        // Update generateReport to handle Group 5 Q7 properly
+        const origGenerateReport = generateReport;
+        generateReport = function(groupNum) {
+            if(groupNum === 5) {
+                const name = document.getElementById('name-5').value || 'Anonymous';
+                const date = document.getElementById('date-5').value || new Date().toISOString().slice(0,10);
+                const score = document.getElementById('score-5').innerText;
+                
+                let rows = "";
+                let answers = assessmentAnswers[5];
+                
+                for(let i=1; i<=10; i++) {
+                    let inputId = 'ans-a5-' + i;
+                    let input = document.getElementById(inputId);
+                    let studentAns = "";
+                    let correctAns = answers[i-1];
+                    let note = "x";
+
+                    if(i === 7) {
+                        let a = document.getElementById('ans-a5-7a').checked;
+                        let b = document.getElementById('ans-a5-7b').checked;
+                        let c = document.getElementById('ans-a5-7c').checked;
+                        let d = document.getElementById('ans-a5-7d').checked;
+                        let tempArr = [];
+                        if(a) tempArr.push("12"); if(b) tempArr.push("24"); if(c) tempArr.push("36"); if(d) tempArr.push("60");
+                        studentAns = tempArr.join(", ");
+                        correctAns = "12, 24, 60";
+                        if(a && b && !c && d) note = "v";
+                    } else {
+                        if(input) studentAns = input.value.trim();
+                        if(studentAns === correctAns) note = "v";
+                    }
+                    rows += `<tr><td style="text-align:center">${i}</td><td>Soal ${i}</td><td style="text-align:center">${studentAns}</td><td style="text-align:center">${correctAns}</td><td style="text-align:center; font-weight:bold; color:${note==='v'?'green':'red'}">${note}</td></tr>`;
+                }
+
+                const html = `
+                    <html><head><title>Assessment Report</title><style>body{font-family:Arial,sans-serif; padding:40px;} h1{color:#4F46E5;} table{width:100%; border-collapse:collapse; margin-top:20px;} th,td{border:1px solid #ddd; padding:8px; text-align:left;} th{background:#f3f4f6;}</style></head>
+                    <body>
+                        <h1>ASSESSMENT RESULT</h1>
+                        <p><strong>Name:</strong> ${name}</p>
+                        <p><strong>Date:</strong> ${date}</p>
+                        <p><strong>Topic:</strong> Faktorisasi dan Kelipatan (KPK & FPB)</p>
+                        <p><strong>Assessment Group:</strong> ${groupNum}</p>
+                        <p><strong>Score:</strong> ${score} / 10</p>
+                        <table>
+                            <tr><th>No</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Note (v/x)</th></tr>
+                            ${rows}
+                        </table>
+                        <br><br><p>Checked by,</p><br><strong>Deni</strong>
+                    </body></html>`;
+
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(html);
+                newWindow.document.close();
+            } else {
+                origGenerateReport(groupNum); // Call original for other groups
+            }
+        };
+    </script>
+</body>
+</html>

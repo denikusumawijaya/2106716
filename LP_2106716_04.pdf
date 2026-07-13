@@ -1,0 +1,1224 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 4074
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F2 20 Tf
+23. TL
+0 g
+56.6929133858267775 785.1970866141732586 Td
+(Faktorisasi dan Kelipatan \(KPK & FPB\) - Faishal Firjatullah) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 742.6774015748030706 Td
+(Created: 13/07/2026) Tj
+ET
+56.6929133858267775 714.3309448818897636 m
+538.5826771653544256 714.3309448818897636 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+56.6929133858267775 685.9844881889763428 Td
+(Student) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 657.6380314960629221 Td
+(Student: Faishal Firjatullah) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 634.9608661417322537 Td
+(Topic: Faktorisasi dan Kelipatan \(KPK & FPB\)) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 612.2837007874015853 Td
+(Status: completed) Tj
+ET
+BT
+/F2 16 Tf
+18.3999999999999986 TL
+0 g
+56.6929133858267775 569.7640157480313974 Td
+(Lesson Plan) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 527.2443307086614368 Td
+(Learning Objectives) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 504.5671653543306547 Td
+(• Menganalisis keterkaitan antara faktorisasi prima dengan penentuan FPB dan KPK pada bilangan) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 487.559291338582625 Td
+(bulat.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 464.8821259842518998 Td
+(• Menghitung nilai FPB dan KPK menggunakan metode tabel atau pohon faktor secara akurat.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 442.2049606299212314 Td
+(• Memodelkan masalah penjadwalan sinkronisasi database dalam konteks Sistem Informasi) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 425.1970866141731449 Td
+(menggunakan konsep KPK.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 402.5199212598424765 Td
+(• Memformulasikan solusi pembagian sumber daya komputasi yang optimal menggunakan prinsip) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 385.5120472440944468 Td
+(FPB.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 340.1577165354329964 Td
+(Lesson Information) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0 g
+56.6929133858267775 294.8033858267715459 Td
+(Lesson Sections) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 266.4569291338582389 Td
+(1. Spiral Review Warm-up \(10 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 243.7797637795274568 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 226.7718897637794271 Td
+(Halo Faishal! Senang sekali bisa bertemu kembali. Sebelum kita masuk ke optimasi sistem yang lebih) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 212.5986614173227736 Td
+(kompleks, kita perlu memastikan 'mesin' perhitungan kita sudah panas. Saya sudah menyiapkan 4) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 198.4254330708660063 Td
+(tantangan cepat di whiteboard digital. Mari kita selesaikan dalam 5 menit!) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 172.9136220472439618 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 155.9057480314959321 Td
+(• Quick Check 1 \(Perkalian\): Selesaikan 14 x 15 menggunakan strategi distribusi \(14x10 + 14x5\).) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 138.8978740157479024 Td
+(• Quick Check 2 \(Perkalian\): Berapa hasil dari 25 x 32 dengan strategi membagi dua dan menggandakan \(50 x 16\)?) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 121.8899999999998727 Td
+(• Quick Check 3 \(Pembagian\): Hitung 252 ÷ 12 menggunakan teknik estimasi atau pembagian bersusun.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 104.882125984251843 Td
+(• Quick Check 4 \(Pembagian\): Jika sebuah server memproses 480 request dalam 15 detik, berapa request per detik \(480 ÷ 15\)?) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+56.6929133858267775 34.0159842519684616 Td
+(Generated on: 13/07/2026, 15:10:51) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+523.0626771653543301 34.0159842519684616 Td
+(1 / 4) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 5141
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 785.1970866141732586 Td
+(2. Introduction & Real-World Connection \(5 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 762.5199212598424765 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 745.5120472440944468 Td
+(Faishal, bayangkan kamu adalah seorang Manajer Proyek SI. Kamu punya dua sistem: Sistem A) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 731.3388188976377933 Td
+(melakukan backup setiap 12 jam, dan Sistem B setiap 18 jam. Kapan keduanya akan melakukan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 717.1655905511811397 Td
+(backup secara bersamaan lagi? Atau, kamu punya 60 lisensi software A dan 84 lisensi software B,) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 702.9923622047243725 Td
+(berapa tim maksimal yang bisa kamu bentuk dengan distribusi lisensi yang sama rata? Inilah gunanya) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 688.819133858267719 Td
+(KPK dan FPB dalam dunia nyata.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 663.3073228346456744 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 646.2994488188976447 Td
+(• Diskusi singkat tentang pentingnya sinkronisasi data.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 629.291574803149615 Td
+(• Presentasi visual tentang 'Interval' \(KPK\) vs 'Pembagian' \(FPB\).) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 583.9372440944881646 Td
+(3. Review of Prior Knowledge \(5 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 561.2600787401574962 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 544.2522047244094665 Td
+(Sebelum kita mencari KPK dan FPB, kita harus ingat tentang Bilangan Prima dan Faktorisasi. Ketik di) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 530.0789763779526993 Td
+(chat box, 5 bilangan prima pertama! Bagus. Sekarang, mari kita pecah angka 36 menjadi faktor) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 515.9057480314959321 Td
+(primanya. Gunakan tool pen di layar ya.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 490.3939370078739444 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 473.3860629921259147 Td
+(• Menyebutkan bilangan prima.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 456.378188976377885 Td
+(• Membuat pohon faktor untuk angka 36 dan 48 pada whiteboard.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 411.0238582677164914 Td
+(4. Problem Introduction \(10 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 388.3466929133857661 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 371.3388188976377364 Td
+(Sekarang, mari kita pelajari metode formalnya. FPB \(Faktor Persekutuan Terbesar\) didapat dengan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 357.1655905511810261 Td
+(mengalikan faktor prima yang sama dengan pangkat TERKECIL. KPK \(Kelipatan Persekutuan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 342.9923622047243725 Td
+(Terkecil\) didapat dengan mengalikan SEMUA faktor prima, dan jika ada yang sama, pilih pangkat) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 328.8191338582676053 Td
+(TERBESAR. Mari kita bedah angka 24 dan 60 untuk mencari titik sinkronisasi dan pembagian) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 314.6459055118109518 Td
+(maksimalnya.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 289.1340944881889072 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 272.1262204724408775 Td
+(• Demonstrasi perhitungan FPB\(24, 60\) dan KPK\(24, 60\).) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 255.1183464566928478 Td
+(• Penulisan notasi eksponen: 24 = 2^3 * 3, 60 = 2^2 * 3 * 5.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 209.7640157480313974 Td
+(5. Guided Practice \(15 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 187.086850393700729 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 170.0789763779526993 Td
+(Oke Faishal, giliranmu. Ada kasus: Server Database A sinkron tiap 45 menit, Server B tiap 60 menit.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 155.9057480314959321 Td
+(\(1\) Tentukan kapan mereka sinkron bersama \(KPK\). \(2\) Jika kita punya 45 modul frontend dan 60) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 141.7325196850392786 Td
+(modul backend, berapa jumlah maksimal pengembang jika setiap pengembang mendapat jumlah) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 127.559291338582625 Td
+(modul yang sama \(FPB\)? Kerjakan di whiteboard, saya akan memandu jika kamu kesulitan.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 102.0474803149605805 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 85.0396062992125508 Td
+(• Siswa melakukan faktorisasi prima untuk 45 dan 60.) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+56.6929133858267775 34.0159842519684616 Td
+(Generated on: 13/07/2026, 15:10:51) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+523.0626771653543301 34.0159842519684616 Td
+(2 / 4) Tj
+ET
+endstream
+endobj
+7 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Length 4713
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 785.1970866141732586 Td
+(• Siswa menentukan FPB untuk pembagian modul.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 768.1892125984252289 Td
+(• Siswa menentukan KPK untuk waktu sinkronisasi.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 722.8348818897637784 Td
+(6. Independent Practice \(15 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 700.15771653543311 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 683.1498425196850803 Td
+(Luar biasa. Sekarang, tantangan mandiri. Di layar ada sistem microservices dengan 3 interval) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 668.9766141732283131 Td
+(berbeda: 12ms, 15ms, dan 20ms. Cari KPK-nya. Lalu, carilah FPB dari 72 dan 108 untuk optimasi) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 654.8033858267716596 Td
+(bandwidth. Tuliskan jawaban akhirmu di chat.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 629.291574803149615 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 612.2837007874015853 Td
+(• Penyelesaian soal KPK 3 bilangan \(12, 15, 20\).) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 595.2758267716535556 Td
+(• Penyelesaian soal FPB bilangan besar \(72, 108\).) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 578.2679527559055259 Td
+(• Drag-and-drop faktor prima ke dalam lingkaran Venn di layar.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 532.9136220472440755 Td
+(7. Consolidation & Reflection \(5 minutes\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 510.2364566929133503 Td
+(Teacher Script:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 493.2285826771653205 Td
+(Kerja bagus hari ini, Faishal! Kita sudah belajar cara mensinkronkan jadwal sistem dengan KPK dan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 479.0553543307086102 Td
+(membagi sumber daya dengan FPB. Apa satu hal yang menurutmu paling menantang tadi? Jangan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 464.8821259842518998 Td
+(lupa, untuk latihan lebih lanjut dan materi tambahan, silakan login ke https://learn.algonova.id/login dan) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 450.7088976377952463 Td
+(akses modul pelajaranmu ya!) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+70.8661417322834666 425.1970866141731449 Td
+(Activities:) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 408.1892125984251152 Td
+(• Self-reflection: Siswa menyebutkan perbedaan utama pencarian KPK dan FPB.) Tj
+ET
+BT
+/F3 10 Tf
+11.5 TL
+0 g
+85.0393700787401627 391.1813385826770855 Td
+(• Instruksi akses LMS.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 345.8270078740156919 Td
+(Homework) Tj
+ET
+BT
+/F2 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 317.480551181102328 Td
+(Medium Questions:) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 300.4726771653542983 Td
+(1. Tentukan FPB dari 42 dan 70 menggunakan pohon faktor.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 277.7955118110235162 Td
+(2. Tentukan KPK dari 15 dan 25.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 255.1183464566928478 Td
+(3. Sebuah lampu hias A menyala setiap 8 detik, lampu B setiap 12 detik. Kapan kedua lampu) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 240.9451181102361943 Td
+(menyala bersamaan?) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 218.2679527559054122 Td
+(4. Ibu memiliki 30 jeruk dan 45 apel. Berapa kantong plastik maksimal yang bisa dibuat jika) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 204.0947244094487587 Td
+(tiap kantong berisi jumlah buah yang sama?) Tj
+ET
+BT
+/F2 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 164.4096850393699469 Td
+(Hard Questions:) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 147.4018110236219172 Td
+(1. Tentukan KPK dan FPB dari tiga bilangan: 24, 36, dan 54.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 124.7246456692912489 Td
+(2. Seorang admin jaringan ingin mengatur jadwal update. Server X update tiap 48 jam, Server) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 110.5514173228345953 Td
+(Y tiap 72 jam, dan Server Z tiap 96 jam. Jika hari ini update bersamaan, berapa hari lagi) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 96.3781889763778281 Td
+(ketiganya update bersamaan kembali?) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+56.6929133858267775 34.0159842519684616 Td
+(Generated on: 13/07/2026, 15:10:51) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+523.0626771653543301 34.0159842519684616 Td
+(3 / 4) Tj
+ET
+endstream
+endobj
+9 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 10 0 R
+>>
+endobj
+10 0 obj
+<<
+/Length 4428
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 785.1970866141732586 Td
+(3. Tentukan nilai 'n' jika KPK\(n, 10\) = 30 dan FPB\(n, 10\) = 2.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 762.5199212598424765 Td
+(4. Gunakan faktorisasi prima untuk membuktikan apakah FPB\(120, 150\) dikalikan KPK\(120,) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 748.346692913385823 Td
+(150\) sama dengan 120 x 150.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 725.6695275590550409 Td
+(5. Dalam proyek IT, ada 120 task backend dan 160 task frontend. Jika tim dibagi secara) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 711.4962992125983874 Td
+(maksimal sehingga setiap tim mendapat porsi yang sama, berapa jumlah task backend) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 697.3230708661417339 Td
+(dalam satu tim?) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 674.6459055118109518 Td
+(6. Cari FPB dari 210, 315, dan 525 menggunakan metode pembagian berturut-turut.) Tj
+ET
+BT
+/F2 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 634.9608661417322537 Td
+(Answer Key:) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 617.952992125984224 Td
+(1. FPB\(42, 70\): 42=2x3x7, 70=2x5x7. FPB=2x7=14.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 603.7797637795274568 Td
+(2. KPK\(15, 25\): 15=3x5, 25=5^2. KPK=3x5^2=75.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 589.6065354330708033 Td
+(3. KPK\(8, 12\)=24 detik.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 575.4333070866141497 Td
+(4. FPB\(30, 45\)=15 kantong.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 561.2600787401574962 Td
+(5. 24=2^3x3, 36=2^2x3^2, 54=2x3^3. FPB=2x3=6, KPK=2^3x3^3=216.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 547.086850393700729 Td
+(6. KPK\(48, 72, 96\). 48=2^4x3, 72=2^3x3^2, 96=2^5x3. KPK=2^5x3^2=288 jam = 12 hari.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 532.9136220472440755 Td
+(7. n=6 \(6=2x3, 10=2x5. KPK=2x3x5=30, FPB=2\).) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 518.7403937007873083 Td
+(8. Ya, berlaku rumus FPB\(a,b\)xKPK\(a,b\) = a x b. FPB=30, KPK=600. 30x600=18000;) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 504.5671653543306547 Td
+(120x150=18000.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 490.3939370078739444 Td
+(9. FPB\(120, 160\)=40 tim. Task backend per tim = 120/40 = 3 task.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 476.2207086614172908 Td
+(10. FPB\(210, 315, 525\)=105.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 462.0474803149605805 Td
+(REVIEW: Perkalian - 14x15 = 210.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 447.8742519685038701 Td
+(REVIEW: Perkalian - 25x32 = 800.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 433.7010236220471597 Td
+(REVIEW: Pembagian - 252/12 = 21.) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+85.0393700787401627 419.5277952755905062 Td
+(REVIEW: Pembagian - 480/15 = 32.) Tj
+ET
+BT
+/F2 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 382.6774015748030706 Td
+(Parent Reminder) Tj
+ET
+BT
+/F2 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 360.0002362204724022 Td
+(Update Belajar Matematika Faishal - KPK & FPB dalam SI) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 342.9923622047243725 Td
+(Hari ini Faishal belajar konsep KPK dan FPB yang diterapkan dalam simulasi manajemen) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 328.8191338582676053 Td
+(proyek Sistem Informasi \(penjadwalan server dan distribusi tugas\). Faishal menunjukkan) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 314.6459055118109518 Td
+(progres yang baik dalam faktorisasi prima. Mohon diingatkan untuk mencoba tantangan di) Tj
+ET
+BT
+/F1 11 Tf
+12.6499999999999986 TL
+0 g
+70.8661417322834666 300.4726771653542983 Td
+(link https://learn.algonova.id/login ya, Pak/Bu!) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+56.6929133858267775 34.0159842519684616 Td
+(Generated on: 13/07/2026, 15:10:51) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0 g
+523.0626771653543301 34.0159842519684616 Td
+(4 / 4) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R 7 0 R 9 0 R ]
+/Count 4
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+21 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+22 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+23 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+24 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 11 0 R
+/F2 12 0 R
+/F3 13 0 R
+/F4 14 0 R
+/F5 15 0 R
+/F6 16 0 R
+/F7 17 0 R
+/F8 18 0 R
+/F9 19 0 R
+/F10 20 0 R
+/F11 21 0 R
+/F12 22 0 R
+/F13 23 0 R
+/F14 24 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+25 0 obj
+<<
+/Producer (jsPDF 3.0.2)
+/CreationDate (D:20260713151051+07'00')
+>>
+endobj
+26 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 27
+0000000000 65535 f 
+0000019129 00000 n 
+0000020969 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000004278 00000 n 
+0000004415 00000 n 
+0000009608 00000 n 
+0000009745 00000 n 
+0000014510 00000 n 
+0000014648 00000 n 
+0000019204 00000 n 
+0000019330 00000 n 
+0000019461 00000 n 
+0000019595 00000 n 
+0000019733 00000 n 
+0000019857 00000 n 
+0000019986 00000 n 
+0000020118 00000 n 
+0000020254 00000 n 
+0000020382 00000 n 
+0000020509 00000 n 
+0000020638 00000 n 
+0000020771 00000 n 
+0000020873 00000 n 
+0000021222 00000 n 
+0000021308 00000 n 
+trailer
+<<
+/Size 27
+/Root 26 0 R
+/Info 25 0 R
+/ID [ <D580365D3A4458189BE45A5FA597BBD2> <D580365D3A4458189BE45A5FA597BBD2> ]
+>>
+startxref
+21412
+%%EOF

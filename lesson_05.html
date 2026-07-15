@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengantar Perbandingan (Rasio) - Math Tutoring by Deni</title>
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --sidebar-bg: #1c1e21;
+            --sidebar-text: #e4e6eb;
+            --primary: #0066ff;
+            --primary-hover: #0052cc;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --text-main: #1c1e21;
+            --text-muted: #65676b;
+            --border: #e4e6eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* No scrolling on main body */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .sidebar-menu li {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu li:hover {
+            background-color: #2d2f33;
+        }
+
+        .sidebar-menu li.active {
+            background-color: #2d2f33;
+            border-left: 4px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .sidebar-menu li .time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-right: 10px;
+            min-width: 80px;
+        }
+
+        .sidebar-menu li i {
+            margin-right: 10px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Progress Bar */
+        .top-bar {
+            height: 10px;
+            background-color: var(--border);
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 40px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .slide-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .slide-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        /* Illustration Box */
+        .illust-box {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #eef2ff;
+        }
+
+        .illust-box svg {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+
+        /* Interactive Questions */
+        .question-card {
+            background: #f0f2f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .q-text {
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .q-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .q-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .q-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .btn-check, .btn-reset {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-right: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-check {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-check:hover { background: var(--primary-hover); }
+
+        .btn-reset {
+            background: #e4e6eb;
+            color: var(--text-main);
+            display: none;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .explanation-box.correct {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+
+        .explanation-box.wrong {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-nav {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-prev {
+            background: #e4e6eb;
+            color: var(--text-main);
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Homepage specific */
+        .homepage-logo {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Math Tutoring by Deni</h2>
+            <p>Pengantar Perbandingan</p>
+        </div>
+        <ul class="sidebar-menu" id="sidebarMenu">
+            <li onclick="loadSection(0)" class="active"><span class="time">00:00</span><i class="fas fa-home"></i> Homepage</li>
+            <li onclick="loadSection(1)"><span class="time">00:00-00:10</span><i class="fas fa-bolt"></i> Spiral Review</li>
+            <li onclick="loadSection(2)"><span class="time">00:10-00:15</span><i class="fas fa-lightbulb"></i> Intro & Real-World</li>
+            <li onclick="loadSection(3)"><span class="time">00:15-00:20</span><i class="fas fa-history"></i> Prior Knowledge</li>
+            <li onclick="loadSection(4)"><span class="time">00:20-00:30</span><i class="fas fa-exclamation-circle"></i> Problem Intro</li>
+            <li onclick="loadSection(5)"><span class="time">00:30-00:45</span><i class="fas fa-hand-holding-heart"></i> Guided Practice</li>
+            <li onclick="loadSection(6)"><span class="time">00:45-01:00</span><i class="fas fa-user-check"></i> Independent Prac.</li>
+            <li onclick="loadSection(7)"><span class="time">01:00-01:10</span><i class="fas fa-clipboard-check"></i> Assessment 1</li>
+            <li onclick="loadSection(8)"><span class="time">01:10-01:20</span><i class="fas fa-clipboard-check"></i> Assessment 2</li>
+            <li onclick="loadSection(9)"><span class="time">01:20-01:30</span><i class="fas fa-clipboard-check"></i> Assessment 3</li>
+            <li onclick="loadSection(10)"><span class="time">01:30-01:40</span><i class="fas fa-clipboard-check"></i> Assessment 4</li>
+            <li onclick="loadSection(11)"><span class="time">01:40-01:50</span><i class="fas fa-clipboard-check"></i> Assessment 5</li>
+            <li onclick="loadSection(12)"><span class="time">01:50-01:55</span><i class="fas fa-sync-alt"></i> Reflection</li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="content-area">
+            <div class="slide-container" id="slideContainer">
+                <!-- Content will be injected here via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ==========================================
+    // DATA COURSE (LENGKAP PART 1 - 4)
+    // ==========================================
+    const courseData = [
+        // Section 0: Homepage
+        {
+            title: "Selamat Datang!",
+            slides: [
+                { type: 'theory', content: `
+                    <div style="text-align: center;">
+                        <div class="homepage-logo"><i class="fas fa-square-root-alt"></i></div>
+                        <h1 class="slide-title">Math Tutoring by Deni</h1>
+                        <p style="font-size:1.2rem; color:var(--text-muted); margin-bottom:5px;">Pengantar Perbandingan (Rasio)</p>
+                        <p style="font-size:0.9rem; color:var(--text-muted);">Introduction to Ratio</p>
+                        <div class="illust-box" style="margin-top:30px;">
+                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="30" cy="50" r="20" fill="#0066ff" opacity="0.8"/>
+                                <circle cx="70" cy="50" r="20" fill="#10b981" opacity="0.8"/>
+                                <text x="50" y="55" font-size="20" text-anchor="middle" fill="white" font-weight="bold">:</text>
+                            </svg>
+                            <p style="font-size:0.9rem; color:var(--text-muted);">Membagi sumber daya secara adil dan akurat</p>
+                        </div>
+                    </div>
+                `}
+            ]
+        },
+        // Section 1: Spiral Review Warm-up
+        {
+            title: "Spiral Review Warm-up",
+            subtitle: "Pemanasan Operasi Dasar / Basic Operations Warm-up",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <i class="fas fa-calculator" style="font-size:3rem; color:var(--primary);"></i>
+                        <p>Sebelum masuk ke Rasio, mari asah otak dengan pembagian dan perkalian cepat!</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's1_q1', q_type: 'fill', text: '1. Jika sebuah proyek memiliki anggaran Rp 1.200.000 dan dibagi rata untuk 15 hari, berapa biaya per harinya?', answer: '80000', explain: 'Rp 1.200.000 ÷ 15 = Rp 80.000.' },
+                { type: 'question', q_id: 's1_q2', q_type: 'fill', text: '2. Sederhanakan pembagian 450 dibagi 18 secara mental. Berapa hasilnya?', answer: '25', explain: '450 ÷ 18. 18 × 25 = (18 × 100)/4 = 450.' },
+                { type: 'question', q_id: 's1_q3', q_type: 'mc', text: '3. Hitung cepat: Berapa 25 dikali 16 menggunakan strategi pecah-angka (25x4x4)?', options: ['200', '400', '800', '1000'], answer: '400', explain: '25 × 16 = 25 × (4 × 4) = 100 × 4 = 400.' },
+                { type: 'question', q_id: 's1_q4', q_type: 'fill', text: '4. Jika satu lisensi software seharga Rp 125.000, berapa total untuk 8 lisensi?', answer: '1000000', explain: 'Rp 125.000 × 8 = Rp 1.000.000.' },
+                { type: 'question', q_id: 's1_q5', q_type: 'fill', text: '5. Hitung: 1.250 ÷ 25 = ...', answer: '50', explain: '1000 ÷ 25 = 40, 250 ÷ 25 = 10. 40+10=50.' },
+                { type: 'question', q_id: 's1_q6', q_type: 'fill', text: '6. Hitung: 8.400 ÷ 12 = ...', answer: '700', explain: '84 ÷ 12 = 7, tambahkan 2 nol jadi 700.' },
+                { type: 'question', q_id: 's1_q7', q_type: 'fill', text: '7. Hitung: 1.575 ÷ 15 = ...', answer: '105', explain: '1500 ÷ 15 = 100. 75 ÷ 15 = 5. 100+5=105.' },
+                { type: 'question', q_id: 's1_q8', q_type: 'fill', text: '8. Berapa sisa dari 1.000 ÷ 7 ?', answer: '6', explain: '142 × 7 = 994. 1000 - 994 = 6.' },
+                { type: 'question', q_id: 's1_q9', q_type: 'mc', text: '9. Strategi cepat untuk 48 × 5 adalah...', options: ['(48÷2)×10', '(48×2)×10', '48+5', '(48×10)÷2'], answer: '(48÷2)×10', explain: 'Setengahnya dikali 10. 48 ÷ 2 = 24, 24 × 10 = 240.' },
+                { type: 'question', q_id: 's1_q10', q_type: 'fill', text: '10. Hitung cepat: 12 × 15 = ...', answer: '180', explain: '12 × 10 = 120, 12 × 5 = 60. 120+60=180.' }
+            ]
+        },
+        // Section 2: Introduction & Real-World Connection
+        {
+            title: "Introduction & Real-World Connection",
+            subtitle: "Koneksi Rasio di Dunia Nyata / Real-World Ratio Connection",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="20" width="30" height="60" fill="#0066ff" rx="5"/>
+                            <rect x="50" y="20" width="30" height="60" fill="#0066ff" rx="5"/>
+                            <rect x="100" y="20" width="30" height="60" fill="#10b981" rx="5"/>
+                            <rect x="140" y="20" width="30" height="60" fill="#10b981" rx="5"/>
+                            <rect x="180" y="20" width="30" height="60" fill="#10b981" rx="5"/>
+                            <text x="100" y="10" font-size="12" text-anchor="middle" fill="#333">2 Designer : 3 Developer</text>
+                        </svg>
+                        <p style="margin-top:15px;">Rasio membantu membagi sumber daya berdasarkan proporsi yang benar.</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's2_q1', q_type: 'mc', text: '1. Jika rasio Designer:Developer adalah 2:3, apa artinya?', options: ['Designer = 2 orang, Developer = 3 orang', 'Designer 2x lebih banyak', 'Total tim 5 orang, bisa 4 Designer dan 6 Developer', 'Designer dan Developer jumlahnya sama'], answer: 'Total tim 5 orang, bisa 4 Designer dan 6 Developer', explain: 'Kelipatannya benar (2x2=4, 2x3=6).' },
+                { type: 'question', q_id: 's2_q2', q_type: 'fill', text: '2. Rasio cowok:cewek 3:2. Jika ada 9 cowok, berapa jumlah cewek?', answer: '6', explain: 'Pengali = 9 ÷ 3 = 3. Cewek = 2 × 3 = 6.' },
+                { type: 'question', q_id: 's2_q3', q_type: 'fill', text: '3. Resep cat 3 bagian merah, 1 bagian putih. Jika pakai 6 bagian merah, berapa bagian putih?', answer: '2', explain: 'Pengali = 6 ÷ 3 = 2. Putih = 1 × 2 = 2.' },
+                { type: 'question', q_id: 's2_q4', q_type: 'mc', text: '4. Manakah yang BUKAN rasio?', options: ['2:3', '4/5', '10 + 5', '1 banding 2'], answer: '10 + 5', explain: 'Rasio adalah perbandingan, bukan penjumlahan.' },
+                { type: 'question', q_id: 's2_q5', q_type: 'dropdown', text: '5. Dalam rasio 5:7, jumlah total "bagian" adalah...', options: ['5','7','12','35'], answer: '12', explain: 'Total bagian = 5 + 7 = 12.' },
+                { type: 'question', q_id: 's2_q6', q_type: 'fill', text: '6. Rasio uang A:B = 4:1. Total Rp 100.000. Berapa uang A?', answer: '80000', explain: '5 bagian. 1 bag = 20.000. A = 4 × 20.000 = 80.000.' },
+                { type: 'question', q_id: 's2_q7', q_type: 'mc', text: '7. Rasio 1:4 setara dengan...', options: ['2:8', '2:6', '4:1', '1:5'], answer: '2:8', explain: '1×2=2, 4×2=8. Jadi 1:4 = 2:8.' },
+                { type: 'question', q_id: 's2_q8', q_type: 'dropdown', text: '8. Rasio 10:50 disederhanakan menjadi...', options: ['1:5','2:10','1:50','5:10'], answer: '1:5', explain: 'Bagi dengan FPB 10. 10÷10=1, 50÷10=5.' },
+                { type: 'question', q_id: 's2_q9', q_type: 'fill', text: '9. Rasio merah:biru = 3:2. Merah ada 15. Total kelereng?', answer: '25', explain: 'Pengali 5. Biru=10. Total=15+10=25.' },
+                { type: 'question', q_id: 's2_q10', q_type: 'mc', text: '10. Rasio A:B=2:3 dan B:C=3:4. Maka A:B:C adalah...', options: ['2:3:4','6:9:12','2:3:3','4:6:8'], answer: '2:3:4', explain: 'B di kedua rasio sama (3), langsung gabungkan: 2:3:4.' }
+            ]
+        },
+        // Section 3: Review of Prior Knowledge
+        {
+            title: "Review of Prior Knowledge",
+            subtitle: "Menyederhanakan Rasio / Simplifying Ratios",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <i class="fas fa-compress-arrows-alt" style="font-size:3rem; color:var(--primary);"></i>
+                        <p>Rasio mirip pecahan. Bagi dengan FPB untuk menyederhanakan!</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's3_q1', q_type: 'fill', text: '1. Sederhanakan 10:15. (Format a:b)', answer: '2:3', explain: 'FPB 5. 10÷5=2, 15÷5=3.' },
+                { type: 'question', q_id: 's3_q2', q_type: 'fill', text: '2. Sederhanakan 24:36. (Format a:b)', answer: '2:3', explain: 'FPB 12. 24÷12=2, 36÷12=3.' },
+                { type: 'question', q_id: 's3_q3', q_type: 'mc', text: '3. Langkah pertama menyederhanakan 50:100...', options: ['Bagi keduanya dengan 50', 'Bagi keduanya dengan 10', 'Kurangi 50', 'Jumlahkan keduanya'], answer: 'Bagi keduanya dengan 50', explain: 'FPB 50 dan 100 adalah 50.' },
+                { type: 'question', q_id: 's3_q4', q_type: 'dropdown', text: '4. Sederhanakan 12:18...', options: ['2:3','4:6','6:9','3:2'], answer: '2:3', explain: 'FPB 6. 12÷6=2, 18÷6=3.' },
+                { type: 'question', q_id: 's3_q5', q_type: 'fill', text: '5. Sederhanakan 100:250. (Format a:b)', answer: '2:5', explain: 'Hapus nol (bagi 50). 2:5.' },
+                { type: 'question', q_id: 's3_q6', q_type: 'fill', text: '6. Sederhanakan 35:45. (Format a:b)', answer: '7:9', explain: 'FPB 5. 35÷5=7, 45÷5=9.' },
+                { type: 'question', q_id: 's3_q7', q_type: 'mc', text: '7. Rasio setara dengan 4:6 adalah...', options: ['2:3','3:2','6:4','4:6'], answer: '2:3', explain: '4:6 dibagi 2 = 2:3.' },
+                { type: 'question', q_id: 's3_q8', q_type: 'fill', text: '8. Sederhanakan 8:12:16. (Format a:b:c)', answer: '2:3:4', explain: 'FPB 4. 8÷4=2, 12÷4=3, 16÷4=4.' },
+                { type: 'question', q_id: 's3_q9', q_type: 'fill', text: '9. Sederhanakan 1.5:4.5. (Format a:b)', answer: '1:3', explain: 'Kali 2 -> 3:9. FPB 3 -> 1:3.' },
+                { type: 'question', q_id: 's3_q10', q_type: 'dropdown', text: '10. Sederhanakan 0.2:0.8...', options: ['1:4','2:8','1:8','2:4'], answer: '1:4', explain: 'Kali 10 -> 2:8. Bagi 2 -> 1:4.' }
+            ]
+        },
+        // Section 4: Problem Introduction
+        {
+            title: "Problem Introduction",
+            subtitle: "Alokasi Anggaran Proyek / Project Budget Allocation",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <i class="fas fa-project-diagram" style="font-size:3rem; color:var(--success);"></i>
+                        <p>Startup dengan modal Rp 50.000.000. Rasio alokasi 5 : 3 : 2.</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's4_q1', q_type: 'fill', text: '1. Total bagian dari rasio 5:3:2?', answer: '10', explain: '5 + 3 + 2 = 10.' },
+                { type: 'question', q_id: 's4_q2', q_type: 'fill', text: '2. Nilai 1 bagian (dari 50 juta)?', answer: '5000000', explain: '50.000.000 ÷ 10 = 5.000.000.' },
+                { type: 'question', q_id: 's4_q3', q_type: 'fill', text: '3. Alokasi Marketing (rasio 5)?', answer: '25000000', explain: '5 × 5.000.000 = 25.000.000.' },
+                { type: 'question', q_id: 's4_q4', q_type: 'fill', text: '4. Alokasi Produk (rasio 3)?', answer: '15000000', explain: '3 × 5.000.000 = 15.000.000.' },
+                { type: 'question', q_id: 's4_q5', q_type: 'fill', text: '5. Alokasi Operasional (rasio 2)?', answer: '10000000', explain: '2 × 5.000.000 = 10.000.000.' },
+                { type: 'question', q_id: 's4_q6', q_type: 'mc', text: '6. Mengapa tidak bisa langsung bagi 50jt dengan 3?', options: ['Bukan kelipatan 3', 'Porsi tiap divisi berbeda', 'Harus ada sisanya', '3 angka ganjil'], answer: 'Porsi tiap divisi berbeda', explain: 'Rasio 5:3:2 berarti porsinya berbeda, tidak bisa dibagi rata.' },
+                { type: 'question', q_id: 's4_q7', q_type: 'dropdown', text: '7. Jika rasio 1:1:1, berapa anggaran tiap divisi?', options: ['16.666.666','50.000.000','10.000.000','15.000.000'], answer: '16.666.666', explain: '50.000.000 ÷ 3 ≈ 16.666.666.' },
+                { type: 'question', q_id: 's4_q8', q_type: 'fill', text: '8. Cek: 25jt + 15jt + 10jt = ...', answer: '50000000', explain: 'Total alokasi kembali ke modal awal.' },
+                { type: 'question', q_id: 's4_q9', q_type: 'fill', text: '9. Jika Marketing pakai 50% anggarannya, sisanya?', answer: '12500000', explain: '50% dari 25.000.000 = 12.500.000.' },
+                { type: 'question', q_id: 's4_q10', q_type: 'mc', text: '10. Langkah PERTAMA soal rasio?', options: ['Langsung kalikan rasio', 'Jumlahkan bagian rasio', 'Cari selisih', 'Bagi total dengan rasio'], answer: 'Jumlahkan bagian rasio', explain: 'Selalu jumlahkan total bagian dulu.' }
+            ]
+        },
+        // Section 5: Guided Practice
+        {
+            title: "Guided Practice",
+            subtitle: "Distribusi Sumber Daya / Resource Distribution",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <i class="fas fa-users-cog" style="font-size:3rem; color:var(--primary);"></i>
+                        <p>Langkah: Jumlahkan Bagian -> Cari Satuan -> Kalikan.</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's5_q1', q_type: 'fill', text: '1. Rasio 2:3. Total bagian?', answer: '5', explain: '2 + 3 = 5.' },
+                { type: 'question', q_id: 's5_q2', q_type: 'fill', text: '2. Total orang 15. Nilai 1 bagian?', answer: '3', explain: '15 ÷ 5 = 3.' },
+                { type: 'question', q_id: 's5_q3', q_type: 'fill', text: '3. Jumlah Designer (rasio 2)?', answer: '6', explain: '2 × 3 = 6.' },
+                { type: 'question', q_id: 's5_q4', q_type: 'fill', text: '4. Jumlah Developer (rasio 3)?', answer: '9', explain: '3 × 3 = 9.' },
+                { type: 'question', q_id: 's5_q5', q_type: 'fill', text: '5. Rasio A:B:C = 1:2:3. Total=60. Nilai 1 bagian?', answer: '10', explain: '6 bagian. 60 ÷ 6 = 10.' },
+                { type: 'question', q_id: 's5_q6', q_type: 'fill', text: '6. Berapa nilai B?', answer: '20', explain: '2 × 10 = 20.' },
+                { type: 'question', q_id: 's5_q7', q_type: 'fill', text: '7. Berapa nilai C?', answer: '30', explain: '3 × 10 = 30.' },
+                { type: 'question', q_id: 's5_q8', q_type: 'mc', text: '8. Rasio X:Y=3:4. Total=35. Nilai Y?', options: ['15', '20', '25', '10'], answer: '20', explain: '7 bag. 1 bag=5. Y=4×5=20.' },
+                { type: 'question', q_id: 's5_q9', q_type: 'fill', text: '9. Rasio P:Q=5:2. Total=49. Nilai P?', answer: '35', explain: '7 bag. 1 bag=7. P=5×7=35.' },
+                { type: 'question', q_id: 's5_q10', q_type: 'fill', text: '10. Rasio M:N:O=2:3:5. Total=100. M+O?', answer: '70', explain: '1 bag=10. M=20, O=50. 20+50=70.' }
+            ]
+        },
+        // Section 6: Independent Practice
+        {
+            title: "Independent Practice",
+            subtitle: "Tantangan Sang Manajer / The Manager's Challenge",
+            slides: [
+                { type: 'theory', content: `
+                    <div class="illust-box">
+                        <i class="fas fa-tasks" style="font-size:3rem; color:var(--primary);"></i>
+                        <p>Proyek 120 jam. Rasio Riset:Eksekusi:Evaluasi = 1 : 4 : 1.</p>
+                    </div>
+                `},
+                { type: 'question', q_id: 's6_q1', q_type: 'fill', text: '1. Total bagian rasio 1:4:1?', answer: '6', explain: '1+4+1=6.' },
+                { type: 'question', q_id: 's6_q2', q_type: 'fill', text: '2. Nilai 1 bagian (jam)?', answer: '20', explain: '120 ÷ 6 = 20.' },
+                { type: 'question', q_id: 's6_q3', q_type: 'fill', text: '3. Waktu Riset?', answer: '20', explain: '1 × 20 = 20 jam.' },
+                { type: 'question', q_id: 's6_q4', q_type: 'fill', text: '4. Waktu Eksekusi?', answer: '80', explain: '4 × 20 = 80 jam.' },
+                { type: 'question', q_id: 's6_q5', q_type: 'fill', text: '5. Waktu Evaluasi?', answer: '20', explain: '1 × 20 = 20 jam.' },
+                { type: 'question', q_id: 's6_q6', q_type: 'mc', text: '6. Jika rasio 1.5:4.5, apa yang dilakukan?', options: ['Langsung kalikan', 'Sederhanakan dulu', 'Bagi 120 dgn 1.5', 'Abaikan desimal'], answer: 'Sederhanakan dulu', explain: 'Kalikan 2 agar bulat -> 3:9 -> 1:3.' },
+                { type: 'question', q_id: 's6_q7', q_type: 'fill', text: '7. Sederhanakan 1.5:4.5. (Format a:b)', answer: '1:3', explain: '1.5:4.5 = 3:9 = 1:3.' },
+                { type: 'question', q_id: 's6_q8', q_type: 'fill', text: '8. Rasio 1.5:4.5:3 disederhanakan jadi 1:3:2. Total bagiannya?', answer: '6', explain: '1+3+2=6.' },
+                { type: 'question', q_id: 's6_q9', q_type: 'fill', text: '9. Dengan rasio 1:3:2, berapa waktu Eksekusi (dari 120 jam)?', answer: '60', explain: '1 bag=20. Eksekusi (3 bag) = 3×20 = 60 jam.' },
+                { type: 'question', q_id: 's6_q10', q_type: 'fill', text: '10. Berapa selisih Eksekusi dan Evaluasi pada soal no 9?', answer: '20', explain: 'Evaluasi=2×20=40. Selisih 60-40=20.' }
+            ]
+        },
+        // Assessment 1
+        {
+            title: "Assessment 1",
+            subtitle: "Menyederhanakan Rasio / Simplifying Ratios",
+            isAssessment: true, prefix: 'a1'
+            ,
+            slides: [
+                { type: 'question', q_id: 'a1_q1', q_type: 'fill', text: '1. Sederhanakan 48:72. (Format a:b)', answer: '2:3', explain: 'FPB 24. 48÷24=2, 72÷24=3.' },
+                { type: 'question', q_id: 'a1_q2', q_type: 'fill', text: '2. Sederhanakan 1.5:4.5:9. (Format a:b:c)', answer: '1:3:6', explain: 'Kali 2 -> 3:9:18. FPB 3 -> 1:3:6.' },
+                { type: 'question', q_id: 'a1_q3', q_type: 'fill', text: '3. Sederhanakan 100:250. (Format a:b)', answer: '2:5', explain: 'Bagi 50 -> 2:5.' },
+                { type: 'question', q_id: 'a1_q4', q_type: 'fill', text: '4. Sederhanakan 35:45. (Format a:b)', answer: '7:9', explain: 'FPB 5 -> 7:9.' },
+                { type: 'question', q_id: 'a1_q5', q_type: 'fill', text: '5. Sederhanakan 0.25:0.75. (Format a:b)', answer: '1:3', explain: 'Kali 100 -> 25:75. Bagi 25 -> 1:3.' },
+                { type: 'question', q_id: 'a1_q6', q_type: 'fill', text: '6. Rasio 1/2:1/3 ke bilangan bulat? (Format a:b)', answer: '3:2', explain: 'KPK 6. (1/2×6):(1/3×6) = 3:2.' },
+                { type: 'question', q_id: 'a1_q7', q_type: 'fill', text: '7. 2 jam:45 menit disederhanakan? (Format a:b)', answer: '8:3', explain: '2 jam=120 mnt. 120:45. FPB 15 -> 8:3.' },
+                { type: 'question', q_id: 'a1_q8', q_type: 'fill', text: '8. Sederhanakan 2500:5000:7500. (Format a:b:c)', answer: '1:2:3', explain: 'Bagi 2500 -> 1:2:3.' },
+                { type: 'question', q_id: 'a1_q9', q_type: 'mc', text: '9. Rasio 1 kg:500 g setara dengan...', options: ['2:1', '1:2', '1:500', '1000:500'], answer: '2:1', explain: '1 kg=1000 g. 1000:500 = 2:1.' },
+                { type: 'question', q_id: 'a1_q10', q_type: 'fill', text: '10. Sederhanakan 1.5 m:75 cm. (Format a:b)', answer: '2:1', explain: '1.5 m=150 cm. 150:75 = 2:1.' }
+            ]
+        },
+        // Assessment 2
+        {
+            title: "Assessment 2",
+            subtitle: "Membagi Nilai Total / Dividing Total Values",
+            isAssessment: true, prefix: 'a2',
+            slides: [
+                { type: 'question', q_id: 'a2_q1', q_type: 'fill', text: '1. Bagi Rp 240.000 rasio 3:5. Uang A?', answer: '90000', explain: '8 bag. 1 bag=30k. A=3×30k=90k.' },
+                { type: 'question', q_id: 'a2_q2', q_type: 'fill', text: '2. (Lanjutan) Uang B?', answer: '150000', explain: 'B=5×30k=150k.' },
+                { type: 'question', q_id: 'a2_q3', q_type: 'fill', text: '3. Rasio laki:perempuan 4:7. Perempuan 35, laki-laki?', answer: '20', explain: '1 bag=5. Laki=4×5=20.' },
+                { type: 'question', q_id: 'a2_q4', q_type: 'fill', text: '4. Total kelereng 45 rasio 2:3. Kelereng Biru?', answer: '27', explain: '5 bag. 1 bag=9. Biru=3×9=27.' },
+                { type: 'question', q_id: 'a2_q5', q_type: 'fill', text: '5. Berat A:B:C=10:9:8. Total=216kg. Berat A?', answer: '80', explain: '27 bag. 1 bag=8. A=10×8=80.' },
+                { type: 'question', q_id: 'a2_q6', q_type: 'fill', text: '6. (Lanjutan) Berat C?', answer: '64', explain: 'C=8×8=64.' },
+                { type: 'question', q_id: 'a2_q7', q_type: 'fill', text: '7. Bagi 100m rasio 1:4. Panjang kabel panjang?', answer: '80', explain: '5 bag. 1 bag=20m. Panjang=4×20=80.' },
+                { type: 'question', q_id: 'a2_q8', q_type: 'fill', text: '8. Umur Ayah:Anak=5:1. Total=60. Umur Ayah?', answer: '50', explain: '6 bag. 1 bag=10. Ayah=5×10=50.' },
+                { type: 'question', q_id: 'a2_q9', q_type: 'fill', text: '9. Tanah P:Q=3:2. Selisih 100m². Luas P?', answer: '300', explain: 'Selisih 1 bag=100. P=3×100=300.' },
+                { type: 'question', q_id: 'a2_q10', q_type: 'fill', text: '10. Penjualan 7:5. Selisih 20 unit. Total penjualan?', answer: '120', explain: 'Selisih 2 bag=20 -> 1 bag=10. Total=12×10=120.' }
+            ]
+        },
+        // Assessment 3 (NEW)
+        {
+            title: "Assessment 3",
+            subtitle: "Anggaran & Persentase / Budgeting & Percentages",
+            isAssessment: true, prefix: 'a3',
+            slides: [
+                { type: 'question', q_id: 'a3_q1', q_type: 'fill', text: '1. Anggaran film 1.2 Miliar, rasio 7:3:2. Total bagian?', answer: '12', explain: '7 + 3 + 2 = 12.' },
+                { type: 'question', q_id: 'a3_q2', q_type: 'fill', text: '2. Berapa nilai 1 bagian (dalam Juta)?', answer: '100', explain: '1200 Juta ÷ 12 = 100 Juta.' },
+                { type: 'question', q_id: 'a3_q3', q_type: 'fill', text: '3. Berapa anggaran Produksi (rasio 7) dalam Juta?', answer: '700', explain: '7 × 100 Juta = 700 Juta.' },
+                { type: 'question', q_id: 'a3_q4', q_type: 'fill', text: '4. Berapa anggaran Promosi (rasio 3) dalam Juta?', answer: '300', explain: '3 × 100 Juta = 300 Juta.' },
+                { type: 'question', q_id: 'a3_q5', q_type: 'fill', text: '5. Berapa anggaran Distribusi (rasio 2) dalam Juta?', answer: '200', explain: '2 × 100 Juta = 200 Juta.' },
+                { type: 'question', q_id: 'a3_q6', q_type: 'fill', text: '6. Jika Promosi naik 10%, berapa kenaikannya (dalam Juta)?', answer: '30', explain: '10% × 300 Juta = 30 Juta.' },
+                { type: 'question', q_id: 'a3_q7', q_type: 'fill', text: '7. Berapa anggaran Promosi yang baru (dalam Juta)?', answer: '330', explain: '300 + 30 = 330 Juta.' },
+                { type: 'question', q_id: 'a3_q8', q_type: 'fill', text: '8. Resep beton Semen:Pasir:Kerikil=1:2:4. Tersedia 50kg Pasir. Berapa 1 bagian?', answer: '25', explain: 'Pasik=2 bagian. 2 bag=50kg, 1 bag=25kg.' },
+                { type: 'question', q_id: 'a3_q9', q_type: 'fill', text: '9. (Lanjutan) Berapa kebutuhan Semen (kg)?', answer: '25', explain: 'Semen=1 bagian × 25kg = 25kg.' },
+                { type: 'question', q_id: 'a3_q10', q_type: 'fill', text: '10. Berapa total berat beton yang bisa dibuat (kg)?', answer: '175', explain: 'Total rasio=7 bagian. 7 × 25kg = 175kg.' }
+            ]
+        },
+        // Assessment 4 (NEW)
+        {
+            title: "Assessment 4",
+            subtitle: "Rasio Pecahan & Waktu / Fractions & Time Ratios",
+            isAssessment: true, prefix: 'a4',
+            slides: [
+                { type: 'question', q_id: 'a4_q1', q_type: 'fill', text: '1. Rasio 1/2:1/3. KPK penyebut 2 dan 3 adalah?', answer: '6', explain: 'KPK dari 2 dan 3 adalah 6.' },
+                { type: 'question', q_id: 'a4_q2', q_type: 'fill', text: '2. Ubah 1/2:1/3 ke bilangan bulat. (Format a:b)', answer: '3:2', explain: '(1/2×6) : (1/3×6) = 3:2.' },
+                { type: 'question', q_id: 'a4_q3', q_type: 'fill', text: '3. Rasio kabel 1/2:1/3:1/4. Ubah ke KPK 12. Hasilnya? (a:b:c)', answer: '6:4:3', explain: '(1/2×12):(1/3×12):(1/4×12) = 6:4:3.' },
+                { type: 'question', q_id: 'a4_q4', q_type: 'fill', text: '4. Total kabel 180m, rasio 6:4:3. Total bagian?', answer: '13', explain: '6 + 4 + 3 = 13 bagian.' },
+                { type: 'question', q_id: 'a4_q5', q_type: 'fill', text: '5. Berapa panjang kabel terpendek (rasio 3)?', answer: '41.54', explain: '(3/13) × 180 ≈ 41.54m.' },
+                { type: 'question', q_id: 'a4_q6', q_type: 'fill', text: '6. Rasio 2 jam:45 menit. Dalam menit? (Format a:b)', answer: '120:45', explain: '2 jam = 120 menit. Jadi 120:45.' },
+                { type: 'question', q_id: 'a4_q7', q_type: 'fill', text: '7. Sederhanakan 120:45. (Format a:b)', answer: '8:3', explain: 'Bagi 15. 120÷15=8, 45÷15=3.' },
+                { type: 'question', q_id: 'a4_q8', q_type: 'fill', text: '8. Rasio 2 jam:45 menit:150 detik. Ubah semua ke detik. (Pisahkan dengan : tanpa spasi)', answer: '7200:2700:150', explain: '2jam=7200d, 45m=2700d, 150d=150d.' },
+                { type: 'question', q_id: 'a4_q9', q_type: 'mc', text: '9. Langkah pertama menyederhanakan 7200:2700:150?', options: ['Bagi dengan 10 (hilangkan nol)', 'Bagi dengan 150', 'Kurangi 150', 'Jumlahkan semua'], answer: 'Bagi dengan 10 (hilangkan nol)', explain: 'Hilangkan nol akhir terlebih dahulu -> 720:270:15.' },
+                { type: 'question', q_id: 'a4_q10', q_type: 'fill', text: '10. Hasil akhir 7200:2700:150 adalah 48:18:x. Berapa x?', answer: '1', explain: '7200/150=48, 2700/150=18, 150/150=1.' }
+            ]
+        },
+        // Assessment 5 (NEW)
+        {
+            title: "Assessment 5",
+            subtitle: "Logika Kompleks & Keuntungan / Complex Logic & Profits",
+            isAssessment: true, prefix: 'a5',
+            slides: [
+                { type: 'question', q_id: 'a5_q1', q_type: 'fill', text: '1. Keuntungan 150 juta, rasio modal 2:3:5. Total bagian?', answer: '10', explain: '2 + 3 + 5 = 10.' },
+                { type: 'question', q_id: 'a5_q2', q_type: 'fill', text: '2. Berapa 1 bagian (dalam Juta)?', answer: '15', explain: '150 Juta ÷ 10 = 15 Juta.' },
+                { type: 'question', q_id: 'a5_q3', q_type: 'fill', text: '3. Bagian terkecil (rasio 2) dalam Juta?', answer: '30', explain: '2 × 15 Juta = 30 Juta.' },
+                { type: 'question', q_id: 'a5_q4', q_type: 'fill', text: '4. Bagian terbesar (rasio 5) dalam Juta?', answer: '75', explain: '5 × 15 Juta = 75 Juta.' },
+                { type: 'question', q_id: 'a5_q5', q_type: 'fill', text: '5. Selisih bagian terbesar dan terkecil (Juta)?', answer: '45', explain: '75 Juta - 30 Juta = 45 Juta.' },
+                { type: 'question', q_id: 'a5_q6', q_type: 'fill', text: '6. Berat A:B:C=10:9:8, total 216kg. Siapa yang terberat?', answer: 'A', explain: 'Rasio A paling besar (10), jadi A terberat.' },
+                { type: 'question', q_id: 'a5_q7', q_type: 'fill', text: '7. Berapa selisih berat A dan C (kg)?', answer: '16', explain: 'A=80kg, C=64kg. 80-64=16kg.' },
+                { type: 'question', q_id: 'a5_q8', q_type: 'mc', text: '8. Rasio A:B=3:4, B:C=5:6. Agar B sama, A:B:C menjadi?', options: ['15:20:24', '3:4:6', '9:12:18', '3:5:6'], answer: '15:20:24', explain: 'A:B dikali 5 -> 15:20. B:C dikali 4 -> 20:24. Gabung -> 15:20:24.' },
+                { type: 'question', q_id: 'a5_q9', q_type: 'fill', text: '9. Rasio laki:perempuan 4:5. Total 108. Berapa laki-laki?', answer: '48', explain: '9 bag. 1 bag=12. Laki=4×12=48.' },
+                { type: 'question', q_id: 'a5_q10', q_type: 'fill', text: '10. Rasio X:Y=2:3. Jika X bertambah 5, rasio jadi 1:1. Berapa nilai Y awal?', answer: '15', explain: 'Awal: X=2k, Y=3k. (2k+5)=3k -> k=5. Y=3(5)=15.' }
+            ]
+        },
+        // Section 12: Consolidation & Reflection
+        {
+            title: "Consolidation & Reflection",
+            subtitle: "Kesimpulan & Refleksi / Conclusion & Reflection",
+            slides: [
+                { type: 'theory', content: `
+                    <div style="text-align: center;">
+                        <div class="homepage-logo"><i class="fas fa-medal" style="color:#f59e0b;"></i></div>
+                        <h2 class="slide-title">Selamat! Kamu Telah Menguasai Rasio!</h2>
+                        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:20px;">Congratulations! You've Mastered Ratios!</p>
+                    </div>
+                    <div class="illust-box">
+                        <h3 style="margin-bottom:15px;">Langkah Kunci (Key Steps):</h3>
+                        <p><i class="fas fa-check-circle" style="color:var(--success); margin-right:10px;"></i> <b>Jumlahkan</b> semua bagian rasio.</p>
+                        <p><i class="fas fa-check-circle" style="color:var(--success); margin-right:10px;"></i> <b>Cari nilai 1 satuan</b> dengan membagi total nilai dengan total bagian.</p>
+                        <p><i class="fas fa-check-circle" style="color:var(--success); margin-right:10px;"></i> <b>Kalikan</b> nilai satuan ke masing-masing angka rasio.</p>
+                    </div>
+                `},
+                { type: 'theory', content: `
+                    <div style="text-align: center;">
+                        <i class="fas fa-book-open" style="font-size:3rem; color:var(--primary); margin-bottom:20px;"></i>
+                        <h3>Refleksi Diri (Self-Reflection)</h3>
+                        <p>Apa bagian tersulit dari materi Rasio hari ini?</p>
+                        <textarea style="width:100%; height:100px; padding:15px; border:2px solid var(--border); border-radius:8px; font-size:1rem; resize:none; margin-top:10px;" placeholder="Tulis refleksimu di sini..."></textarea>
+                        <div style="margin-top:20px; padding:20px; background:#eef2ff; border-radius:12px;">
+                            <p style="font-weight:bold; margin-bottom:10px;">Jangan lupa lanjutkan latihanmu di platform!</p>
+                            <a href="https://learn.algonova.id/login" target="_blank" class="btn-nav btn-next" style="text-decoration:none; display:inline-block;">
+                                <i class="fas fa-external-link-alt"></i> Login Algonova
+                            </a>
+                        </div>
+                    </div>
+                `}
+            ]
+        }
+    ];
+
+    // ==========================================
+    // SYSTEM LOGIC (JANGAN DIUBAH)
+    // ==========================================
+    let currentSection = 0;
+    let currentSlide = 0;
+    let studentScores = {}; 
+
+    const slideContainer = document.getElementById('slideContainer');
+    const progressBar = document.getElementById('progressBar');
+    const sidebarMenu = document.getElementById('sidebarMenu');
+
+    function loadSection(sectionIndex) {
+        currentSection = sectionIndex;
+        currentSlide = 0;
+        const menuItems = sidebarMenu.querySelectorAll('li');
+        menuItems.forEach((item, idx) => {
+            item.classList.remove('active');
+            if(idx === sectionIndex) item.classList.add('active');
+        });
+        renderSlide();
+    }
+
+    function renderSlide() {
+        const section = courseData[currentSection];
+        const slide = section.slides[currentSlide];
+        const totalSlides = section.slides.length;
+        const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+        progressBar.style.width = progressPercent + '%';
+
+        let htmlContent = '';
+
+        if(slide.type === 'theory') {
+            htmlContent = `
+                <h2 class="slide-title">${section.title}</h2>
+                ${section.subtitle ? `<p class="slide-subtitle">${section.subtitle}</p>` : ''}
+                <div class="slide-body">${slide.content}</div>
+            `;
+        } else if(slide.type === 'question') {
+            let inputHtml = '';
+            if(slide.q_type === 'fill') {
+                inputHtml = `<input type="text" class="q-input" id="${slide.q_id}_input" autocomplete="off">`;
+            } else if(slide.q_type === 'mc') {
+                inputHtml = slide.options.map((opt, i) => `
+                    <label style="display:block; margin:8px 0; cursor:pointer; padding:10px; border:2px solid var(--border); border-radius:8px; transition:0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                        <input type="radio" name="${slide.q_id}" value="${opt}" style="margin-right:8px;"> ${opt}
+                    </label>
+                `).join('');
+            } else if(slide.q_type === 'dropdown') {
+                inputHtml = `<select class="q-select" id="${slide.q_id}_input">
+                    <option value="">-- Pilih Jawaban --</option>
+                    ${slide.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                </select>`;
+            }
+
+            htmlContent = `
+                <h2 class="slide-title">Latihan Soal</h2>
+                <div class="slide-body">
+                    <div class="question-card">
+                        <p class="q-text">${slide.text}</p>
+                        ${inputHtml}
+                        <div style="margin-top:15px;">
+                            <button class="btn-check" onclick="checkAnswer('${slide.q_id}', '${slide.answer}', '${slide.q_type}')">Cek Jawaban</button>
+                            <button class="btn-reset" id="reset_${slide.q_id}" onclick="resetAnswer('${slide.q_id}', '${slide.q_type}')">Reset</button>
+                        </div>
+                        <div class="explanation-box" id="explain_${slide.q_id}"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Navigation Logic
+        const isLastSlide = currentSlide === totalSlides - 1;
+        const isFirstSlide = currentSlide === 0;
+        const isLastSection = currentSection === courseData.length - 1;
+        const isAssessment = section.isAssessment === true;
+
+        let nextButtonHtml = '';
+        if(isLastSlide && isAssessment) {
+            // Jika soal terakhir di Assessment, tampilkan tombol Lihat Hasil
+            nextButtonHtml = `<button class="btn-nav btn-next" onclick="showAssessmentResult('${section.prefix}', '${section.title}')">Lihat Hasil Assessment <i class="fas fa-chart-bar"></i></button>`;
+        } else if (isLastSlide && isLastSection) {
+            nextButtonHtml = `<button class="btn-nav btn-next" disabled>Selesai <i class="fas fa-check"></i></button>`;
+        } else {
+            nextButtonHtml = `<button class="btn-nav btn-next" onclick="nextSlide()">${isLastSlide ? 'Bagian Selanjutnya <i class="fas fa-forward"></i>' : 'Lanjut <i class="fas fa-chevron-right"></i>'}</button>`;
+        }
+
+        let navHtml = `
+            <div class="nav-buttons">
+                <button class="btn-nav btn-prev" ${isFirstSlide && currentSection === 0 ? 'disabled' : ''} onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i> Kembali
+                </button>
+                ${nextButtonHtml}
+            </div>
+        `;
+
+        slideContainer.innerHTML = htmlContent + navHtml;
+
+        // Re-render KaTeX
+        if(typeof renderMathInElement === 'function') {
+            renderMathInElement(slideContainer, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        }
+    }
+
+    function nextSlide() {
+        const section = courseData[currentSection];
+        if(currentSlide < section.slides.length - 1) {
+            currentSlide++;
+        } else {
+            if(currentSection < courseData.length - 1) {
+                loadSection(currentSection + 1);
+                return;
+            }
+        }
+        renderSlide();
+    }
+
+    function prevSlide() {
+        if(currentSlide > 0) {
+            currentSlide--;
+        } else {
+            if(currentSection > 0) {
+                currentSection--;
+                currentSlide = courseData[currentSection].slides.length - 1;
+                const menuItems = sidebarMenu.querySelectorAll('li');
+                menuItems.forEach((item, idx) => {
+                    item.classList.remove('active');
+                    if(idx === currentSection) item.classList.add('active');
+                });
+                renderSlide();
+                return;
+            }
+        }
+        renderSlide();
+    }
+
+    function checkAnswer(q_id, correctAnswer, q_type) {
+        let userAnswer = '';
+        let isCorrect = false;
+
+        if(q_type === 'fill') {
+            userAnswer = document.getElementById(q_id + '_input').value.replace(/\s/g, '');
+            isCorrect = userAnswer === correctAnswer;
+        } else if(q_type === 'mc') {
+            const radios = document.getElementsByName(q_id);
+            for(let r of radios) {
+                if(r.checked) userAnswer = r.value;
+            }
+            isCorrect = userAnswer === correctAnswer;
+        } else if(q_type === 'dropdown') {
+            userAnswer = document.getElementById(q_id + '_input').value;
+            isCorrect = userAnswer === correctAnswer;
+        }
+
+        const explainBox = document.getElementById('explain_' + q_id);
+        const resetBtn = document.getElementById('reset_' + q_id);
+        const section = courseData[currentSection];
+        const slide = section.slides[currentSlide];
+        
+        if(!userAnswer) {
+            alert('Silakan isi jawaban terlebih dahulu!');
+            return;
+        }
+
+        studentScores[q_id] = isCorrect; // Simpan skor
+
+        if(isCorrect) {
+            explainBox.className = 'explanation-box correct';
+            explainBox.innerHTML = `<i class="fas fa-check-circle"></i> Benar! `;
+        } else {
+            explainBox.className = 'explanation-box wrong';
+            explainBox.innerHTML = `<i class="fas fa-times-circle"></i> Salah. Jawaban yang benar adalah ${correctAnswer}.`;
+        }
+
+        explainBox.innerHTML += `<br><small>${slide.explain}</small>`;
+        explainBox.style.display = 'block';
+        resetBtn.style.display = 'inline-block';
+    }
+
+    function resetAnswer(q_id, q_type) {
+        if(q_type === 'fill') {
+            document.getElementById(q_id + '_input').value = '';
+        } else if(q_type === 'mc') {
+            const radios = document.getElementsByName(q_id);
+            for(let r of radios) r.checked = false;
+        } else if(q_type === 'dropdown') {
+            document.getElementById(q_id + '_input').value = '';
+        }
+        document.getElementById('explain_' + q_id).style.display = 'none';
+        document.getElementById('reset_' + q_id).style.display = 'none';
+        delete studentScores[q_id]; // Hapus skor sebelumnya
+    }
+
+    function showAssessmentResult(groupPrefix, groupName) {
+        let score = 0;
+        let totalQuestions = 0;
+        
+        courseData[currentSection].slides.forEach(slide => {
+            if(slide.q_id && slide.q_id.startsWith(groupPrefix)) {
+                totalQuestions++;
+                if(studentScores[slide.q_id] === true) {
+                    score++;
+                }
+            }
+        });
+
+        slideContainer.innerHTML = `
+            <h2 class="slide-title">Hasil Assessment</h2>
+            <p class="slide-subtitle">Assessment Result</p>
+            <div class="slide-body" style="text-align: center;">
+                <div class="illust-box">
+                    ${score >= 7 ? '<i class="fas fa-trophy" style="font-size:4rem; color:#f59e0b;"></i>' : '<i class="fas fa-redo" style="font-size:4rem; color:var(--danger);"></i>'}
+                    <h1 style="font-size:3rem; margin:20px 0; color:${score >= 7 ? 'var(--success)' : 'var(--danger)'};">${score} / ${totalQuestions}</h1>
+                    <p>${score >= 7 ? 'Luar biasa! Kamu menguasai materi ini.' : 'Jangan menyerah, coba pelajari lagi penjelasannya!'}</p>
+                </div>
+                
+                <div style="text-align:left; margin-top:30px; background:#f0f2f5; padding:20px; border-radius:12px;">
+                    <h3><i class="fas fa-print" style="margin-right:10px;"></i>Cetak Sertifikat/Report</h3>
+                    <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+                        <input type="text" id="studentName" class="q-input" placeholder="Masukkan Nama Lengkap" style="flex:2; min-width:200px;">
+                        <input type="date" id="studentDate" class="q-input" style="flex:1; min-width:150px;">
+                    </div>
+                    <button class="btn-nav btn-next" style="margin-top:15px; width:100%;" onclick="printReport('${groupPrefix}', '${groupName}')">
+                        <i class="fas fa-file-alt"></i> Cetak Report (New Tab)
+                    </button>
+                </div>
+                
+                <div class="nav-buttons" style="justify-content:center; margin-top:20px;">
+                    <button class="btn-nav btn-prev" onclick="loadSection(currentSection)"><i class="fas fa-arrow-left"></i> Ulangi Assessment</button>
+                    <button class="btn-nav btn-next" onclick="nextSlide()"> Lanjut <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        `;
+    }
+
+    function printReport(groupPrefix, groupName) {
+        const studentName = document.getElementById('studentName').value || 'Student';
+        const studentDate = document.getElementById('studentDate').value || new Date().toISOString().slice(0, 10);
+        const topic = "Pengantar Perbandingan (Rasio)";
+
+        let tableRows = '';
+        let score = 0;
+        
+        courseData[currentSection].slides.forEach((slide, index) => {
+            if(slide.q_id && slide.q_id.startsWith(groupPrefix)) {
+                const isCorrect = studentScores[slide.q_id] === true;
+                if(isCorrect) score++;
+                const note = isCorrect ? '<span style="color:green; font-weight:bold;">&#10004; Benar</span>' : '<span style="color:red; font-weight:bold;">&#10006; Salah</span>';
+                const correctAns = slide.answer;
+                
+                tableRows += `
+                    <tr>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center;">${index + 1}</td>
+                        <td style="border:1px solid #ddd; padding:8px;">${slide.text}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center;">${correctAns}</td>
+                        <td style="border:1px solid #ddd; padding:8px; text-align:center;">${note}</td>
+                    </tr>
+                `;
+            }
+        });
+
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Assessment Report - ${groupName}</title>
+                <style>
+                    body { font-family: 'Segoe UI', sans-serif; padding: 40px; color: #333; line-height:1.6; }
+                    .container { max-width: 900px; margin: auto; border: 1px solid #ccc; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+                    h1 { color: #0066ff; border-bottom: 3px solid #0066ff; padding-bottom: 15px; margin-top:0; }
+                    .info-box { background: #f0f2f5; padding: 20px; border-radius: 8px; margin: 25px 0; display:flex; justify-content:space-between; flex-wrap:wrap; }
+                    .info-box p { margin:5px 0; flex-basis: 45%; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 25px; font-size:0.9rem; }
+                    th { background: #1c1e21; color: white; padding: 12px; text-align: left; }
+                    tr:nth-child(even) { background-color: #f9f9f9; }
+                    .footer { margin-top: 60px; text-align: right; }
+                    .footer p { margin-bottom: 60px; }
+                    .score-big { font-size: 2rem; font-weight: bold; color: ${score >= 7 ? '#10b981' : '#ef4444'}; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>ASSESSMENT RESULT</h1>
+                    <div class="info-box">
+                        <p><strong>Name:</strong> ${studentName}</p>
+                        <p><strong>Date:</strong> ${studentDate}</p>
+                        <p><strong>Topic:</strong> ${topic}</p>
+                        <p><strong>Assessment Group:</strong> ${groupName}</p>
+                        <p><strong>Score:</strong> <span class="score-big">${score} / 10</span></p>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:5%;">No</th>
+                                <th style="width:50%;">Question</th>
+                                <th style="width:20%;">Correct Answer</th>
+                                <th style="width:25%;">Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                    
+                    <div class="footer">
+                        <p>Checked by</p>
+                        <p><strong>Deni</strong></p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(htmlContent);
+        newWindow.document.close();
+    }
+
+    // Initialize
+    loadSection(0);
+    </script>
+</body>
+</html>

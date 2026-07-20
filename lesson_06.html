@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perbandingan Senilai - MATH TUTORING by Deni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{fontFamily:{display:['Space Grotesk','sans-serif'],body:['DM Sans','sans-serif']},colors:{navy:{950:'#060e1a',900:'#0a1628',800:'#0f1d2f',700:'#152a42',600:'#1e3a5f',500:'#2a4f7a'},amber:{400:'#fbbf24',500:'#f59e0b',600:'#d97706'},emerald:{400:'#34d399',500:'#10b981',600:'#059669'}}}}}
+</script>
+<style>
+/* === BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#060e1a;color:#e2e8f0;overflow-x:hidden;min-height:100vh}
+h1,h2,h3,h4,h5{font-family:'Space Grotesk',sans-serif}
+::selection{background:rgba(245,158,11,.3);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a1628}
+::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#2a4f7a}
+
+/* === HEADER === */
+.app-header{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(6,14,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(30,58,95,.5);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.app-header .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#f59e0b;letter-spacing:-.3px;white-space:nowrap}
+.app-header .logo span{color:#e2e8f0;font-weight:400}
+.app-header .topic-badge{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fbbf24;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;white-space:nowrap}
+.header-btn{background:rgba(30,58,95,.4);border:1px solid rgba(30,58,95,.6);color:#94a3b8;font-size:13px;font-weight:500;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.header-btn:hover{background:rgba(30,58,95,.7);color:#e2e8f0}
+
+/* === MODAL === */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(6,14,26,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#0f1d2f;border:1px solid #1e3a5f;border-radius:16px;padding:32px;max-width:480px;width:100%;position:relative;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;padding:4px;transition:color .2s}
+.modal-close:hover{color:#e2e8f0}
+.modal-box h2{font-size:20px;font-weight:700;color:#f59e0b;margin-bottom:20px}
+.modal-box ol{list-style:none;counter-reset:rules;padding:0}
+.modal-box ol li{counter-increment:rules;padding:10px 0 10px 40px;position:relative;border-bottom:1px solid rgba(30,58,95,.4);color:#cbd5e1;font-size:14px;line-height:1.6}
+.modal-box ol li:last-child{border-bottom:none}
+.modal-box ol li::before{content:counter(rules);position:absolute;left:0;top:10px;width:26px;height:26px;background:rgba(245,158,11,.15);color:#f59e0b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Space Grotesk',sans-serif}
+
+/* === MAP VIEW === */
+.map-view{padding-top:60px;min-height:100vh;position:relative;overflow:hidden}
+.map-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(245,158,11,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(16,185,129,.03) 0%,transparent 50%)}
+.map-container{position:relative;max-width:700px;margin:0 auto;padding:40px 20px 80px}
+.map-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.map-path-line{stroke:#1e3a5f;stroke-width:3;fill:none;stroke-dasharray:8 6;opacity:.7}
+.map-node{position:absolute;z-index:2;cursor:pointer;transition:transform .25s ease,filter .25s ease}
+.map-node:hover{transform:scale(1.12);filter:brightness(1.2)}
+.map-node-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;border:3px solid #1e3a5f;background:#0a1628;color:#64748b;transition:all .3s ease;position:relative}
+.map-node.active .map-node-circle{border-color:#f59e0b;color:#f59e0b;box-shadow:0 0 24px rgba(245,158,11,.35),inset 0 0 12px rgba(245,158,11,.1)}
+.map-node.completed .map-node-circle{border-color:#10b981;color:#10b981;background:rgba(16,185,129,.1);box-shadow:0 0 16px rgba(16,185,129,.2)}
+.map-node.completed .map-node-circle::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;font-size:14px;position:absolute}
+.map-node.completed .map-node-circle .node-label{opacity:0}
+.map-node-label{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:600;color:#94a3b8;transition:color .3s;text-align:center;pointer-events:none;max-width:160px}
+.map-node-label.top{bottom:calc(100% + 8px)}
+.map-node-label.bottom{top:calc(100% + 8px)}
+.map-node.active .map-node-label{color:#fbbf24}
+.map-node.completed .map-node-label{color:#34d399}
+.map-node-time{font-size:10px;color:#475569;font-weight:400;display:block;margin-top:2px}
+.map-title-banner{text-align:center;margin-bottom:40px;position:relative;z-index:1}
+.map-title-banner h1{font-size:28px;font-weight:700;background:linear-gradient(135deg,#f59e0b,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.map-title-banner p{color:#64748b;font-size:14px;margin-top:6px}
+
+/* === CONTENT VIEW === */
+.content-view{padding-top:60px;min-height:100vh;display:none;flex-direction:column}
+.content-view.active{display:flex}
+.content-inner{max-width:740px;width:100%;margin:0 auto;padding:24px 20px 80px;flex:1}
+.back-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:none;color:#94a3b8;font-size:14px;font-weight:500;cursor:pointer;padding:8px 0;margin-bottom:16px;font-family:'DM Sans',sans-serif;transition:color .2s}
+.back-btn:hover{color:#f59e0b}
+.node-title-bar{margin-bottom:20px}
+.node-title-bar h2{font-size:22px;font-weight:700;color:#e2e8f0}
+.node-title-bar .node-time{font-size:13px;color:#64748b;margin-top:4px}
+
+/* === STEP INDICATOR === */
+.step-indicator{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Space Grotesk',sans-serif;border:2px solid #1e3a5f;background:#0a1628;color:#475569;cursor:pointer;transition:all .25s ease;flex-shrink:0}
+.step-dot.theory{border-radius:6px}
+.step-dot.current{border-color:#f59e0b;color:#f59e0b;box-shadow:0 0 12px rgba(245,158,11,.25)}
+.step-dot.done{border-color:#10b981;color:#10b981;background:rgba(16,185,129,.1)}
+.step-dot.done.theory{background:rgba(16,185,129,.08)}
+.step-info{font-size:12px;color:#64748b;margin-bottom:12px}
+
+/* === PROGRESS BAR === */
+.progress-wrap{width:100%;height:6px;background:#0a1628;border-radius:3px;overflow:hidden;margin-bottom:24px;border:1px solid #1e3a5f}
+.progress-fill{height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:3px;transition:width .4s ease;width:0}
+
+/* === THEORY CARD === */
+.theory-card{background:linear-gradient(135deg,rgba(15,29,47,.9),rgba(21,42,66,.6));border:1px solid #1e3a5f;border-radius:14px;padding:28px;margin-bottom:16px;position:relative;overflow:hidden}
+.theory-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,#f59e0b,#d97706);border-radius:4px 0 0 4px}
+.theory-card h3{font-size:18px;font-weight:700;color:#fbbf24;margin-bottom:14px}
+.theory-card p,.theory-card li{color:#cbd5e1;font-size:15px;line-height:1.75}
+.theory-card ul,.theory-card ol{padding-left:20px;margin:8px 0}
+.theory-card li{margin-bottom:4px}
+.theory-en{font-size:13px;color:#64748b;font-style:italic;margin-top:12px;padding-top:12px;border-top:1px solid rgba(30,58,95,.4);line-height:1.6}
+.theory-card .katex-display{margin:12px 0;overflow-x:auto}
+
+/* === EXERCISE WRAPPER === */
+.exercise-wrapper{background:#0f1d2f;border:1px solid #1e3a5f;border-radius:14px;padding:28px;margin-bottom:16px;transition:border-color .3s}
+.exercise-wrapper.correct{border-color:#10b981;background:rgba(16,185,129,.04)}
+.exercise-wrapper.wrong{border-color:#ef4444;background:rgba(239,68,68,.04)}
+.question-block{margin-bottom:20px}
+.question-text{font-size:15px;font-weight:600;color:#e2e8f0;line-height:1.7}
+.question-text-en{font-size:12px;color:#64748b;font-style:italic;margin-top:4px}
+.exercise-body{margin-bottom:20px}
+
+/* === FILL IN === */
+.fill-input{width:100%;max-width:300px;padding:10px 16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;color:#e2e8f0;font-size:16px;font-family:'DM Sans',sans-serif;transition:border-color .2s;outline:none}
+.fill-input:focus{border-color:#f59e0b}
+.fill-input:disabled{opacity:.7;cursor:default}
+.fill-input.input-correct{border-color:#10b981}
+.fill-input.input-wrong{border-color:#ef4444}
+.fill-input::placeholder{color:#475569}
+
+/* === CHECKBOX / RADIO === */
+.option-list{display:flex;flex-direction:column;gap:10px}
+.option-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;cursor:pointer;transition:all .2s;user-select:none}
+.option-item:hover{border-color:#2a4f7a;background:rgba(30,58,95,.3)}
+.option-item.selected{border-color:#f59e0b;background:rgba(245,158,11,.06)}
+.option-item.option-correct{border-color:#10b981!important;background:rgba(16,185,129,.08)!important}
+.option-item.option-wrong{border-color:#ef4444!important;background:rgba(239,68,68,.06)!important}
+.option-item input{display:none}
+.option-marker{width:22px;height:22px;border:2px solid #2a4f7a;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:11px;color:transparent}
+.option-item[data-type="checkbox"] .option-marker{border-radius:6px}
+.option-item.selected .option-marker{border-color:#f59e0b;background:#f59e0b;color:#0a1628}
+.option-item.option-correct .option-marker{border-color:#10b981!important;background:#10b981!important;color:#fff!important}
+.option-item.option-wrong .option-marker{border-color:#ef4444!important;background:#ef4444!important;color:#fff!important}
+.option-text{font-size:14px;color:#cbd5e1;line-height:1.5;flex:1}
+.option-text .katex{font-size:1em}
+
+/* === TRUE/FALSE === */
+.tf-buttons{display:flex;gap:12px}
+.tf-btn{flex:1;padding:14px;border:2px solid #1e3a5f;border-radius:10px;background:#0a1628;color:#cbd5e1;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+.tf-btn:hover{border-color:#2a4f7a}
+.tf-btn.selected{border-color:#f59e0b;background:rgba(245,158,11,.08);color:#fbbf24}
+.tf-btn.tf-correct{border-color:#10b981!important;background:rgba(16,185,129,.1)!important;color:#34d399!important}
+.tf-btn.tf-wrong{border-color:#ef4444!important;background:rgba(239,68,68,.08)!important;color:#f87171!important}
+
+/* === PAIRING === */
+.pairing-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:500px){.pairing-cols{grid-template-columns:1fr;gap:12px}}
+.pairing-col{display:flex;flex-direction:column;gap:8px}
+.pairing-col-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:4px}
+.pair-item{padding:12px 16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;cursor:pointer;transition:all .2s;font-size:14px;color:#cbd5e1;user-select:none;text-align:center}
+.pair-item:hover{border-color:#2a4f7a}
+.pair-item.pair-selected{border-color:#f59e0b;background:rgba(245,158,11,.08);box-shadow:0 0 12px rgba(245,158,11,.15)}
+.pair-item.pair-matched{border-color:#10b981;background:rgba(16,185,129,.08)}
+.pair-item.pair-wrong-match{border-color:#ef4444;background:rgba(239,68,68,.06)}
+.pair-color-0{border-left:4px solid #f59e0b}
+.pair-color-1{border-left:4px solid #3b82f6}
+.pair-color-2{border-left:4px solid #a855f7}
+.pair-color-3{border-left:4px solid #ec4899}
+.pair-color-4{border-left:4px solid #14b8a6}
+.pair-color-r0{border-right:4px solid #f59e0b}
+.pair-color-r1{border-right:4px solid #3b82f6}
+.pair-color-r2{border-right:4px solid #a855f7}
+.pair-color-r3{border-right:4px solid #ec4899}
+.pair-color-r4{border-right:4px solid #14b8a6}
+
+/* === ORDER === */
+.order-list{display:flex;flex-direction:column;gap:8px}
+.order-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;transition:all .25s}
+.order-item.order-correct{border-color:#10b981;background:rgba(16,185,129,.06)}
+.order-item.order-wrong{border-color:#ef4444;background:rgba(239,68,68,.04)}
+.order-num{width:28px;height:28px;border-radius:50%;background:#1e3a5f;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:'Space Grotesk',sans-serif}
+.order-text{flex:1;font-size:14px;color:#cbd5e1}
+.order-text .katex{font-size:1em}
+.order-controls{display:flex;flex-direction:column;gap:2px}
+.order-btn{width:28px;height:24px;border:1px solid #1e3a5f;background:#0a1628;color:#64748b;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .2s}
+.order-btn:hover{background:#1e3a5f;color:#e2e8f0}
+.order-btn:disabled{opacity:.3;cursor:default}
+
+/* === DRAG & DROP === */
+.dnd-question{margin-bottom:16px;font-size:15px;line-height:1.8;color:#cbd5e1}
+.dnd-question .katex{font-size:1em}
+.dnd-zone{display:inline-block;min-width:60px;min-height:36px;padding:4px 14px;border:2px dashed #2a4f7a;border-radius:8px;background:rgba(10,22,40,.6);vertical-align:middle;text-align:center;font-weight:700;color:#f59e0b;font-size:16px;transition:all .2s;margin:0 4px}
+.dnd-zone.dnd-zone-hover{border-color:#f59e0b;background:rgba(245,158,11,.08);box-shadow:0 0 12px rgba(245,158,11,.2)}
+.dnd-zone.dnd-zone-filled{border-style:solid;border-color:#10b981;color:#34d399;background:rgba(16,185,129,.06)}
+.dnd-zone.dnd-zone-wrong{border-color:#ef4444!important;color:#f87171!important;background:rgba(239,68,68,.06)!important}
+.dnd-bank{display:flex;flex-wrap:wrap;gap:10px;padding:16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;margin-top:12px;min-height:52px}
+.dnd-bank-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:8px;width:100%}
+.dnd-draggable{padding:8px 18px;background:linear-gradient(135deg,#1e3a5f,#2a4f7a);border:2px solid #2a4f7a;border-radius:8px;color:#e2e8f0;font-size:15px;font-weight:600;cursor:grab;user-select:none;transition:all .2s;font-family:'Space Grotesk',sans-serif}
+.dnd-draggable:hover{border-color:#f59e0b;background:linear-gradient(135deg,#2a4f7a,#3b6098);transform:translateY(-1px)}
+.dnd-draggable.dnd-dragging{opacity:.4;transform:scale(.95)}
+.dnd-draggable.dnd-placed{opacity:.3;cursor:default;pointer-events:none}
+.dnd-ghost{position:fixed;z-index:9999;pointer-events:none;padding:8px 18px;background:linear-gradient(135deg,#f59e0b,#d97706);border:2px solid #f59e0b;border-radius:8px;color:#0a1628;font-size:15px;font-weight:700;font-family:'Space Grotesk',sans-serif;box-shadow:0 8px 32px rgba(245,158,11,.4);transform:rotate(2deg) scale(1.05)}
+
+/* === EXERCISE ACTIONS === */
+.exercise-actions{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.btn-check,.btn-reset{padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:2px solid transparent;font-family:'DM Sans',sans-serif}
+.btn-check{background:linear-gradient(135deg,#f59e0b,#d97706);color:#0a1628;border-color:#f59e0b}
+.btn-check:hover{box-shadow:0 4px 20px rgba(245,158,11,.35);transform:translateY(-1px)}
+.btn-check:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none}
+.btn-check.btn-correct-show{background:linear-gradient(135deg,#10b981,#059669);border-color:#10b981;color:#fff}
+.btn-reset{background:transparent;color:#94a3b8;border-color:#1e3a5f}
+.btn-reset:hover{border-color:#475569;color:#e2e8f0}
+
+/* === EXPLANATION === */
+.explanation-block{border:1px solid #1e3a5f;border-radius:10px;overflow:hidden;margin-bottom:8px}
+.explanation-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(30,58,95,.3);cursor:pointer;user-select:none;transition:background .2s}
+.explanation-toggle:hover{background:rgba(30,58,95,.5)}
+.explanation-toggle span{font-size:13px;font-weight:600;color:#94a3b8}
+.explanation-toggle i{font-size:12px;color:#64748b;transition:transform .3s}
+.explanation-toggle.open i{transform:rotate(180deg)}
+.explanation-content{max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 16px}
+.explanation-content.open{max-height:600px;padding:16px}
+.explanation-content p{font-size:14px;color:#cbd5e1;line-height:1.7;margin-bottom:6px}
+.explanation-content .exp-en{font-size:12px;color:#64748b;font-style:italic}
+
+/* === NAV BUTTONS === */
+.nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:20px;padding-top:20px;border-top:1px solid #1e3a5f}
+.nav-btn{padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:2px solid #1e3a5f;background:transparent;color:#94a3b8;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:8px}
+.nav-btn:hover{border-color:#2a4f7a;color:#e2e8f0;background:rgba(30,58,95,.3)}
+.nav-btn:disabled{opacity:.3;cursor:default}
+.nav-btn.primary{background:linear-gradient(135deg,#f59e0b,#d97706);border-color:#f59e0b;color:#0a1628}
+.nav-btn.primary:hover{box-shadow:0 4px 16px rgba(245,158,11,.3)}
+
+/* === RESULT CARD (ASSIGNMENT) === */
+.result-card{background:linear-gradient(135deg,rgba(15,29,47,.95),rgba(21,42,66,.7));border:1px solid #1e3a5f;border-radius:16px;padding:32px;text-align:center}
+.result-score{font-size:56px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin:16px 0}
+.result-score.perfect{color:#10b981}
+.result-score.good{color:#fbbf24}
+.result-score.low{color:#ef4444}
+.result-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;text-align:left}
+.result-table th{background:#0a1628;color:#94a3b8;font-weight:600;padding:10px 12px;border:1px solid #1e3a5f;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.result-table td{padding:10px 12px;border:1px solid #1e3a5f;color:#cbd5e1;vertical-align:top}
+.result-table .correct-mark{color:#10b981;font-size:16px}
+.result-table .wrong-mark{color:#ef4444;font-size:16px}
+.btn-print{padding:12px 32px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#0a1628;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:8px;margin-top:16px}
+.btn-print:hover{box-shadow:0 4px 20px rgba(245,158,11,.4);transform:translateY(-2px)}
+
+/* === NAME INPUT (ASSIGNMENT) === */
+.name-input-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.name-input-wrap label{font-size:14px;font-weight:600;color:#94a3b8;white-space:nowrap}
+.name-input{padding:10px 16px;background:#0a1628;border:2px solid #1e3a5f;border-radius:10px;color:#e2e8f0;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;flex:1;min-width:200px}
+.name-input:focus{border-color:#f59e0b}
+
+/* === NODE 8 (CONSOLIDATION) === */
+.consolidation-card{background:linear-gradient(135deg,rgba(16,185,129,.06),rgba(15,29,47,.9));border:1px solid rgba(16,185,129,.3);border-radius:16px;padding:32px;text-align:center}
+.consolidation-card h3{font-size:20px;font-weight:700;color:#34d399;margin-bottom:16px}
+.lms-link{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-radius:12px;font-size:16px;font-weight:700;text-decoration:none;transition:all .25s;font-family:'Space Grotesk',sans-serif;margin-top:16px}
+.lms-link:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(16,185,129,.35)}
+
+/* === ANIMATIONS === */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-in-up{animation:fadeInUp .4s ease both}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 8px rgba(245,158,11,.2)}50%{box-shadow:0 0 20px rgba(245,158,11,.4)}}
+.map-node.active .map-node-circle{animation:pulse-glow 2s ease infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* === RESPONSIVE === */
+@media(max-width:640px){
+  .app-header{padding:0 12px}
+  .app-header .topic-badge{display:none}
+  .map-node-circle{width:46px;height:46px;font-size:13px}
+  .content-inner{padding:16px 14px 60px}
+  .theory-card,.exercise-wrapper{padding:20px 16px}
+  .pairing-cols{grid-template-columns:1fr}
+  .result-table{font-size:11px}
+  .result-table th,.result-table td{padding:6px 8px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:0s!important}}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="app-header">
+  <div class="logo">MATH TUTORING <span>by Deni</span></div>
+  <div class="topic-badge">Perbandingan Senilai</div>
+  <button class="header-btn" onclick="toggleModal(true)"><i class="fas fa-gavel" style="margin-right:6px"></i>Class Rules</button>
+</header>
+
+<!-- ===== CLASS RULES MODAL ===== -->
+<div class="modal-overlay" id="classRulesModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="toggleModal(false)"><i class="fas fa-times"></i></button>
+    <h2>Class Rules</h2>
+    <ol>
+      <li>Berbicara secara bergantian</li>
+      <li>Meminta izin jika ingin meninggalkan kelas</li>
+      <li>Menyalakan kamera dan microphone jika diperlukan</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ===== MAP VIEW ===== -->
+<div class="map-view" id="mapView">
+  <div class="map-bg"></div>
+  <div class="map-container" id="mapContainer">
+    <div class="map-title-banner">
+      <h1>Perbandingan Senilai</h1>
+      <p>Direct Proportion</p>
+    </div>
+    <svg class="map-svg" id="mapSvg"></svg>
+    <div id="mapNodes"></div>
+  </div>
+</div>
+
+<!-- ===== CONTENT VIEW ===== -->
+<div class="content-view" id="contentView">
+  <div class="content-inner" id="contentInner"></div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+/* ==========================================================
+   NODE META - Definisi semua node beserta posisi di peta
+   ========================================================== */
+const NODE_META = [
+  { id:'node1', label:'1', title:'Spiral Review Warm-up', titleEn:'Spiral Review Warm-up', time:'00:00 - 00:10', col:0 },
+  { id:'node2', label:'2', title:'Introduction & Real-World Connection', titleEn:'Introduction & Real-World Connection', time:'00:10 - 00:15', col:1 },
+  { id:'node3', label:'3', title:'Review of Prior Knowledge', titleEn:'Review of Prior Knowledge', time:'00:15 - 00:20', col:0 },
+  { id:'node4', label:'4', title:'Problem Introduction', titleEn:'Problem Introduction', time:'00:20 - 00:30', col:1 },
+  { id:'node5', label:'5', title:'Guided Practice', titleEn:'Guided Practice', time:'00:30 - 00:45', col:0 },
+  { id:'node6', label:'6', title:'Independent Practice', titleEn:'Independent Practice', time:'00:45 - 01:00', col:1 },
+  { id:'node7_1', label:'7.1', title:'Assignment 1', titleEn:'Assignment 1', time:'', col:0 },
+  { id:'node7_2', label:'7.2', title:'Assignment 2', titleEn:'Assignment 2', time:'', col:1 },
+  { id:'node7_3', label:'7.3', title:'Assignment 3', titleEn:'Assignment 3', time:'', col:0 },
+  { id:'node7_4', label:'7.4', title:'Assignment 4', titleEn:'Assignment 4', time:'', col:1 },
+  { id:'node7_5', label:'7.5', title:'Assignment 5', titleEn:'Assignment 5', time:'', col:0 },
+  { id:'node8', label:'8', title:'Consolidation & Reflection', titleEn:'Consolidation & Reflection', time:'01:00 - 01:05', col:1 }
+];
+
+/* ==========================================================
+   STATE
+   ========================================================== */
+const state = {
+  currentNode: null,
+  currentStep: 0,
+  completed: {},      // nodeId -> Set of completed exercise IDs
+  studentAnswers: {}, // exerciseId -> answer text (untuk print)
+  pairingState: {},   // exerciseId -> { selectedLeft, pairs: {leftId: rightId} }
+  dndState: {}        // exerciseId -> { zoneId: value }
+};
+
+// Inisialisasi completed Sets
+NODE_META.forEach(n => { state.completed[n.id] = new Set(); });
+
+/* ==========================================================
+   NODE DATA - Akan diisi oleh Chat 2-7
+   ========================================================== */
+const NODES = {};
+NODES['node1'] = {
+  steps: [
+    {
+      id: 'n1_t1', type: 'theory',
+      title: 'Perkalian Cepat: Teknik Pemisahan Angka',
+      content: '<p>Untuk menghitung $25 \\times 12$ dengan cepat, kita bisa memecah salah satu angka:</p><p>$25 \\times 12 = (20 + 5) \\times 12$</p><p>$= (20 \\times 12) + (5 \\times 12)$</p><p>$= 240 + 60$</p><p>$= \\boxed{300}$</p><p><strong>Teknik kunci:</strong> Pecah angka yang lebih mudah dihitung, lalu jumlahkan hasilnya.</p>',
+      contentEn: 'To calculate $25 \\times 12$ quickly, we can split one of the numbers:<br>$25 \\times 12 = (20 + 5) \\times 12$<br>$= (20 \\times 12) + (5 \\times 12)$<br>$= 240 + 60$<br>$= \\boxed{300}$<br><strong>Key technique:</strong> Split the number that is easier to calculate, then add the results.'
+    },
+    {
+      id: 'n1_e1', type: 'fill',
+      question: 'Berapa hasil dari $25 \\times 12$ menggunakan teknik pemisahan angka?',
+      questionEn: 'What is the result of $25 \\times 12$ using the number splitting technique?',
+      answer: ['300'],
+      explanation: '$25 \\times 12 = (20 \\times 12) + (5 \\times 12) = 240 + 60 = 300$',
+      explanationEn: '$25 \\times 12 = (20 \\times 12) + (5 \\times 12) = 240 + 60 = 300$'
+    },
+    {
+      id: 'n1_e2', type: 'fill',
+      question: 'Jika kamu punya $15$ set ikon, masing-masing berisi $8$ ikon, totalnya berapa ikon?',
+      questionEn: 'If you have $15$ sets of icons, each containing $8$ icons, what is the total number of icons?',
+      answer: ['120'],
+      explanation: '$15 \\times 8 = (10 \\times 8) + (5 \\times 8) = 80 + 40 = 120$ ikon',
+      explanationEn: '$15 \\times 8 = (10 \\times 8) + (5 \\times 8) = 80 + 40 = 120$ icons'
+    },
+    {
+      id: 'n1_e3', type: 'fill',
+      question: 'Ada $144$ baris kode yang harus dibagi ke dalam $12$ modul secara merata. Berapa baris per modul?',
+      questionEn: 'There are $144$ lines of code to be divided evenly into $12$ modules. How many lines per module?',
+      answer: ['12'],
+      explanation: '$144 \\div 12 = (120 \\div 12) + (24 \\div 12) = 10 + 2 = 12$ baris per modul',
+      explanationEn: '$144 \\div 12 = (120 \\div 12) + (24 \\div 12) = 10 + 2 = 12$ lines per module'
+    },
+    {
+      id: 'n1_e4', type: 'fill',
+      question: '$450 \\div 5 = \\,?$',
+      questionEn: '$450 \\div 5 = \\,?$',
+      answer: ['90'],
+      explanation: 'Kalikan pembilang dan penyebut dengan $2$: $450 \\times 2 \\div 10 = 900 \\div 10 = 90$',
+      explanationEn: 'Multiply numerator and denominator by $2$: $450 \\times 2 \\div 10 = 900 \\div 10 = 90$'
+    },
+    {
+      id: 'n1_t2', type: 'theory',
+      title: 'Perkalian Cepat untuk Himpunan/Set',
+      content: '<p>Saat menghitung total dari beberapa set, gunakan pemisahan angka:</p><p>$15 \\times 8 = (10 + 5) \\times 8$</p><p>$= 80 + 40$</p><p>$= 120$</p><p><strong>Tips:</strong> Pecah angka menjadi puluhan dan satuan, hitung terpisah, lalu jumlahkan.</p>',
+      contentEn: 'When calculating the total of several sets, use number splitting:<br>$15 \\times 8 = (10 + 5) \\times 8$<br>$= 80 + 40$<br>$= 120$<br><strong>Tips:</strong> Split the number into tens and units, calculate separately, then add.'
+    },
+    {
+      id: 'n1_e5', type: 'radio',
+      question: 'Teknik manakah yang paling efisien untuk menghitung $32 \\times 15$?',
+      questionEn: 'Which technique is most efficient for calculating $32 \\times 15$?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: 'Mengalikan langsung $32 \\times 15$ tanpa pemisahan' },
+        { value: 'b', text: 'Memisahkan $32$ menjadi $30 + 2$, lalu $(30 \\times 15) + (2 \\times 15)$' },
+        { value: 'c', text: 'Memisahkan $15$ menjadi $10 + 3 + 2$, lalu mengalikan satu per satu' },
+        { value: 'd', text: 'Menggunakan metode garis bilangan' }
+      ],
+      explanation: 'Memisahkan $32$ menjadi $30 + 2$ paling efisien: $(30 \\times 15) + (2 \\times 15) = 450 + 30 = 480$',
+      explanationEn: 'Splitting $32$ into $30 + 2$ is most efficient: $(30 \\times 15) + (2 \\times 15) = 450 + 30 = 480$'
+    },
+    {
+      id: 'n1_e6', type: 'truefalse',
+      question: '$35 \\times 4 = 140$',
+      questionEn: '$35 \\times 4 = 140$',
+      answer: true,
+      explanation: '$35 \\times 4 = (30 \\times 4) + (5 \\times 4) = 120 + 20 = 140$. Pernyataan ini <strong>benar</strong>.',
+      explanationEn: '$35 \\times 4 = (30 \\times 4) + (5 \\times 4) = 120 + 20 = 140$. This statement is <strong>true</strong>.'
+    },
+    {
+      id: 'n1_e7', type: 'checkbox',
+      question: 'Manakah di bawah ini yang hasilnya sama dengan $200$?',
+      questionEn: 'Which of the following have a result equal to $200$?',
+      answer: ['a', 'c'],
+      options: [
+        { value: 'a', text: '$25 \\times 8$' },
+        { value: 'b', text: '$15 \\times 14$' },
+        { value: 'c', text: '$40 \\times 5$' },
+        { value: 'd', text: '$18 \\times 12$' }
+      ],
+      explanation: '$25 \\times 8 = 200$ ✓ dan $40 \\times 5 = 200$ ✓. Sedangkan $15 \\times 14 = 210$ dan $18 \\times 12 = 216$.',
+      explanationEn: '$25 \\times 8 = 200$ ✓ and $40 \\times 5 = 200$ ✓. While $15 \\times 14 = 210$ and $18 \\times 12 = 216$.'
+    },
+    {
+      id: 'n1_t3', type: 'theory',
+      title: 'Pembagian Cepat',
+      content: '<p>Untuk pembagian cepat, ada dua teknik utama:</p><p><strong>Teknik 1: Pemecahan Bilangan</strong></p><p>$144 \\div 12 = (120 + 24) \\div 12 = (120 \\div 12) + (24 \\div 12) = 10 + 2 = 12$</p><p><strong>Teknik 2: Perkalian Silang Penyebut</strong></p><p>$450 \\div 5$: Kalikan pembilang dan penyebut dengan $2$</p><p>$= (450 \\times 2) \\div (5 \\times 2) = 900 \\div 10 = 90$</p><p>Teknik 2 sangat berguna saat penyebut adalah $5$ atau $25$.</p>',
+      contentEn: 'For quick division, there are two main techniques:<br><strong>Technique 1: Number Decomposition</strong><br>$144 \\div 12 = (120 + 24) \\div 12 = (120 \\div 12) + (24 \\div 12) = 10 + 2 = 12$<br><strong>Technique 2: Cross-multiplying the Denominator</strong><br>$450 \\div 5$: Multiply numerator and denominator by $2$<br>$= (450 \\times 2) \\div (5 \\times 2) = 900 \\div 10 = 90$<br>Technique 2 is very useful when the denominator is $5$ or $25$.'
+    },
+    {
+      id: 'n1_e8', type: 'order',
+      question: 'Urutkan langkah-langkah menghitung $24 \\times 13$ dengan teknik pemisahan angka:',
+      questionEn: 'Order the steps to calculate $24 \\times 13$ using the number splitting technique:',
+      answer: [1, 3, 2, 0],
+      items: [
+        'Jumlahkan: $260 + 52 = 312$',
+        'Pisahkan $24$ menjadi $20 + 4$',
+        'Hitung $4 \\times 13 = 52$',
+        'Hitung $20 \\times 13 = 260$'
+      ],
+      explanation: 'Urutan benar: (1) Pisahkan $24 = 20 + 4$ → (2) Hitung $20 \\times 13 = 260$ → (3) Hitung $4 \\times 13 = 52$ → (4) Jumlahkan $260 + 52 = 312$',
+      explanationEn: 'Correct order: (1) Split $24 = 20 + 4$ → (2) Calculate $20 \\times 13 = 260$ → (3) Calculate $4 \\times 13 = 52$ → (4) Add $260 + 52 = 312$'
+    },
+    {
+      id: 'n1_e9', type: 'pairing',
+      question: 'Cocokkan operasi perkalian/pembagian dengan hasil yang benar:',
+      questionEn: 'Match the multiplication/division operation with the correct result:',
+      pairs: [
+        { left: '$18 \\times 6$', right: '$108$' },
+        { left: '$96 \\div 8$', right: '$12$' },
+        { left: '$45 \\times 12$', right: '$540$' },
+        { left: '$840 \\div 7$', right: '$120$' }
+      ]
+    },
+    {
+      id: 'n1_e10', type: 'dragdrop',
+      question: 'Lengkapi perhitungan \\(36 \\times 12\\):<br><br>= \\(30 \\times 12 +\\) \\boxed{n1_e10_z0} × \\(12\\)<br><br>= \\(360 +\\) \\boxed{n1_e10_z1}<br><br>= \\boxed{n1_e10_z2}',
+      questionEn: 'Complete the calculation \\(36 \\times 12\\):<br><br>= \\(30 \\times 12 +\\) \\boxed{n1_e10_z0} × \\(12\\)<br><br>= \\(360 +\\) \\boxed{n1_e10_z1}<br><br>= \\boxed{n1_e10_z2}',
+      answer: { 'n1_e10_z0': '6', 'n1_e10_z1': '72', 'n1_e10_z2': '432' },
+      draggables: ['6', '72', '432', '480'],
+      explanation: '\\(36 = 30 + 6\\), maka \\(36 \\times 12 = (30 \\times 12) + (6 \\times 12) = 360 + 72 = 432\\)',
+      explanationEn: '\\(36 = 30 + 6\\), so \\(36 \\times 12 = (30 \\times 12) + (6 \\times 12) = 360 + 72 = 432\\)'
+    }
+  ]
+};
+
+NODES['node2'] = {
+  steps: [
+    {
+      id: 'n2_t1', type: 'theory',
+      title: 'Apa Itu Aspect Ratio?',
+      content: '<p><strong>Aspect Ratio</strong> (rasio aspek) adalah perbandingan antara lebar dan tinggi sebuah gambar atau layar.</p><p>Contoh aspect ratio yang umum:</p><ul><li>$16 : 9$ — Layar monitor dan TV modern</li><li>$4 : 3$ — Layar lama dan beberapa proyektor</li><li>$1 : 1$ — Foto profil di media sosial (persegi)</li></ul><p>Jika sebuah gambar memiliki lebar $16$ cm dan tinggi $9$ cm, maka aspect ratio-nya adalah $16:9$.</p><p><strong>Penting:</strong> Aspect ratio merupakan contoh nyata dari <em>perbandingan senilai</em>!</p>',
+      contentEn: '<strong>Aspect Ratio</strong> is the ratio between the width and height of an image or screen.<br>Common aspect ratios:<br>- $16 : 9$ — Modern monitors and TVs<br>- $4 : 3$ — Older screens and some projectors<br>- $1 : 1$ — Social media profile photos (square)<br>If an image has a width of $16$ cm and height of $9$ cm, its aspect ratio is $16:9$.<br><strong>Important:</strong> Aspect ratio is a real example of <em>direct proportion</em>!'
+    },
+    {
+      id: 'n2_e1', type: 'radio',
+      question: 'Apa yang dimaksud dengan <em>aspect ratio</em>?',
+      questionEn: 'What is meant by <em>aspect ratio</em>?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: 'Perbandingan antara panjang dan lebar suatu ruangan' },
+        { value: 'b', text: 'Perbandingan antara lebar dan tinggi sebuah gambar atau layar' },
+        { value: 'c', text: 'Selisih antara resolusi gambar asli dan hasil kompresi' },
+        { value: 'd', text: 'Rasio antara jumlah piksel warna merah dan biru' }
+      ],
+      explanation: 'Aspect ratio adalah perbandingan antara lebar dan tinggi sebuah gambar atau layar, misalnya $16:9$ atau $4:3$.',
+      explanationEn: 'Aspect ratio is the ratio between the width and height of an image or screen, such as $16:9$ or $4:3$.'
+    },
+    {
+      id: 'n2_e2', type: 'truefalse',
+      question: 'Jika lebar sebuah gambar diperbesar $3$ kali lipat, maka tingginya juga harus diperbesar $3$ kali lipat agar gambar tidak terdistorsi.',
+      questionEn: 'If the width of an image is enlarged $3$ times, its height must also be enlarged $3$ times to prevent distortion.',
+      answer: true,
+      explanation: 'Benar! Ini adalah prinsip perbandingan senilai. Jika salah satu sisi dikali $n$, sisi lain juga harus dikali $n$ agar rasio tetap sama.',
+      explanationEn: 'True! This is the principle of direct proportion. If one side is multiplied by $n$, the other side must also be multiplied by $n$ to keep the ratio the same.'
+    },
+    {
+      id: 'n2_e3', type: 'fill',
+      question: 'Sebuah gambar memiliki aspect ratio $4:3$. Jika lebarnya $20$ cm, berapa cm tingginya?',
+      questionEn: 'An image has an aspect ratio of $4:3$. If its width is $20$ cm, what is its height in cm?',
+      answer: ['15'],
+      explanation: '$\\dfrac{4}{3} = \\dfrac{20}{x} \\Rightarrow x = \\dfrac{20 \\times 3}{4} = 15$ cm',
+      explanationEn: '$\\dfrac{4}{3} = \\dfrac{20}{x} \\Rightarrow x = \\dfrac{20 \\times 3}{4} = 15$ cm'
+    },
+    {
+      id: 'n2_e4', type: 'dragdrop',
+      question: 'Lengkapilah pernyataan berikut:<br><br>Jika lebar gambar naik \\(2\\times\\) lipat, maka tinggi juga harus naik \\boxed{n2_e4_z0} lipat. Ini disebut \\boxed{n2_e4_z1} senilai.',
+      questionEn: 'Complete the following statement:<br><br>If the image width increases \\(2\\times\\), then the height must also increase \\boxed{n2_e4_z0} times. This is called direct \\boxed{n2_e4_z1}.',
+      answer: { 'n2_e4_z0': '2', 'n2_e4_z1': 'perbandingan' },
+      draggables: ['2', 'perbandingan', '3', 'berbalik'],
+      explanation: 'Pada perbandingan senilai, jika satu sisi dikali $n$, sisi lain juga dikali $n$. Jadi jika lebar naik $2\\times$, tinggi juga naik $2\\times$.',
+      explanationEn: 'In direct proportion, if one side is multiplied by $n$, the other side is also multiplied by $n$. So if width increases $2\\times$, height also increases $2\\times$.'
+    },
+    {
+      id: 'n2_t2', type: 'theory',
+      title: 'Perbandingan Senilai di UI Design',
+      content: '<p>Di dunia <strong>UI Design</strong>, perbandingan senilai sangat penting:</p><ul><li>Saat mengubah ukuran tombol dari layar HP ke Monitor, <strong>rasio harus tetap sama</strong></li><li>Jika lebar tombol naik $2\\times$ lipat, tingginya <strong>juga harus naik $2\\times$ lipat</strong></li><li>Jika tidak, tombol akan terlihat gepeng atau lonjong</li></ul><p><strong>Contoh:</strong></p><p>Tombol di HP: lebar $60$ px, tinggi $40$ px → rasio $3:2$</p><p>Tombol di Monitor: lebar $150$ px → tinggi harus $100$ px</p><p>Karena $\\dfrac{150}{60} = 2{,}5$, maka $40 \\times 2{,}5 = 100$ px</p>',
+      contentEn: 'In the world of <strong>UI Design</strong>, direct proportion is very important:<br>- When resizing a button from phone screen to Monitor, <strong>the ratio must stay the same</strong><br>- If the button width increases $2\\times$, its height <strong>must also increase $2\\times$</strong><br>- If not, the button will look squished or stretched<br><strong>Example:</strong><br>Button on phone: width $60$ px, height $40$ px → ratio $3:2$<br>Button on Monitor: width $150$ px → height must be $100$ px<br>Because $\\dfrac{150}{60} = 2.5$, so $40 \\times 2.5 = 100$ px'
+    },
+    {
+      id: 'n2_e5', type: 'checkbox',
+      question: 'Manakah di bawah ini yang merupakan contoh perbandingan senilai?',
+      questionEn: 'Which of the following are examples of direct proportion?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Mengubah ukuran gambar dengan rasio tetap' },
+        { value: 'b', text: 'Harga $5$ buku Rp25.000, harga $10$ buku Rp50.000' },
+        { value: 'c', text: '$4$ tukang cat membutuhkan $3$ hari, $8$ tukang cat membutuhkan $3$ hari' },
+        { value: 'd', text: 'Skala peta $1:100.000$, jarak $2$ cm mewakili $2$ km' }
+      ],
+      explanation: 'Opsi A, B, dan D adalah perbandingan senilai (jika satu naik, yang lain juga naik proporsional). Opsi C adalah perbandingan berbalik nilai (lebih banyak pekerja = lebih sedikit waktu).',
+      explanationEn: 'Options A, B, and D are direct proportion (if one increases, the other also increases proportionally). Option C is inverse proportion (more workers = less time).'
+    },
+    {
+      id: 'n2_e6', type: 'pairing',
+      question: 'Cocokkan perangkat dengan aspect ratio yang paling umum digunakan:',
+      questionEn: 'Match the device with its most commonly used aspect ratio:',
+      pairs: [
+        { left: 'Monitor widescreen', right: '$16 : 9$' },
+        { left: 'Foto Instagram', right: '$1 : 1$' },
+        { left: 'Layar proyektor lama', right: '$4 : 3$' },
+        { left: 'Film sinema', right: '$21 : 9$' }
+      ]
+    },
+    {
+      id: 'n2_e7', type: 'fill',
+      question: 'Sebuah tombol di HP memiliki ukuran $80$ px &times; $50$ px. Jika di monitor lebarnya menjadi $200$ px, berapa px tingginya agar tetap proporsional?',
+      questionEn: 'A button on a phone has a size of $80$ px &times; $50$ px. If on a monitor its width becomes $200$ px, what should its height in px be to stay proportional?',
+      answer: ['125'],
+      explanation: '$\\dfrac{80}{50} = \\dfrac{200}{x} \\Rightarrow x = \\dfrac{200 \\times 50}{80} = 125$ px',
+      explanationEn: '$\\dfrac{80}{50} = \\dfrac{200}{x} \\Rightarrow x = \\dfrac{200 \\times 50}{80} = 125$ px'
+    },
+    {
+      id: 'n2_t3', type: 'theory',
+      title: 'Ciri-Ciri Perbandingan Senilai',
+      content: '<p>Perbandingan senilai memiliki <strong>$3$ ciri utama</strong>:</p><ol><li><strong>Kedua kuantitas berubah ke arah yang sama</strong> — jika satu naik, yang lain juga naik</li><li><strong>Rasio antar kuantitas selalu tetap (konstan)</strong> — $\\dfrac{y}{x} = k$ (konstan)</li><li><strong>Grafiknya berupa garis lurus melalui titik asal $(0,0)$</strong></li></ol><p><strong>Contoh:</strong></p><p>$\\dfrac{60}{40} = 1{,}5$ dan $\\dfrac{150}{100} = 1{,}5$ → Rasio sama! Ini perbandingan senilai.</p><p><strong>Formula dasar:</strong> $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$</p>',
+      contentEn: 'Direct proportion has <strong>$3$ main characteristics</strong>:<br>1. <strong>Both quantities change in the same direction</strong> — if one increases, the other also increases<br>2. <strong>The ratio between quantities is always constant</strong> — $\\dfrac{y}{x} = k$ (constant)<br>3. <strong>The graph is a straight line through the origin $(0,0)$</strong><br><strong>Example:</strong><br>$\\dfrac{60}{40} = 1.5$ and $\\dfrac{150}{100} = 1.5$ → Same ratio! This is direct proportion.<br><strong>Basic formula:</strong> $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$'
+    },
+    {
+      id: 'n2_e8', type: 'truefalse',
+      question: 'Aspect ratio $1:1$ berarti gambar berbentuk persegi panjang dengan lebar dua kali tinggi.',
+      questionEn: 'Aspect ratio $1:1$ means the image is rectangular with width twice the height.',
+      answer: false,
+      explanation: 'Salah! Aspect ratio $1:1$ berarti lebar sama dengan tinggi, sehingga gambar berbentuk <strong>persegi</strong>, bukan persegi panjang.',
+      explanationEn: 'False! Aspect ratio $1:1$ means width equals height, so the image is a <strong>square</strong>, not a rectangle.'
+    },
+    {
+      id: 'n2_e9', type: 'order',
+      question: 'Urutkan langkah-langkah mengubah ukuran gambar secara proporsional dari $120$ px &times; $80$ px menjadi lebar $300$ px:',
+      questionEn: 'Order the steps to proportionally resize an image from $120$ px &times; $80$ px to width $300$ px:',
+      answer: [1, 3, 0, 2],
+      items: [
+        'Hitung tinggi baru: $80 \\times 2{,}5 = 200$ px',
+        'Tentukan rasio awal: $\\dfrac{120}{80} = \\dfrac{3}{2}$',
+        'Ukuran baru: $300$ px &times; $200$ px',
+        'Hitung faktor perubahan: $\\dfrac{300}{120} = 2{,}5$'
+      ],
+      explanation: 'Urutan benar: (1) Rasio awal $\\dfrac{120}{80} = \\dfrac{3}{2}$ → (2) Faktor $\\dfrac{300}{120} = 2{,}5$ → (3) Tinggi baru $= 80 \\times 2{,}5 = 200$ px → (4) Hasil $300 \\times 200$ px',
+      explanationEn: 'Correct order: (1) Initial ratio $\\dfrac{120}{80} = \\dfrac{3}{2}$ → (2) Factor $\\dfrac{300}{120} = 2.5$ → (3) New height $= 80 \\times 2.5 = 200$ px → (4) Result $300 \\times 200$ px'
+    },
+    {
+      id: 'n2_e10', type: 'radio',
+      question: 'Sebuah gambar $120$ px &times; $80$ px diperbesar menjadi $240$ px &times; $160$ px. Apakah perubahan ini proporsional?',
+      questionEn: 'An image of $120$ px &times; $80$ px is enlarged to $240$ px &times; $160$ px. Is this change proportional?',
+      answer: 'a',
+      options: [
+        { value: 'a', text: 'Ya, karena lebar dan tinggi sama-sama naik $2\\times$ lipat' },
+        { value: 'b', text: 'Tidak, karena rasio akhir berbeda dari rasio awal' },
+        { value: 'c', text: 'Tidak bisa ditentukan tanpa mengetahui format gambar' },
+        { value: 'd', text: 'Ya, tapi hanya jika gambar berformat PNG' }
+      ],
+      explanation: 'Benar proporsional! $\\dfrac{240}{120} = 2$ dan $\\dfrac{160}{80} = 2$. Kedua sisi naik dengan faktor yang sama ($2\\times$), jadi rasio tetap $3:2$.',
+      explanationEn: 'Correctly proportional! $\\dfrac{240}{120} = 2$ and $\\dfrac{160}{80} = 2$. Both sides increase by the same factor ($2\\times$), so the ratio remains $3:2$.'
+    }
+  ]
+};
+
+NODES['node3'] = {
+  steps: [
+    {
+      id: 'n3_t1', type: 'theory',
+      title: 'Pecahan Senilai',
+      content: '<p>Pecahan dikatakan <strong>senilai</strong> jika nilainya sama, meskipun pembilang dan penyebutnya berbeda.</p><p>Contoh:</p><p>$\\dfrac{1}{2} = \\dfrac{2}{4} = \\dfrac{3}{6} = \\dfrac{5}{10}$</p><p>Semua pecahan di atas bernilai sama, yaitu $0{,}5$.</p><p><strong>Cara mengecek:</strong> Kalikan pembilang dan penyebut pecahan pertama dengan bilangan yang sama.</p><p>$\\dfrac{1 \\times 2}{2 \\times 2} = \\dfrac{2}{4}$ ✓</p><p>$\\dfrac{1 \\times 3}{2 \\times 3} = \\dfrac{3}{6}$ ✓</p>',
+      contentEn: 'Fractions are said to be <strong>equivalent</strong> if they have the same value, even though their numerators and denominators are different.<br>Example:<br>$\\dfrac{1}{2} = \\dfrac{2}{4} = \\dfrac{3}{6} = \\dfrac{5}{10}$<br>All the fractions above have the same value, which is $0.5$.<br><strong>How to check:</strong> Multiply the numerator and denominator of the first fraction by the same number.<br>$\\dfrac{1 \\times 2}{2 \\times 2} = \\dfrac{2}{4}$ ✓<br>$\\dfrac{1 \\times 3}{2 \\times 3} = \\dfrac{3}{6}$ ✓'
+    },
+    {
+      id: 'n3_e1', type: 'truefalse',
+      question: '$\\dfrac{2}{5}$ senilai dengan $\\dfrac{6}{15}$.',
+      questionEn: '$\\dfrac{2}{5}$ is equivalent to $\\dfrac{6}{15}$.',
+      answer: true,
+      explanation: '$\\dfrac{2 \\times 3}{5 \\times 3} = \\dfrac{6}{15}$ ✓. Pecahan ini senilai karena diperoleh dengan mengalikan pembilang dan penyebut dengan bilangan yang sama ($3$).',
+      explanationEn: '$\\dfrac{2 \\times 3}{5 \\times 3} = \\dfrac{6}{15}$ ✓. These fractions are equivalent because they are obtained by multiplying the numerator and denominator by the same number ($3$).'
+    },
+    {
+      id: 'n3_e2', type: 'radio',
+      question: 'Manakah yang <strong>tidak</strong> senilai dengan $\\dfrac{3}{4}$?',
+      questionEn: 'Which one is <strong>not</strong> equivalent to $\\dfrac{3}{4}$?',
+      answer: 'c',
+      options: [
+        { value: 'a', text: '$\\dfrac{6}{8}$' },
+        { value: 'b', text: '$\\dfrac{9}{12}$' },
+        { value: 'c', text: '$\\dfrac{12}{15}$' },
+        { value: 'd', text: '$\\dfrac{15}{20}$' }
+      ],
+      explanation: '$\\dfrac{12}{15}$ disederhanakan menjadi $\\dfrac{4}{5} \\neq \\dfrac{3}{4}$. Sedangkan $\\dfrac{6}{8} = \\dfrac{9}{12} = \\dfrac{15}{20} = \\dfrac{3}{4}$.',
+      explanationEn: '$\\dfrac{12}{15}$ simplifies to $\\dfrac{4}{5} \\neq \\dfrac{3}{4}$. While $\\dfrac{6}{8} = \\dfrac{9}{12} = \\dfrac{15}{20} = \\dfrac{3}{4}$.'
+    },
+    {
+      id: 'n3_e3', type: 'fill',
+      question: '$\\dfrac{3}{7} = \\dfrac{\\boxed{\\,}}{21}$. Berapa pembilang yang tepat?',
+      questionEn: '$\\dfrac{3}{7} = \\dfrac{\\boxed{\\,}}{21}$. What is the correct numerator?',
+      answer: ['9'],
+      explanation: '$7 \\times 3 = 21$, maka pembilang juga dikali $3$: $3 \\times 3 = 9$.',
+      explanationEn: '$7 \\times 3 = 21$, so the numerator is also multiplied by $3$: $3 \\times 3 = 9$.'
+    },
+    {
+      id: 'n3_t2', type: 'theory',
+      title: 'Prinsip $\\dfrac{a}{b} = \\dfrac{c}{d}$',
+      content: '<p>Jika dua perbandingan senilai, maka berlaku:</p><p>$$\\frac{a}{b} = \\frac{c}{d}$$</p><p><strong>Aturan perkalian silang (cross multiplication):</strong></p><p>$$a \\times d = b \\times c$$</p><p>Ini sangat berguna saat kita mengetahui $3$ angka dan ingin mencari angka keempat.</p><p><strong>Contoh:</strong> Jika $\\dfrac{3}{5} = \\dfrac{x}{20}$, maka:</p><p>$3 \\times 20 = 5 \\times x$</p><p>$60 = 5x$</p><p>$x = \\boxed{12}$</p>',
+      contentEn: 'If two ratios are equivalent, then:<br>$$\\frac{a}{b} = \\frac{c}{d}$$<br><strong>Cross multiplication rule:</strong><br>$$a \\times d = b \\times c$$<br>This is very useful when we know $3$ numbers and want to find the fourth.<br><strong>Example:</strong> If $\\dfrac{3}{5} = \\dfrac{x}{20}$, then:<br>$3 \\times 20 = 5 \\times x$<br>$60 = 5x$<br>$x = \\boxed{12}$'
+    },
+    {
+      id: 'n3_e4', type: 'dragdrop',
+      question: 'Lengkapi perhitungan perkalian silang:<br><br>Jika \\(\\dfrac{4}{7} = \\dfrac{x}{35}\\), maka:<br><br>$4$ × \\boxed{n3_e4_z0} $= 7$ × \\boxed{n3_e4_z1}<br><br>$140 = 7x$<br><br>$x =$ \\boxed{n3_e4_z2}',
+      questionEn: 'Complete the cross multiplication calculation:<br><br>If \\(\\dfrac{4}{7} = \\dfrac{x}{35}\\), then:<br><br>$4$ × \\boxed{n3_e4_z0} $= 7$ × \\boxed{n3_e4_z1}<br><br>$140 = 7x$<br><br>$x =$ \\boxed{n3_e4_z2}',
+      answer: { 'n3_e4_z0': '35', 'n3_e4_z1': 'x', 'n3_e4_z2': '20' },
+      draggables: ['35', 'x', '20', '28'],
+      explanation: 'Perkalian silang: $4 \\times 35 = 7 \\times x \\Rightarrow 140 = 7x \\Rightarrow x = 20$',
+      explanationEn: 'Cross multiplication: $4 \\times 35 = 7 \\times x \\Rightarrow 140 = 7x \\Rightarrow x = 20$'
+    },
+    {
+      id: 'n3_e5', type: 'truefalse',
+      question: 'Pada perkalian silang $\\dfrac{a}{b} = \\dfrac{c}{d}$, berlaku $a \\times c = b \\times d$.',
+      questionEn: 'In cross multiplication $\\dfrac{a}{b} = \\dfrac{c}{d}$, the rule is $a \\times c = b \\times d$.',
+      answer: false,
+      explanation: 'Salah! Rumus perkalian silang yang benar adalah $a \\times d = b \\times c$ (pembilang kiri dikali penyebut kanan, bukan pembilang kali pembilang).',
+      explanationEn: 'False! The correct cross multiplication formula is $a \\times d = b \\times c$ (left numerator times right denominator, not numerator times numerator).'
+    },
+    {
+      id: 'n3_e6', type: 'checkbox',
+      question: 'Manakah di bawah ini yang merupakan pasangan pecahan senilai?',
+      questionEn: 'Which of the following are pairs of equivalent fractions?',
+      answer: ['a', 'c', 'd'],
+      options: [
+        { value: 'a', text: '$\\dfrac{2}{3}$ dan $\\dfrac{8}{12}$' },
+        { value: 'b', text: '$\\dfrac{5}{6}$ dan $\\dfrac{10}{13}$' },
+        { value: 'c', text: '$\\dfrac{7}{9}$ dan $\\dfrac{21}{27}$' },
+        { value: 'd', text: '$\\dfrac{4}{5}$ dan $\\dfrac{16}{20}$' }
+      ],
+      explanation: '$\\dfrac{2}{3} = \\dfrac{8}{12}$ ✓, $\\dfrac{7}{9} = \\dfrac{21}{27}$ ✓, $\\dfrac{4}{5} = \\dfrac{16}{20}$ ✓. Sedangkan $\\dfrac{5}{6} \\neq \\dfrac{10}{13}$ karena $\\dfrac{5}{6} = \\dfrac{10}{12} \\neq \\dfrac{10}{13}$.',
+      explanationEn: '$\\dfrac{2}{3} = \\dfrac{8}{12}$ ✓, $\\dfrac{7}{9} = \\dfrac{21}{27}$ ✓, $\\dfrac{4}{5} = \\dfrac{16}{20}$ ✓. While $\\dfrac{5}{6} \\neq \\dfrac{10}{13}$ because $\\dfrac{5}{6} = \\dfrac{10}{12} \\neq \\dfrac{10}{13}$.'
+    },
+    {
+      id: 'n3_t3', type: 'theory',
+      title: 'Menyederhanakan Perbandingan',
+      content: '<p>Sebelum menggunakan perbandingan senilai, sering kali kita perlu <strong>menyederhanakan</strong> perbandingan terlebih dahulu.</p><p><strong>Contoh 1:</strong></p><p>$\\dfrac{120}{80} = \\dfrac{120 \\div 40}{80 \\div 40} = \\dfrac{3}{2}$</p><p><strong>Contoh 2:</strong></p><p>$\\dfrac{45}{30} = \\dfrac{45 \\div 15}{30 \\div 15} = \\dfrac{3}{2}$</p><p><strong>Tips:</strong> Cari FPB (Faktor Persekutuan Besar) dari pembilang dan penyebut, lalu bagi keduanya dengan FPB tersebut.</p><p>$\\text{FPB}(120, 80) = 40$ dan $\\text{FPB}(45, 30) = 15$</p>',
+      contentEn: 'Before using direct proportion, we often need to <strong>simplify</strong> the ratio first.<br><strong>Example 1:</strong><br>$\\dfrac{120}{80} = \\dfrac{120 \\div 40}{80 \\div 40} = \\dfrac{3}{2}$<br><strong>Example 2:</strong><br>$\\dfrac{45}{30} = \\dfrac{45 \\div 15}{30 \\div 15} = \\dfrac{3}{2}$<br><strong>Tips:</strong> Find the GCF (Greatest Common Factor) of the numerator and denominator, then divide both by the GCF.<br>$\\text{GCF}(120, 80) = 40$ and $\\text{GCF}(45, 30) = 15$'
+    },
+    {
+      id: 'n3_e7', type: 'order',
+      question: 'Urutkan langkah-langkah menyederhanakan $\\dfrac{150}{90}$:',
+      questionEn: 'Order the steps to simplify $\\dfrac{150}{90}$:',
+      answer: [2, 0, 3, 1],
+      items: [
+        'Bagi pembilang: $150 \\div 30 = 5$',
+        'Hasil sederhana: $\\dfrac{5}{3}$',
+        'Cari FPB dari $150$ dan $90$, yaitu $30$',
+        'Bagi penyebut: $90 \\div 30 = 3$'
+      ],
+      explanation: 'Urutan benar: (1) Cari FPB$(150,90) = 30$ → (2) Bagi pembilang $150 \\div 30 = 5$ → (3) Bagi penyebut $90 \\div 30 = 3$ → (4) Hasil $\\dfrac{5}{3}$',
+      explanationEn: 'Correct order: (1) Find GCF$(150,90) = 30$ → (2) Divide numerator $150 \\div 30 = 5$ → (3) Divide denominator $90 \\div 30 = 3$ → (4) Result $\\dfrac{5}{3}$'
+    },
+    {
+      id: 'n3_e8', type: 'fill',
+      question: 'Sederhanakan $\\dfrac{200}{120}$ menjadi pecahan terkecil (tulis pembilang:penyebut, misal 3:2):',
+      questionEn: 'Simplify $\\dfrac{200}{120}$ to the lowest terms (write as numerator:denominator, e.g. 3:2):',
+      answer: ['5:3', '5/3'],
+      explanation: '$\\text{FPB}(200, 120) = 40$. Maka $\\dfrac{200 \\div 40}{120 \\div 40} = \\dfrac{5}{3}$.',
+      explanationEn: '$\\text{GCF}(200, 120) = 40$. So $\\dfrac{200 \\div 40}{120 \\div 40} = \\dfrac{5}{3}$.'
+    },
+    {
+      id: 'n3_e9', type: 'pairing',
+      question: 'Cocokkan perbandingan dengan bentuk sederhananya:',
+      questionEn: 'Match the ratio with its simplified form:',
+      pairs: [
+        { left: '$\\dfrac{18}{12}$', right: '$\\dfrac{3}{2}$' },
+        { left: '$\\dfrac{25}{100}$', right: '$\\dfrac{1}{4}$' },
+        { left: '$\\dfrac{36}{24}$', right: '$\\dfrac{3}{2}$' },
+        { left: '$\\dfrac{14}{21}$', right: '$\\dfrac{2}{3}$' }
+      ]
+    },
+    {
+      id: 'n3_e10', type: 'fill',
+      question: 'Jika $\\dfrac{5}{8} = \\dfrac{x}{32}$, maka nilai $x = \\,?$',
+      questionEn: 'If $\\dfrac{5}{8} = \\dfrac{x}{32}$, then the value of $x = \\,?$',
+      answer: ['20'],
+      explanation: 'Perkalian silang: $5 \\times 32 = 8 \\times x \\Rightarrow 160 = 8x \\Rightarrow x = 20$',
+      explanationEn: 'Cross multiplication: $5 \\times 32 = 8 \\times x \\Rightarrow 160 = 8x \\Rightarrow x = 20$'
+    }
+  ]
+};
+
+NODES['node4'] = {
+  steps: [
+    {
+      id: 'n4_t1', type: 'theory',
+      title: 'Skala Peta',
+      content: '<p><strong>Skala peta</strong> adalah perbandingan antara jarak pada peta dengan jarak sebenarnya.</p><p>Contoh: Skala $1 : 500.000$ artinya:</p><p>$1$ cm di peta $= 500.000$ cm $= 5$ km di dunia nyata</p><p><strong>Perhatikan:</strong></p><ul><li>$1$ km $= 100.000$ cm</li><li>Jadi $500.000$ cm $= \\dfrac{500.000}{100.000} = 5$ km</li></ul><p><strong>Konversi penting:</strong></p><p>$1$ m $= 100$ cm &nbsp;&nbsp;|&nbsp;&nbsp; $1$ km $= 1.000$ m $= 100.000$ cm</p>',
+      contentEn: '<strong>Map scale</strong> is the ratio between the distance on the map and the actual distance.<br>Example: Scale $1 : 500{,}000$ means:<br>$1$ cm on map $= 500{,}000$ cm $= 5$ km in the real world<br><strong>Note:</strong><br>- $1$ km $= 100{,}000$ cm<br>- So $500{,}000$ cm $= \\dfrac{500{,}000}{100{,}000} = 5$ km<br><strong>Important conversions:</strong><br>$1$ m $= 100$ cm &nbsp;|&nbsp; $1$ km $= 1{,}000$ m $= 100{,}000$ cm'
+    },
+    {
+      id: 'n4_e1', type: 'fill',
+      question: 'Skala peta $1 : 200.000$ artinya $1$ cm di peta mewakili berapa km di dunia nyata?',
+      questionEn: 'Map scale $1 : 200{,}000$ means $1$ cm on the map represents how many km in the real world?',
+      answer: ['2'],
+      explanation: '$200.000$ cm $= \\dfrac{200.000}{100.000} = 2$ km',
+      explanationEn: '$200{,}000$ cm $= \\dfrac{200{,}000}{100{,}000} = 2$ km'
+    },
+    {
+      id: 'n4_e2', type: 'radio',
+      question: 'Pada peta berskala $1 : 500.000$, jarak dua kota bertambah dari $4$ cm menjadi $12$ cm. Apa yang terjadi pada jarak sebenarnya?',
+      questionEn: 'On a map with scale $1 : 500{,}000$, the distance between two cities increases from $4$ cm to $12$ cm. What happens to the actual distance?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: 'Jarak sebenarnya berkurang karena skala tetap' },
+        { value: 'b', text: 'Jarak sebenarnya juga bertambah $3\\times$ lipat, dari $20$ km menjadi $60$ km' },
+        { value: 'c', text: 'Jarak sebenarnya tetap sama yaitu $20$ km' },
+        { value: 'd', text: 'Jarak sebenarnya bertambah menjadi $12$ km' }
+      ],
+      explanation: 'Ini perbandingan senilai! Jika jarak peta naik $3\\times$ ($4 \\to 12$), jarak sebenarnya juga naik $3\\times$: $20 \\times 3 = 60$ km.',
+      explanationEn: 'This is direct proportion! If the map distance increases $3\\times$ ($4 \\to 12$), the actual distance also increases $3\\times$: $20 \\times 3 = 60$ km.'
+    },
+    {
+      id: 'n4_e3', type: 'truefalse',
+      question: '$1$ km sama dengan $10.000$ cm.',
+      questionEn: '$1$ km equals $10{,}000$ cm.',
+      answer: false,
+      explanation: 'Salah! $1$ km $= 1.000$ m $= 1.000 \\times 100 = 100.000$ cm, bukan $10.000$ cm.',
+      explanationEn: 'False! $1$ km $= 1{,}000$ m $= 1{,}000 \\times 100 = 100{,}000$ cm, not $10{,}000$ cm.'
+    },
+    {
+      id: 'n4_t2', type: 'theory',
+      title: 'Formula Perbandingan Senilai: $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$',
+      content: '<p>Untuk menghitung nilai yang belum diketahui pada perbandingan senilai, gunakan formula:</p><p>$$\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$$</p><p><strong>Contoh soal peta:</strong></p><p>Skala peta $1 : 500.000$. Jarak dua kota di peta $= 12$ cm. Berapa jarak sebenarnya?</p><p><strong>Langkah 1:</strong> Tulis perbandingan</p><p>$\\dfrac{1}{500.000} = \\dfrac{12}{x}$</p><p><strong>Langkah 2:</strong> Perkalian silang</p><p>$1 \\times x = 500.000 \\times 12$</p><p>$x = 6.000.000$ cm</p><p><strong>Langkah 3:</strong> Konversi ke km</p><p>$x = \\dfrac{6.000.000}{100.000} = \\boxed{60}$ km</p>',
+      contentEn: 'To calculate the unknown value in direct proportion, use the formula:<br>$$\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$$<br><strong>Map problem example:</strong><br>Map scale $1 : 500{,}000$. Distance between two cities on map $= 12$ cm. What is the actual distance?<br><strong>Step 1:</strong> Write the proportion<br>$\\dfrac{1}{500{,}000} = \\dfrac{12}{x}$<br><strong>Step 2:</strong> Cross multiply<br>$1 \\times x = 500{,}000 \\times 12$<br>$x = 6{,}000{,}000$ cm<br><strong>Step 3:</strong> Convert to km<br>$x = \\dfrac{6{,}000{,}000}{100{,}000} = \\boxed{60}$ km'
+    },
+    {
+      id: 'n4_e4', type: 'dragdrop',
+      question: 'Sebuah peta berskala $1 : 400.000$. Jarak di peta $= 8$ cm. Lengkapilah:<br><br>$x = 400.000 \\times$ \\boxed{n4_e4_z0}<br><br>$x =$ \\boxed{n4_e4_z1} cm<br><br>$x =$ \\boxed{n4_e4_z2} km',
+      questionEn: 'A map has scale $1 : 400{,}000$. Distance on map $= 8$ cm. Complete:<br><br>$x = 400{,}000 \\times$ \\boxed{n4_e4_z0}<br><br>$x =$ \\boxed{n4_e4_z1} cm<br><br>$x =$ \\boxed{n4_e4_z2} km',
+      answer: { 'n4_e4_z0': '8', 'n4_e4_z1': '3.200.000', 'n4_e4_z2': '32' },
+      draggables: ['8', '3.200.000', '32', '480'],
+      explanation: '$x = 400.000 \\times 8 = 3.200.000$ cm $= \\dfrac{3.200.000}{100.000} = 32$ km',
+      explanationEn: '$x = 400{,}000 \\times 8 = 3{,}200{,}000$ cm $= \\dfrac{3{,}200{,}000}{100{,}000} = 32$ km'
+    },
+    {
+      id: 'n4_e5', type: 'fill',
+      question: 'Skala peta $1 : 250.000$. Jarak dua kota di peta $= 6$ cm. Berapa km jarak sebenarnya?',
+      questionEn: 'Map scale $1 : 250{,}000$. Distance between two cities on map $= 6$ cm. How many km is the actual distance?',
+      answer: ['15'],
+      explanation: '$x = 250.000 \\times 6 = 1.500.000$ cm $= \\dfrac{1.500.000}{100.000} = 15$ km',
+      explanationEn: '$x = 250{,}000 \\times 6 = 1{,}500{,}000$ cm $= \\dfrac{1{,}500{,}000}{100{,}000} = 15$ km'
+    },
+    {
+      id: 'n4_e6', type: 'checkbox',
+      question: 'Manakah pernyataan berikut yang <strong>benar</strong> tentang skala peta dan perbandingan senilai?',
+      questionEn: 'Which of the following statements are <strong>true</strong> about map scale and direct proportion?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Semakin besar jarak di peta, semakin besar jarak sebenarnya' },
+        { value: 'b', text: 'Skala peta merupakan bentuk perbandingan senilai' },
+        { value: 'c', text: 'Jika skala $1:100.000$, maka $1$ cm di peta = $100$ m di dunia nyata' },
+        { value: 'd', text: 'Rasio jarak peta terhadap jarak sebenarnya selalu konstan pada skala yang sama' }
+      ],
+      explanation: 'A benar (perbandingan senilai), B benar, C salah ($1$ cm $= 1$ km, bukan $100$ m), D benar (rasio konstan adalah sifat perbandingan senilai).',
+      explanationEn: 'A is true (direct proportion), B is true, C is false ($1$ cm $= 1$ km, not $100$ m), D is true (constant ratio is a property of direct proportion).'
+    },
+    {
+      id: 'n4_t3', type: 'theory',
+      title: 'Karakteristik Permasalahan Perbandingan Senilai',
+      content: '<p>Bagaimana kita <strong>mengenali</strong> bahwa sebuah masalah menggunakan perbandingan senilai?</p><p><strong>Ciri-ciri:</strong></p><ol><li><strong>Kedua kuantitas berubah ke arah sama</strong> — jika satu naik, yang lain naik</li><li><strong>Tidak ada faktor lain yang mempengaruhi</strong> — hubungan langsung antara dua variabel</li><li><strong>Dapat ditulis dalam bentuk $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$</strong></li></ol><p><strong>Bukan perbandingan senilai jika:</strong></p><ul><li>Lebih banyak pekerja → lebih sedikit waktu (<em>berbalik nilai</em>)</li><li>Ada biaya tetap yang tidak proporsional</li></ul><p><strong>Contoh senilai:</strong> Harga vs jumlah barang, skala peta, rasio aspek gambar.</p>',
+      contentEn: 'How do we <strong>recognize</strong> that a problem uses direct proportion?<br><strong>Characteristics:</strong><br>1. <strong>Both quantities change in the same direction</strong> — if one increases, the other increases<br>2. <strong>No other factors influence the relationship</strong> — direct relationship between two variables<br>3. <strong>Can be written as $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$</strong><br><strong>Not direct proportion if:</strong><br>- More workers → less time (<em>inverse proportion</em>)<br>- There are fixed costs that are not proportional<br><strong>Examples of direct proportion:</strong> Price vs quantity, map scale, image aspect ratio.'
+    },
+    {
+      id: 'n4_e7', type: 'order',
+      question: 'Urutkan langkah menyelesaikan soal: "Skala $1:300.000$, jarak peta $= 9$ cm. Berapa km jarak sebenarnya?"',
+      questionEn: 'Order the steps to solve: "Scale $1:300{,}000$, map distance $= 9$ cm. How many km is the actual distance?"',
+      answer: [2, 1, 3, 0],
+      items: [
+        'Konversi ke km: $2.700.000 \\div 100.000 = 27$ km',
+        'Tulis perbandingan: $\\dfrac{1}{300.000} = \\dfrac{9}{x}$',
+        'Identifikasi yang diketahui: skala $1:300.000$, jarak peta $= 9$ cm',
+        'Perkalian silang: $x = 300.000 \\times 9 = 2.700.000$ cm'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data → (2) Tulis model $\\dfrac{1}{300.000} = \\dfrac{9}{x}$ → (3) Perkalian silang $x = 2.700.000$ cm → (4) Konversi $= 27$ km',
+      explanationEn: 'Correct order: (1) Identify data → (2) Write model $\\dfrac{1}{300{,}000} = \\dfrac{9}{x}$ → (3) Cross multiply $x = 2{,}700{,}000$ cm → (4) Convert $= 27$ km'
+    },
+    {
+      id: 'n4_e8', type: 'pairing',
+      question: 'Cocokkan situasi dengan jenis perbandingannya:',
+      questionEn: 'Match the situation with its type of proportion:',
+      pairs: [
+        { left: 'Harga $3$ kg beras Rp$45.000$, harga $6$ kg beras Rp$90.000$', right: 'Perbandingan Senilai' },
+        { left: '$4$ tukang cat selesai $6$ hari, $8$ tukang cat selesai $3$ hari', right: 'Perbandingan Berbalik Nilai' },
+        { left: 'Skala peta $1:50.000$, $3$ cm = $1{,}5$ km', right: 'Perbandingan Senilai' },
+        { left: 'Kecepatan $60$ km/jam tempuh $2$ jam, kecepatan $120$ km/jam tempuh $1$ jam', right: 'Perbandingan Berbalik Nilai' }
+      ]
+    },
+    {
+      id: 'n4_e9', type: 'fill',
+      question: 'Pada peta skala $1 : 600.000$, jarak sebenarnya dua kota adalah $45$ km. Berapa cm jarak di peta?',
+      questionEn: 'On a map with scale $1 : 600{,}000$, the actual distance between two cities is $45$ km. How many cm is the distance on the map?',
+      answer: ['7.5', '7,5'],
+      explanation: '$45$ km $= 4.500.000$ cm. Maka $\\dfrac{1}{600.000} = \\dfrac{x}{4.500.000} \\Rightarrow x = \\dfrac{4.500.000}{600.000} = 7{,}5$ cm',
+      explanationEn: '$45$ km $= 4{,}500{,}000$ cm. So $\\dfrac{1}{600{,}000} = \\dfrac{x}{4{,}500{,}000} \\Rightarrow x = \\dfrac{4{,}500{,}000}{600{,}000} = 7.5$ cm'
+    },
+    {
+      id: 'n4_e10', type: 'radio',
+      question: 'Jarak di peta dan jarak sebenarnya memiliki hubungan perbandingan senilai karena...',
+      questionEn: 'Map distance and actual distance have a direct proportion relationship because...',
+      answer: 'c',
+      options: [
+        { value: 'a', text: 'Keduanya selalu menggunakan satuan cm' },
+        { value: 'b', text: 'Semakin kecil skala, semakin besar jarak sebenarnya' },
+        { value: 'c', text: 'Jika jarak di peta bertambah, jarak sebenarnya juga bertambah dengan rasio yang tetap' },
+        { value: 'd', text: 'Peta selalu digambar dengan skala yang sama di seluruh dunia' }
+      ],
+      explanation: 'Inti perbandingan senilai: kedua kuantitas berubah searah dengan rasio konstan. Jika jarak peta naik $2\\times$, jarak nyata juga naik $2\\times$.',
+      explanationEn: 'The core of direct proportion: both quantities change in the same direction with a constant ratio. If map distance increases $2\\times$, the actual distance also increases $2\\times$.'
+    }
+  ]
+};
+
+NODES['node5'] = {
+  steps: [
+    {
+      id: 'n5_t1', type: 'theory',
+      title: 'Simulasi Desain UI: Mengubah Ukuran Aset',
+      content: '<p>Sebuah aset gambar memiliki <strong>lebar $120$ px dan tinggi $80$ px</strong>. Kita ingin memperbesar lebarnya menjadi $300$ px. Berapa tingginya agar tetap proporsional?</p><p><strong>Langkah 1:</strong> Tulis perbandingannya</p><p>$$\\frac{120}{80} = \\frac{300}{x}$$</p><p><strong>Langkah 2:</strong> Sederhanakan ruas kiri</p><p>$\\dfrac{120}{80} = \\dfrac{120 \\div 40}{80 \\div 40} = \\dfrac{3}{2}$</p><p><strong>Langkah 3:</strong> Gunakan perkalian silang</p><p>$3 \\times x = 2 \\times 300$</p><p>$3x = 600$</p><p>$x = \\boxed{200}$ px</p>',
+      contentEn: 'An image asset has a <strong>width of $120$ px and height of $80$ px</strong>. We want to enlarge the width to $300$ px. What should the height be to stay proportional?<br><strong>Step 1:</strong> Write the proportion<br>$$\\frac{120}{80} = \\frac{300}{x}$$<br><strong>Step 2:</strong> Simplify the left side<br>$\\dfrac{120}{80} = \\dfrac{120 \\div 40}{80 \\div 40} = \\dfrac{3}{2}$<br><strong>Step 3:</strong> Use cross multiplication<br>$3 \\times x = 2 \\times 300$<br>$3x = 600$<br>$x = \\boxed{200}$ px'
+    },
+    {
+      id: 'n5_e1', type: 'fill',
+      question: 'Pada contoh di atas, setelah menyederhanakan $\\dfrac{120}{80}$, diperoleh rasio $\\dfrac{3}{2}$. Berapa nilai $x$ dari $3 \\times x = 2 \\times 300$?',
+      questionEn: 'In the example above, after simplifying $\\dfrac{120}{80}$, we get the ratio $\\dfrac{3}{2}$. What is the value of $x$ from $3 \\times x = 2 \\times 300$?',
+      answer: ['200'],
+      explanation: '$3x = 600 \\Rightarrow x = \\dfrac{600}{3} = 200$ px',
+      explanationEn: '$3x = 600 \\Rightarrow x = \\dfrac{600}{3} = 200$ px'
+    },
+    {
+      id: 'n5_e2', type: 'truefalse',
+      question: 'Jika aset $120$ px &times; $80$ px diperbesar menjadi $300$ px &times; $200$ px, maka rasionya tetap sama yaitu $3:2$.',
+      questionEn: 'If the asset $120$ px &times; $80$ px is enlarged to $300$ px &times; $200$ px, the ratio remains the same at $3:2$.',
+      answer: true,
+      explanation: 'Benar! $\\dfrac{300}{200} = \\dfrac{3}{2}$, sama dengan rasio awal $\\dfrac{120}{80} = \\dfrac{3}{2}$. Gambar tetap proporsional.',
+      explanationEn: 'True! $\\dfrac{300}{200} = \\dfrac{3}{2}$, same as the original ratio $\\dfrac{120}{80} = \\dfrac{3}{2}$. The image stays proportional.'
+    },
+    {
+      id: 'n5_e3', type: 'dragdrop',
+      question: 'Aset gambar $150$ px × $100$ px akan diperbesar lebarnya menjadi $375$ px. Lengkapilah:<br><br>Rasio awal: $\\dfrac{150}{100} =$ \\boxed{n5_e3_z0}<br><br>Perkalian silang: \\(\\dfrac{3}{2} = \\dfrac{375}{x}\\)<br><br>$3x =$ \\boxed{n5_e3_z1}<br><br>$x =$ \\boxed{n5_e3_z2} px',
+      questionEn: 'An image asset $150$ px &times; $100$ px will be enlarged to width $375$ px. Complete:<br><br>Initial ratio: $\\dfrac{150}{100} =$ \\boxed{n5_e3_z0}<br><br>Cross multiplication: \\(\\dfrac{3}{2} = \\dfrac{375}{x}\\)<br><br>$3x =$ \\boxed{n5_e3_z1}<br><br>$x =$ \\boxed{n5_e3_z2} px',
+      answer: { 'n5_e3_z0': '3/2', 'n5_e3_z1': '750', 'n5_e3_z2': '250' },
+      draggables: ['3/2', '750', '250', '300'],
+      explanation: '$\\dfrac{150}{100} = \\dfrac{3}{2}$. Lalu $3x = 2 \\times 375 = 750$, sehingga $x = 250$ px.',
+      explanationEn: '$\\dfrac{150}{100} = \\dfrac{3}{2}$. Then $3x = 2 \\times 375 = 750$, so $x = 250$ px.'
+    },
+    {
+      id: 'n5_t2', type: 'theory',
+      title: 'Tips: Sederhanakan Dulu, Baru Perkalian Silang',
+      content: '<p>Menyederhanakan rasio sebelum perkalian silang membuat perhitungan lebih mudah:</p><p><strong>Tanpa menyederhanakan:</strong></p><p>$\\dfrac{180}{120} = \\dfrac{450}{x}$</p><p>$180x = 120 \\times 450 = 54.000$</p><p>$x = 300$</p><p><strong>Dengan menyederhanakan:</strong></p><p>$\\dfrac{180}{120} = \\dfrac{3}{2}$</p><p>$\\dfrac{3}{2} = \\dfrac{450}{x}$</p><p>$3x = 2 \\times 450 = 900$</p><p>$x = 300$ ✓</p><p>Angkanya jauh lebih kecil dan mudah dihitung!</p>',
+      contentEn: 'Simplifying the ratio before cross multiplication makes calculation easier:<br><strong>Without simplifying:</strong><br>$\\dfrac{180}{120} = \\dfrac{450}{x}$<br>$180x = 120 \\times 450 = 54{,}000$<br>$x = 300$<br><strong>With simplifying:</strong><br>$\\dfrac{180}{120} = \\dfrac{3}{2}$<br>$\\dfrac{3}{2} = \\dfrac{450}{x}$<br>$3x = 2 \\times 450 = 900$<br>$x = 300$ ✓<br>The numbers are much smaller and easier to calculate!'
+    },
+    {
+      id: 'n5_e4', type: 'radio',
+      question: 'Manakah cara yang paling efisien untuk menghitung $x$ dari $\\dfrac{200}{150} = \\dfrac{x}{600}$?',
+      questionEn: 'Which is the most efficient way to calculate $x$ from $\\dfrac{200}{150} = \\dfrac{x}{600}$?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: 'Langsung perkalian silang: $200 \\times 600 = 150 \\times x$' },
+        { value: 'b', text: 'Sederhanakan dulu: $\\dfrac{4}{3} = \\dfrac{x}{600}$, lalu $x = \\dfrac{4 \\times 600}{3}$' },
+        { value: 'c', text: 'Ubah ke desimal: $1{,}33 = \\dfrac{x}{600}$, lalu $x = 1{,}33 \\times 600$' },
+        { value: 'd', text: 'Hitung secara trial and error' }
+      ],
+      explanation: 'Menyederhanakan dulu ke $\\dfrac{4}{3}$ membuat angka lebih kecil: $x = \\dfrac{4 \\times 600}{3} = 800$. Lebih mudah daripada $120.000 = 150x$.',
+      explanationEn: 'Simplifying first to $\\dfrac{4}{3}$ makes numbers smaller: $x = \\dfrac{4 \\times 600}{3} = 800$. Easier than $120{,}000 = 150x$.'
+    },
+    {
+      id: 'n5_e5', type: 'checkbox',
+      question: 'Dalam menyelesaikan perbandingan senilai, manakah langkah yang <strong>benar</strong>?',
+      questionEn: 'In solving direct proportion, which steps are <strong>correct</strong>?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Menyederhanakan perbandingan sebelum perkalian silang' },
+        { value: 'b', text: 'Memastikan satuan pada kedua sisi perbandingan sudah sama' },
+        { value: 'c', text: 'Selalu mengalikan kedua sisi dengan bilangan yang berbeda' },
+        { value: 'd', text: 'Memeriksa kembali hasil dengan menyubstitusi ke persamaan awal' }
+      ],
+      explanation: 'A benar (menyederhanakan memudahkan), B benar (satuan harus konsisten), D benar (verifikasi penting). C salah karena harus dikali bilangan yang sama pada pembilang dan penyebut.',
+      explanationEn: 'A is correct (simplifying helps), B is correct (units must be consistent), D is correct (verification is important). C is wrong because you should multiply by the same number on numerator and denominator.'
+    },
+    {
+      id: 'n5_e6', type: 'fill',
+      question: 'Sebuah ikon $64$ px &times; $64$ px akan diubah menjadi $96$ px &times; $x$ px. Berapa nilai $x$ agar tetap proporsional?',
+      questionEn: 'A $64$ px &times; $64$ px icon will be changed to $96$ px &times; $x$ px. What is $x$ to stay proportional?',
+      answer: ['96'],
+      explanation: 'Rasio awal $\\dfrac{64}{64} = 1$, jadi $\\dfrac{1}{1} = \\dfrac{96}{x} \\Rightarrow x = 96$ px. Ini ikon persegi, jadi lebar dan tinggi selalu sama.',
+      explanationEn: 'Initial ratio $\\dfrac{64}{64} = 1$, so $\\dfrac{1}{1} = \\dfrac{96}{x} \\Rightarrow x = 96$ px. This is a square icon, so width and height are always equal.'
+    },
+    {
+      id: 'n5_t3', type: 'theory',
+      title: 'Membangun Model Matematika dari Skenario Nyata',
+      content: '<p>Untuk mengubah skenario menjadi model matematika perbandingan senilai:</p><p><strong>Langkah 1:</strong> Identifikasi dua kuantitas yang berhubungan</p><p>Contoh: "Harga $5$ lisensi Rp$750.000$" → kuantitas: jumlah lisensi dan harga</p><p><strong>Langkah 2:</strong> Tentukan pasangan data yang diketahui</p><p>$5$ lisensi $\\leftrightarrow$ Rp$750.000$</p><p><strong>Langkah 3:</strong> Tentukan apa yang ditanyakan</p><p>$12$ lisensi $\\leftrightarrow$ $x$</p><p><strong>Langkah 4:</strong> Susun model matematika</p><p>$$\\frac{5}{750.000} = \\frac{12}{x}$$</p><p><strong>Langkah 5:</strong> Selesaikan dengan perkalian silang</p>',
+      contentEn: 'To convert a scenario into a direct proportion math model:<br><strong>Step 1:</strong> Identify the two related quantities<br>Example: "Price of $5$ licenses is Rp$750{,}000$" → quantities: number of licenses and price<br><strong>Step 2:</strong> Determine the known data pair<br>$5$ licenses $\\leftrightarrow$ Rp$750{,}000$<br><strong>Step 3:</strong> Determine what is being asked<br>$12$ licenses $\\leftrightarrow$ $x$<br><strong>Step 4:</strong> Build the math model<br>$$\\frac{5}{750{,}000} = \\frac{12}{x}$$<br><strong>Step 5:</strong> Solve using cross multiplication'
+    },
+    {
+      id: 'n5_e7', type: 'order',
+      question: 'Urutkan langkah menghitung: "Harga $4$ kg apel Rp$60.000$. Berapa harga $10$ kg?"',
+      questionEn: 'Order the steps to calculate: "Price of $4$ kg of apples is Rp$60{,}000$. What is the price of $10$ kg?"',
+      answer: [3, 0, 2, 1],
+      items: [
+        'Sederhanakan: $\\dfrac{4}{60.000} = \\dfrac{1}{15.000}$',
+        'Hitung: $x = 15.000 \\times 10 = 150.000$',
+        'Tulis model: $\\dfrac{1}{15.000} = \\dfrac{10}{x}$',
+        'Identifikasi: $4$ kg $\\to$ Rp$60.000$, $10$ kg $\\to$ $x$'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi $4$ kg $\\to$ Rp$60.000$ → (2) Sederhanakan $\\dfrac{1}{15.000}$ → (3) Tulis model $\\dfrac{1}{15.000} = \\dfrac{10}{x}$ → (4) Hitung $x = 150.000$',
+      explanationEn: 'Correct order: (1) Identify $4$ kg $\\to$ Rp$60{,}000$ → (2) Simplify $\\dfrac{1}{15{,}000}$ → (3) Write model $\\dfrac{1}{15{,}000} = \\dfrac{10}{x}$ → (4) Calculate $x = 150{,}000$'
+    },
+    {
+      id: 'n5_e8', type: 'pairing',
+      question: 'Cocokkan skenario dengan model matematika yang tepat:',
+      questionEn: 'Match the scenario with the correct math model:',
+      pairs: [
+        { left: '$3$ kg beras Rp$45.000$, cari harga $7$ kg', right: '$\\dfrac{3}{45.000} = \\dfrac{7}{x}$' },
+        { left: 'Skala $1:200$, panjang nyata $6$ m, cari di denah', right: '$\\dfrac{1}{200} = \\dfrac{x}{600}$' },
+        { left: '$120$ kata dalam $3$ menit, cari kata dalam $10$ menit', right: '$\\dfrac{120}{3} = \\dfrac{x}{10}$' },
+        { left: 'Monitor $16:9$, tinggi $27$ cm, cari lebar', right: '$\\dfrac{16}{9} = \\dfrac{x}{27}$' }
+      ]
+    },
+    {
+      id: 'n5_e9', type: 'truefalse',
+      question: 'Model matematika $\\dfrac{5}{750.000} = \\dfrac{12}{x}$ tepat untuk soal: "Harga $5$ lisensi Rp$750.000$. Berapa harga $12$ lisensi?"',
+      questionEn: 'The math model $\\dfrac{5}{750{,}000} = \\dfrac{12}{x}$ is correct for: "Price of $5$ licenses is Rp$750{,}000$. What is the price of $12$ licenses?"',
+      answer: true,
+      explanation: 'Benar! Jumlah lisensi di pembilang, harga di penyebut. $5$ lisensi $\\to$ Rp$750.000$ dan $12$ lisensi $\\to$ $x$.',
+      explanationEn: 'True! Number of licenses in numerator, price in denominator. $5$ licenses $\\to$ Rp$750{,}000$ and $12$ licenses $\\to$ $x$.'
+    },
+    {
+      id: 'n5_e10', type: 'fill',
+      question: 'Mobil menghabiskan $4$ liter bensin untuk jarak $60$ km. Berapa liter bensin untuk $150$ km?',
+      questionEn: 'A car uses $4$ liters of gasoline for $60$ km. How many liters for $150$ km?',
+      answer: ['10'],
+      explanation: '$\\dfrac{4}{60} = \\dfrac{x}{150} \\Rightarrow x = \\dfrac{4 \\times 150}{60} = \\dfrac{600}{60} = 10$ liter',
+      explanationEn: '$\\dfrac{4}{60} = \\dfrac{x}{150} \\Rightarrow x = \\dfrac{4 \\times 150}{60} = \\dfrac{600}{60} = 10$ liters'
+    }
+  ]
+};
+
+NODES['node6'] = {
+  steps: [
+    {
+      id: 'n6_t1', type: 'theory',
+      title: 'Dev Challenge: Tips Sebelum Mengerjakan',
+      content: '<p>Sebelum mengerjakan soal-soal tantangan, ingat <strong>$4$ langkah kunci</strong>:</p><ol><li><strong>Identifikasi jenis perbandingan</strong> — pastikan ini senilai, bukan berbalik nilai</li><li><strong>Tentukan pasangan data</strong> — apa yang diketahui, apa yang ditanyakan</li><li><strong>Susun model $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$</strong> — posisi pembilang/penyebut harus konsisten</li><li><strong>Selesaikan dengan perkalian silang</strong> — sederhanakan dulu jika bisa</li></ol><p><strong>Perhatikan satuan!</strong> Jika soal mencampur km dan cm atau m dan cm, konversi dulu ke satuan yang sama.</p>',
+      contentEn: 'Before tackling challenge problems, remember these <strong>$4$ key steps</strong>:<br>1. <strong>Identify the proportion type</strong> — make sure it\'s direct, not inverse proportion<br>2. <strong>Determine the data pairs</strong> — what is known, what is asked<br>3. <strong>Set up the model $\\dfrac{x_1}{y_1} = \\dfrac{x_2}{y_2}$</strong> — numerator/denominator positions must be consistent<br>4. <strong>Solve with cross multiplication</strong> — simplify first if possible<br><strong>Watch the units!</strong> If the problem mixes km and cm or m and cm, convert to the same unit first.'
+    },
+    {
+      id: 'n6_e1', type: 'fill',
+      question: 'Soal 1: Skala denah rumah $1:200$. Jika panjang ruang tamu sebenarnya $6$ meter, berapa cm di denah?',
+      questionEn: 'Problem 1: House floor plan scale $1:200$. If the actual length of the living room is $6$ meters, how many cm on the floor plan?',
+      answer: ['3'],
+      explanation: 'Konversi dulu: $6$ m $= 600$ cm. Lalu $\\dfrac{1}{200} = \\dfrac{x}{600} \\Rightarrow x = \\dfrac{600}{200} = 3$ cm.',
+      explanationEn: 'Convert first: $6$ m $= 600$ cm. Then $\\dfrac{1}{200} = \\dfrac{x}{600} \\Rightarrow x = \\dfrac{600}{200} = 3$ cm.'
+    },
+    {
+      id: 'n6_e2', type: 'fill',
+      question: 'Soal 2: Harga $5$ lisensi software adalah Rp$750.000$. Berapa harga untuk $12$ lisensi? (tulis angka saja tanpa Rp)',
+      questionEn: 'Problem 2: Price of $5$ software licenses is Rp$750{,}000$. What is the price for $12$ licenses? (write the number only without Rp)',
+      answer: ['1.800.000', '1800000'],
+      explanation: '$\\dfrac{5}{750.000} = \\dfrac{12}{x} \\Rightarrow x = \\dfrac{750.000 \\times 12}{5} = 150.000 \\times 12 = 1.800.000$',
+      explanationEn: '$\\dfrac{5}{750{,}000} = \\dfrac{12}{x} \\Rightarrow x = \\dfrac{750{,}000 \\times 12}{5} = 150{,}000 \\times 12 = 1{,}800{,}000$'
+    },
+    {
+      id: 'n6_e3', type: 'dragdrop',
+      question: 'Soal 3: Printer $3$D membutuhkan $45$ menit untuk $3$ komponen. Berapa jam untuk $10$ komponen?<br><br>\\(\\dfrac{45}{3} = \\dfrac{x}{10}\\)<br><br>$x =$ \\boxed{n6_e3_z0} menit<br><br>$x =$ \\boxed{n6_e3_z1} jam',
+      questionEn: 'Problem 3: A $3$D printer takes $45$ minutes for $3$ components. How many hours for $10$ components?<br><br>\\(\\dfrac{45}{3} = \\dfrac{x}{10}\\)<br><br>$x =$ \\boxed{n6_e3_z0} minutes<br><br>$x =$ \\boxed{n6_e3_z1} hours',
+      answer: { 'n6_e3_z0': '150', 'n6_e3_z1': '2,5' },
+      draggables: ['150', '2,5', '120', '3'],
+      explanation: '$\\dfrac{45}{3} = 15$ menit per komponen. $15 \\times 10 = 150$ menit $= \\dfrac{150}{60} = 2{,}5$ jam.',
+      explanationEn: '$\\dfrac{45}{3} = 15$ minutes per component. $15 \\times 10 = 150$ minutes $= \\dfrac{150}{60} = 2.5$ hours.'
+    },
+    {
+      id: 'n6_t2', type: 'theory',
+      title: 'Kesalahan Umum yang Harus Dihindari',
+      content: '<p><strong>Kesalahan 1: Lupa konversi satuan</strong></p><p>$\\dfrac{1}{200} = \\dfrac{x}{6}$ ← Salah! $6$ meter belum dikonversi ke cm</p><p>$\\dfrac{1}{200} = \\dfrac{x}{600}$ ← Benar!</p><p><strong>Kesalahan 2: Posisi pembilang/penyebut tidak konsisten</strong></p><p>$\\dfrac{5}{750.000} = \\dfrac{x}{12}$ ← Salah! Posisi terbalik</p><p>$\\dfrac{5}{750.000} = \\dfrac{12}{x}$ ← Benar!</p><p><strong>Kesalahan 3: Tidak menyederhanakan sehingga angka terlalu besar</strong></p><p>$\\dfrac{5}{750.000} = \\dfrac{12}{x}$ → Sederhanakan: $\\dfrac{1}{150.000} = \\dfrac{12}{x}$</p>',
+      contentEn: '<strong>Mistake 1: Forgetting unit conversion</strong><br>$\\dfrac{1}{200} = \\dfrac{x}{6}$ ← Wrong! $6$ meters not yet converted to cm<br>$\\dfrac{1}{200} = \\dfrac{x}{600}$ ← Correct!<br><strong>Mistake 2: Inconsistent numerator/denominator positions</strong><br>$\\dfrac{5}{750{,}000} = \\dfrac{x}{12}$ ← Wrong! Positions are swapped<br>$\\dfrac{5}{750{,}000} = \\dfrac{12}{x}$ ← Correct!<br><strong>Mistake 3: Not simplifying, making numbers too large</strong><br>$\\dfrac{5}{750{,}000} = \\dfrac{12}{x}$ → Simplify: $\\dfrac{1}{150{,}000} = \\dfrac{12}{x}$'
+    },
+    {
+      id: 'n6_e4', type: 'truefalse',
+      question: 'Pada soal skala denah $1:200$, jika panjang sebenarnya $6$ m, maka langsung bisa dihitung $\\dfrac{1}{200} = \\dfrac{x}{6}$.',
+      questionEn: 'In the floor plan scale problem $1:200$, if the actual length is $6$ m, you can directly calculate $\\dfrac{1}{200} = \\dfrac{x}{6}$.',
+      answer: false,
+      explanation: 'Salah! $6$ meter harus dikonversi ke cm terlebih dahulu menjadi $600$ cm, sehingga $\\dfrac{1}{200} = \\dfrac{x}{600}$.',
+      explanationEn: 'False! $6$ meters must be converted to cm first to $600$ cm, so $\\dfrac{1}{200} = \\dfrac{x}{600}$.'
+    },
+    {
+      id: 'n6_e5', type: 'radio',
+      question: 'Soal: "Harga $3$ kg jeruk Rp$45.000$. Berapa harga $7$ kg jeruk?" Manakah model matematika yang benar?',
+      questionEn: 'Problem: "Price of $3$ kg of oranges is Rp$45{,}000$. What is the price of $7$ kg?" Which math model is correct?',
+      answer: 'a',
+      options: [
+        { value: 'a', text: '$\\dfrac{3}{45.000} = \\dfrac{7}{x}$' },
+        { value: 'b', text: '$\\dfrac{3}{x} = \\dfrac{7}{45.000}$' },
+        { value: 'c', text: '$\\dfrac{45.000}{3} = \\dfrac{x}{7}$' },
+        { value: 'd', text: '$\\dfrac{3}{7} = \\dfrac{45.000}{x}$' }
+      ],
+      explanation: 'A dan C keduanya benar secara matematis (hanya posisi yang berbeda). Tapi A lebih langsung karena posisi kg di atas, harga di bawah. Dari A: $3x = 315.000 \\Rightarrow x = 105.000$.',
+      explanationEn: 'A and C are both mathematically correct (just different positions). But A is more direct with kg on top, price on bottom. From A: $3x = 315{,}000 \\Rightarrow x = 105{,}000$.'
+    },
+    {
+      id: 'n6_e6', type: 'checkbox',
+      question: 'Manakah yang termasuk kesalahan umum dalam perbandingan senilai?',
+      questionEn: 'Which are common mistakes in direct proportion?',
+      answer: ['a', 'b', 'c'],
+      options: [
+        { value: 'a', text: 'Lupa mengkonversi satuan sebelum menghitung' },
+        { value: 'b', text: 'Menempatkan data di pembilang dan penyebut secara tidak konsisten' },
+        { value: 'c', text: 'Tidak memeriksa kembali hasil perhitungan' },
+        { value: 'd', text: 'Menyederhanakan perbandingan sebelum perkalian silang' }
+      ],
+      explanation: 'A, B, dan C adalah kesalahan umum. D justru merupakan <em>praktik baik</em>, bukan kesalahan.',
+      explanationEn: 'A, B, and C are common mistakes. D is actually a <em>good practice</em>, not a mistake.'
+    },
+    {
+      id: 'n6_t3', type: 'theory',
+      title: 'Metode Cepat: Menggunakan Faktor Perubahan',
+      content: '<p>Selain perkalian silang, ada <strong>metode cepat</strong> menggunakan faktor perubahan:</p><p><strong>Contoh:</strong> $4$ liter bensin untuk $60$ km. Berapa liter untuk $150$ km?</p><p><strong>Langkah 1:</strong> Hitung faktor perubahan</p><p>$k = \\dfrac{150}{60} = 2{,}5$</p><p><strong>Langkah 2:</strong> Kalikan faktor ke kuantitas lain</p><p>$x = 4 \\times 2{,}5 = \\boxed{10}$ liter</p><p><strong>Kapan menggunakan metode ini?</strong> Saat faktor perubahan menghasilkan bilangan yang "ramah" (bulat atau setengah). Jika faktornya aneh (misal $\\dfrac{7}{13}$), lebih baik pakai perkalian silang.</p>',
+      contentEn: 'Besides cross multiplication, there is a <strong>quick method</strong> using the change factor:<br><strong>Example:</strong> $4$ liters of gasoline for $60$ km. How many liters for $150$ km?<br><strong>Step 1:</strong> Calculate the change factor<br>$k = \\dfrac{150}{60} = 2.5$<br><strong>Step 2:</strong> Multiply the factor to the other quantity<br>$x = 4 \\times 2.5 = \\boxed{10}$ liters<br><strong>When to use this method?</strong> When the change factor produces "friendly" numbers (whole or half). If the factor is awkward (e.g. $\\dfrac{7}{13}$), it\'s better to use cross multiplication.'
+    },
+    {
+      id: 'n6_e7', type: 'order',
+      question: 'Urutkan langkah metode cepat untuk: "Pengetik mengetik $120$ kata dalam $3$ menit. Berapa kata dalam $10$ menit?"',
+      questionEn: 'Order the quick method steps for: "A typist types $120$ words in $3$ minutes. How many words in $10$ minutes?"',
+      answer: [2, 1, 3, 0],
+      items: [
+        'Kalikan faktor: $40 \\times 10 = 400$ kata',
+        'Hitung kecepatan: $\\dfrac{120}{3} = 40$ kata/menit',
+        'Identifikasi: $120$ kata $\\to$ $3$ menit, $x$ kata $\\to$ $10$ menit',
+        'Gunakan kecepatan konstan sebagai faktor perubahan'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data → (2) Hitung kecepatan $40$ kata/menit → (3) Gunakan sebagai faktor perubahan → (4) Kalikan $40 \\times 10 = 400$ kata',
+      explanationEn: 'Correct order: (1) Identify data → (2) Calculate speed $40$ words/min → (3) Use as change factor → (4) Multiply $40 \\times 10 = 400$ words'
+    },
+    {
+      id: 'n6_e8', type: 'fill',
+      question: 'Jarak $2$ cm pada peta mewakili $15$ km. Berapa km jarak sebenarnya jika jarak di peta $8$ cm?',
+      questionEn: 'A distance of $2$ cm on the map represents $15$ km. How many km is the actual distance if the map distance is $8$ cm?',
+      answer: ['60'],
+      explanation: '$\\dfrac{2}{15} = \\dfrac{8}{x} \\Rightarrow x = \\dfrac{15 \\times 8}{2} = 60$ km. Atau dengan faktor: $k = \\dfrac{8}{2} = 4$, maka $15 \\times 4 = 60$ km.',
+      explanationEn: '$\\dfrac{2}{15} = \\dfrac{8}{x} \\Rightarrow x = \\dfrac{15 \\times 8}{2} = 60$ km. Or with factor: $k = \\dfrac{8}{2} = 4$, so $15 \\times 4 = 60$ km.'
+    },
+    {
+      id: 'n6_e9', type: 'pairing',
+      question: 'Cocokkan soal dengan jawaban yang benar:',
+      questionEn: 'Match the problem with the correct answer:',
+      pairs: [
+        { left: '$3$ kg jeruk Rp$45.000$, harga $7$ kg?', right: 'Rp$105.000$' },
+        { left: '$4$ liter untuk $60$ km, berapa liter untuk $150$ km?', right: '$10$ liter' },
+        { left: '$2$ cm $= 15$ km, jarak $8$ cm di peta?', right: '$60$ km' },
+        { left: '$120$ kata dalam $3$ menit, kata dalam $10$ menit?', right: '$400$ kata' }
+      ]
+    },
+    {
+      id: 'n6_e10', type: 'radio',
+      question: 'Printer $3$D membutuhkan $45$ menit untuk $3$ komponen. Untuk mencetak $10$ komponen dibutuhkan $150$ menit. Ini termasuk perbandingan...',
+      questionEn: 'A $3$D printer takes $45$ minutes for $3$ components. To print $10$ components it takes $150$ minutes. This is an example of...',
+      answer: 'a',
+      options: [
+        { value: 'a', text: 'Perbandingan senilai — lebih banyak komponen, lebih banyak waktu' },
+        { value: 'b', text: 'Perbandingan berbalik nilai — lebih banyak komponen, lebih sedikit waktu' },
+        { value: 'c', text: 'Bukan perbandingan — hubungannya acak' },
+        { value: 'd', text: 'Perbandingan senilai — lebih banyak komponen, lebih sedikit waktu' }
+      ],
+      explanation: 'Ini perbandingan senilai karena kedua kuantitas berubah searah: lebih banyak komponen → lebih banyak waktu yang dibutuhkan.',
+      explanationEn: 'This is direct proportion because both quantities change in the same direction: more components → more time needed.'
+    }
+  ]
+};
+
+NODES['node7_1'] = {
+  steps: [
+    {
+      id: 'n71_e1', type: 'fill',
+      question: 'Harga $3$ kg jeruk adalah Rp$45.000$. Berapa harga $7$ kg jeruk? (tulis angka saja tanpa Rp)',
+      questionEn: 'The price of $3$ kg of oranges is Rp$45{,}000$. What is the price of $7$ kg of oranges? (write the number only without Rp)',
+      answer: ['105.000', '105000'],
+      explanation: '$\\dfrac{3}{45.000} = \\dfrac{7}{x} \\Rightarrow x = \\dfrac{45.000 \\times 7}{3} = 15.000 \\times 7 = 105.000$',
+      explanationEn: '$\\dfrac{3}{45{,}000} = \\dfrac{7}{x} \\Rightarrow x = \\dfrac{45{,}000 \\times 7}{3} = 15{,}000 \\times 7 = 105{,}000$'
+    },
+    {
+      id: 'n71_e2', type: 'radio',
+      question: 'Untuk soal jeruk di atas, manakah model matematika yang tepat?',
+      questionEn: 'For the orange problem above, which math model is correct?',
+      answer: 'a',
+      options: [
+        { value: 'a', text: '$\\dfrac{3}{45.000} = \\dfrac{7}{x}$' },
+        { value: 'b', text: '$\\dfrac{3}{x} = \\dfrac{7}{45.000}$' },
+        { value: 'c', text: '$\\dfrac{45.000}{3} = \\dfrac{45.000}{7}$' },
+        { value: 'd', text: '$3 + 45.000 = 7 + x$' }
+      ],
+      explanation: 'Jumlah kg di pembilang, harga di penyebut, posisi konsisten: $\\dfrac{3}{45.000} = \\dfrac{7}{x}$.',
+      explanationEn: 'Kg amount in numerator, price in denominator, consistent positions: $\\dfrac{3}{45{,}000} = \\dfrac{7}{x}$.'
+    },
+    {
+      id: 'n71_e3', type: 'truefalse',
+      question: 'Harga $3$ kg jeruk Rp$45.000$ dan harga $7$ kg jeruk Rp$105.000$ menunjukkan perbandingan senilai karena rasio harga per kg-nya tetap.',
+      questionEn: 'Price of $3$ kg of oranges Rp$45{,}000$ and price of $7$ kg of oranges Rp$105{,}000$ show direct proportion because the price per kg ratio remains constant.',
+      answer: true,
+      explanation: 'Benar! $\\dfrac{45.000}{3} = 15.000$/kg dan $\\dfrac{105.000}{7} = 15.000$/kg. Rasio harga per kg tetap sama.',
+      explanationEn: 'True! $\\dfrac{45{,}000}{3} = 15{,}000$/kg and $\\dfrac{105{,}000}{7} = 15{,}000$/kg. The price per kg ratio stays the same.'
+    },
+    {
+      id: 'n71_e4', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal jeruk:<br><br>\\(\\dfrac{3}{45.000} = \\dfrac{7}{x}\\)<br><br>$3x = 45.000$ × \\boxed{n71_e4_z0}<br><br>$3x =$ \\boxed{n71_e4_z1}<br><br>$x =$ \\boxed{n71_e4_z2}',
+      questionEn: 'Complete the orange problem calculation:<br><br>\\(\\dfrac{3}{45{,}000} = \\dfrac{7}{x}\\)<br><br>$3x = 45{,}000$ × \\boxed{n71_e4_z0}<br><br>$3x =$ \\boxed{n71_e4_z1}<br><br>$x =$ \\boxed{n71_e4_z2}',
+      answer: { 'n71_e4_z0': '7', 'n71_e4_z1': '315.000', 'n71_e4_z2': '105.000' },
+      draggables: ['7', '315.000', '105.000', '150.000'],
+      explanation: '$3x = 45.000 \\times 7 = 315.000 \\Rightarrow x = \\dfrac{315.000}{3} = 105.000$',
+      explanationEn: '$3x = 45{,}000 \\times 7 = 315{,}000 \\Rightarrow x = \\dfrac{315{,}000}{3} = 105{,}000$'
+    },
+    {
+      id: 'n71_e5', type: 'order',
+      question: 'Urutkan langkah menghitung harga $7$ kg jeruk jika $3$ kg = Rp$45.000$:',
+      questionEn: 'Order the steps to calculate the price of $7$ kg of oranges if $3$ kg = Rp$45{,}000$:',
+      answer: [2, 0, 3, 1],
+      items: [
+        'Tulis model: $\\dfrac{3}{45.000} = \\dfrac{7}{x}$',
+        'Hitung: $x = \\dfrac{315.000}{3} = 105.000$',
+        'Identifikasi: $3$ kg $\\to$ Rp$45.000$, $7$ kg $\\to$ $x$',
+        'Perkalian silang: $3x = 45.000 \\times 7 = 315.000$'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi $3$ kg $\\to$ Rp$45.000$ → (2) Tulis model → (3) Perkalian silang $3x = 315.000$ → (4) Hitung $x = 105.000$',
+      explanationEn: 'Correct order: (1) Identify $3$ kg $\\to$ Rp$45{,}000$ → (2) Write model → (3) Cross multiply $3x = 315{,}000$ → (4) Calculate $x = 105{,}000$'
+    },
+    {
+      id: 'n71_e6', type: 'fill',
+      question: 'Sebuah mobil menghabiskan $4$ liter bensin untuk jarak $60$ km. Berapa liter bensin untuk $150$ km?',
+      questionEn: 'A car uses $4$ liters of gasoline for a distance of $60$ km. How many liters for $150$ km?',
+      answer: ['10'],
+      explanation: '$\\dfrac{4}{60} = \\dfrac{x}{150} \\Rightarrow x = \\dfrac{4 \\times 150}{60} = \\dfrac{600}{60} = 10$ liter',
+      explanationEn: '$\\dfrac{4}{60} = \\dfrac{x}{150} \\Rightarrow x = \\dfrac{4 \\times 150}{60} = \\dfrac{600}{60} = 10$ liters'
+    },
+    {
+      id: 'n71_e7', type: 'checkbox',
+      question: 'Manakah pernyataan yang <strong>benar</strong> tentang soal bensin di atas?',
+      questionEn: 'Which statements are <strong>true</strong> about the gasoline problem above?',
+      answer: ['a', 'c', 'd'],
+      options: [
+        { value: 'a', text: 'Ini adalah perbandingan senilai karena jarak dan bensin berubah searah' },
+        { value: 'b', text: 'Konsumsi bensin per km adalah $15$ km/liter' },
+        { value: 'c', text: 'Faktor perubahan dari $60$ km ke $150$ km adalah $2{,}5$' },
+        { value: 'd', text: 'Dengan metode cepat: $4 \\times 2{,}5 = 10$ liter' }
+      ],
+      explanation: 'A benar (senilai), B salah ("konsumsi per km" seharusnya dalam satuan liter/km yaitu $\\frac{4}{60}$, sedangkan $15$ km/liter adalah "efisiensi" bukan "konsumsi per km"), C benar ($\\frac{150}{60} = 2{,}5$), D benar.',
+      explanationEn: 'A is true (direct proportion), B is false ("consumption per km" should be in liters/km i.e. $\\frac{4}{60}$, while $15$ km/liter is "efficiency" not "consumption per km"), C is true ($\\frac{150}{60} = 2.5$), D is true.'
+    },
+    {
+      id: 'n71_e8', type: 'pairing',
+      question: 'Cocokkan soal dengan jawaban yang benar:',
+      questionEn: 'Match the problem with the correct answer:',
+      pairs: [
+        { left: '$3$ kg jeruk $\\to$ Rp$45.000$, harga $7$ kg?', right: 'Rp$105.000$' },
+        { left: '$4$ liter bensin $\\to$ $60$ km, bensin untuk $150$ km?', right: '$10$ liter' },
+        { left: '$3$ kg jeruk $\\to$ Rp$45.000$, harga $9$ kg?', right: 'Rp$135.000$' },
+        { left: '$4$ liter bensin $\\to$ $60$ km, bensin untuk $90$ km?', right: '$6$ liter' }
+      ]
+    },
+    {
+      id: 'n71_e9', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal bensin dengan metode cepat:<br><br>Faktor perubahan: \\(k = \\dfrac{150}{60} =\\) \\boxed{n71_e9_z0}<br><br>Bensin yang dibutuhkan: \\(4 \\times\\) \\boxed{n71_e9_z1} \\(=\\) \\boxed{n71_e9_z2} liter',
+      questionEn: 'Complete the gasoline calculation using the quick method:<br><br>Change factor: \\(k = \\dfrac{150}{60} =\\) \\boxed{n71_e9_z0}<br><br>Gasoline needed: \\(4 \\times\\) \\boxed{n71_e9_z1} \\(=\\) \\boxed{n71_e9_z2} liters',
+      answer: { 'n71_e9_z0': '2,5', 'n71_e9_z1': '2,5', 'n71_e9_z2': '10' },
+      draggables: ['2,5', '10', '15'],
+      explanation: '$k = \\dfrac{150}{60} = 2{,}5$. Bensin $= 4 \\times 2{,}5 = 10$ liter.',
+      explanationEn: '$k = \\dfrac{150}{60} = 2.5$. Gasoline $= 4 \\times 2.5 = 10$ liters.'
+    },
+    {
+      id: 'n71_e10', type: 'radio',
+      question: 'Untuk soal bensin, manakah metode yang paling efisien?',
+      questionEn: 'For the gasoline problem, which method is most efficient?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: 'Perkalian silang langsung tanpa menyederhanakan' },
+        { value: 'b', text: 'Metode faktor perubahan: $k = 2{,}5$, lalu $4 \\times 2{,}5$' },
+        { value: 'c', text: 'Mengubah ke desimal lalu membulatkan' },
+        { value: 'd', text: 'Menggambar grafik terlebih dahulu' }
+      ],
+      explanation: 'Faktor perubahan $\\dfrac{150}{60} = 2{,}5$ menghasilkan bilangan sederhana, sehingga metode cepat $4 \\times 2{,}5 = 10$ paling efisien.',
+      explanationEn: 'The change factor $\\dfrac{150}{60} = 2.5$ produces a simple number, so the quick method $4 \\times 2.5 = 10$ is most efficient.'
+    },
+    { id: 'n71_result', type: 'result' }
+  ]
+};
+
+NODES['node7_2'] = {
+  steps: [
+    {
+      id: 'n72_e1', type: 'fill',
+      question: 'Di sebuah peta, jarak $2$ cm mewakili $15$ km. Berapa km jarak sebenarnya jika jarak di peta $8$ cm?',
+      questionEn: 'On a map, a distance of $2$ cm represents $15$ km. How many km is the actual distance if the map distance is $8$ cm?',
+      answer: ['60'],
+      explanation: '$\\dfrac{2}{15} = \\dfrac{8}{x} \\Rightarrow x = \\dfrac{15 \\times 8}{2} = 60$ km. Atau faktor: $k = \\dfrac{8}{2} = 4$, maka $15 \\times 4 = 60$ km.',
+      explanationEn: '$\\dfrac{2}{15} = \\dfrac{8}{x} \\Rightarrow x = \\dfrac{15 \\times 8}{2} = 60$ km. Or factor: $k = \\dfrac{8}{2} = 4$, so $15 \\times 4 = 60$ km.'
+    },
+    {
+      id: 'n72_e2', type: 'truefalse',
+      question: 'Pada soal peta di atas, jika jarak di peta bertambah $2\\times$, maka jarak sebenarnya juga bertambah $2\\times$.',
+      questionEn: 'In the map problem above, if the map distance increases $2\\times$, the actual distance also increases $2\\times$.',
+      answer: true,
+      explanation: 'Benar! Ini ciri khas perbandingan senilai. Contoh: jarak peta $4$ cm (dari $2$ cm) → jarak nyata $30$ km (dari $15$ km). Keduanya naik $2\\times$.',
+      explanationEn: 'True! This is a hallmark of direct proportion. Example: map distance $4$ cm (from $2$ cm) → actual distance $30$ km (from $15$ km). Both increase $2\\times$.'
+    },
+    {
+      id: 'n72_e3', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal peta:<br><br>\\(\\dfrac{2}{15} = \\dfrac{8}{x}\\)<br><br>$2x = 15$ × \\boxed{n72_e3_z0}<br><br>$2x =$ \\boxed{n72_e3_z1}<br><br>$x =$ \\boxed{n72_e3_z2} km',
+      questionEn: 'Complete the map problem calculation:<br><br>\\(\\dfrac{2}{15} = \\dfrac{8}{x}\\)<br><br>$2x = 15$ × \\boxed{n72_e3_z0}<br><br>$2x =$ \\boxed{n72_e3_z1}<br><br>$x =$ \\boxed{n72_e3_z2} km',
+      answer: { 'n72_e3_z0': '8', 'n72_e3_z1': '120', 'n72_e3_z2': '60' },
+      draggables: ['8', '120', '60', '30'],
+      explanation: '$2x = 15 \\times 8 = 120 \\Rightarrow x = \\dfrac{120}{2} = 60$ km',
+      explanationEn: '$2x = 15 \\times 8 = 120 \\Rightarrow x = \\dfrac{120}{2} = 60$ km'
+    },
+    {
+      id: 'n72_e4', type: 'radio',
+      question: 'Manakah model matematika yang tepat untuk soal peta: "$2$ cm mewakili $15$ km, berapa km jika jarak peta $8$ cm?"',
+      questionEn: 'Which math model is correct for the map problem: "$2$ cm represents $15$ km, how many km if map distance is $8$ cm?"',
+      answer: 'c',
+      options: [
+        { value: 'a', text: '$\\dfrac{2}{8} = \\dfrac{15}{x}$' },
+        { value: 'b', text: '$\\dfrac{2}{x} = \\dfrac{8}{15}$' },
+        { value: 'c', text: '$\\dfrac{2}{15} = \\dfrac{8}{x}$' },
+        { value: 'd', text: '$\\dfrac{15}{2} = \\dfrac{x}{8}$' }
+      ],
+      explanation: 'C benar (jarak peta di atas, jarak nyata di bawah, konsisten). Catatan: D juga benar secara matematis karena hanya menukar posisi pembilang/penyebut di kedua ruas.',
+      explanationEn: 'C is correct (map distance on top, actual distance on bottom, consistent). Note: D is also mathematically correct as it just swaps numerator/denominator on both sides.'
+    },
+    {
+      id: 'n72_e5', type: 'order',
+      question: 'Urutkan langkah menyelesaikan soal peta "$2$ cm = $15$ km, jarak peta $8$ cm":',
+      questionEn: 'Order the steps to solve the map problem "$2$ cm = $15$ km, map distance $8$ cm":',
+      answer: [3, 0, 2, 1],
+      items: [
+        'Perkalian silang: $2x = 15 \\times 8 = 120$',
+        'Hitung: $x = \\dfrac{120}{2} = 60$ km',
+        'Tulis model: $\\dfrac{2}{15} = \\dfrac{8}{x}$',
+        'Identifikasi: $2$ cm $\\to$ $15$ km, $8$ cm $\\to$ $x$ km'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data → (2) Perkalian silang $2x = 120$ → (3) Tulis model → (4) Hitung $x = 60$ km',
+      explanationEn: 'Correct order: (1) Identify data → (2) Cross multiply $2x = 120$ → (3) Write model → (4) Calculate $x = 60$ km'
+    },
+    {
+      id: 'n72_e6', type: 'fill',
+      question: 'Seorang pengetik bisa mengetik $120$ kata dalam $3$ menit. Berapa kata yang diketik dalam $10$ menit?',
+      questionEn: 'A typist can type $120$ words in $3$ minutes. How many words are typed in $10$ minutes?',
+      answer: ['400'],
+      explanation: '$\\dfrac{120}{3} = \\dfrac{x}{10} \\Rightarrow x = \\dfrac{120 \\times 10}{3} = 40 \\times 10 = 400$ kata',
+      explanationEn: '$\\dfrac{120}{3} = \\dfrac{x}{10} \\Rightarrow x = \\dfrac{120 \\times 10}{3} = 40 \\times 10 = 400$ words'
+    },
+    {
+      id: 'n72_e7', type: 'checkbox',
+      question: 'Manakah pernyataan yang <strong>benar</strong> tentang soal pengetik di atas?',
+      questionEn: 'Which statements are <strong>true</strong> about the typist problem above?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Kecepatan mengetik konstan, yaitu $40$ kata/menit' },
+        { value: 'b', text: 'Ini termasuk perbandingan senilai karena lebih banyak waktu → lebih banyak kata' },
+        { value: 'c', text: 'Jika waktu berkurang menjadi $1$ menit, kata yang diketik menjadi $400$' },
+        { value: 'd', text: 'Model matematika $\\dfrac{120}{3} = \\dfrac{x}{10}$ sudah tepat' }
+      ],
+      explanation: 'A benar ($120 \\div 3 = 40$ kata/menit), B benar (senilai), C salah (waktu $1$ menit → $40$ kata, bukan $400$), D benar.',
+      explanationEn: 'A is true ($120 \\div 3 = 40$ words/min), B is true (direct proportion), C is false ($1$ minute → $40$ words, not $400$), D is true.'
+    },
+    {
+      id: 'n72_e8', type: 'pairing',
+      question: 'Cocokkan soal dengan jawaban yang benar:',
+      questionEn: 'Match the problem with the correct answer:',
+      pairs: [
+        { left: '$2$ cm peta $= 15$ km, $6$ cm peta?', right: '$45$ km' },
+        { left: '$120$ kata/$3$ menit, $9$ menit?', right: '$360$ kata' },
+        { left: '$2$ cm peta $= 15$ km, $10$ cm peta?', right: '$75$ km' },
+        { left: '$120$ kata/$3$ menit, $1$ menit?', right: '$40$ kata' }
+      ]
+    },
+    {
+      id: 'n72_e9', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal pengetik dengan metode cepat:<br><br>Kecepatan: $\\dfrac{120}{3} =$ \\boxed{n72_e9_z0} kata/menit<br><br>Kata dalam $10$ menit: \\boxed{n72_e9_z1} × $10 =$ \\boxed{n72_e9_z2} kata',
+      questionEn: 'Complete the typist calculation using the quick method:<br><br>Speed: $\\dfrac{120}{3} =$ \\boxed{n72_e9_z0} words/min<br><br>Words in $10$ minutes: \\boxed{n72_e9_z1} × $10 =$ \\boxed{n72_e9_z2} words',
+      answer: { 'n72_e9_z0': '40', 'n72_e9_z1': '40', 'n72_e9_z2': '400' },
+      draggables: ['40', '40', '400', '120'],
+      explanation: 'Kecepatan $= \\dfrac{120}{3} = 40$ kata/menit. Dalam $10$ menit: $40 \\times 10 = 400$ kata.',
+      explanationEn: 'Speed $= \\dfrac{120}{3} = 40$ words/min. In $10$ minutes: $40 \\times 10 = 400$ words.'
+    },
+    {
+      id: 'n72_e10', type: 'truefalse',
+      question: 'Jika pengetik mengetik $120$ kata dalam $3$ menit, maka untuk mengetik $600$ kata dibutuhkan $15$ menit.',
+      questionEn: 'If a typist types $120$ words in $3$ minutes, then to type $600$ words it takes $15$ minutes.',
+      answer: true,
+      explanation: 'Benar! $\\dfrac{120}{3} = \\dfrac{600}{x} \\Rightarrow x = \\dfrac{600 \\times 3}{120} = 15$ menit. Atau faktor: $\\dfrac{600}{120} = 5$, maka $3 \\times 5 = 15$ menit.',
+      explanationEn: 'True! $\\dfrac{120}{3} = \\dfrac{600}{x} \\Rightarrow x = \\dfrac{600 \\times 3}{120} = 15$ minutes. Or factor: $\\dfrac{600}{120} = 5$, so $3 \\times 5 = 15$ minutes.'
+    },
+    { id: 'n72_result', type: 'result' }
+  ]
+};
+
+NODES['node7_3'] = {
+  steps: [
+    {
+      id: 'n73_e1', type: 'fill',
+      question: 'Skala maket gedung adalah $1 : 150$. Jika tinggi gedung pada maket $24$ cm, berapa cm tinggi gedung sebenarnya?',
+      questionEn: 'The scale of a building model is $1 : 150$. If the height of the building on the model is $24$ cm, how many cm is the actual height?',
+      answer: ['3600'],
+      explanation: '$\\dfrac{1}{150} = \\dfrac{24}{x} \\Rightarrow x = 24 \\times 150 = 3.600$ cm',
+      explanationEn: '$\\dfrac{1}{150} = \\dfrac{24}{x} \\Rightarrow x = 24 \\times 150 = 3{,}600$ cm'
+    },
+    {
+      id: 'n73_e2', type: 'fill',
+      question: 'Dari soal sebelumnya, tinggi gedung sebenarnya $3.600$ cm. Berapa meter tinggi gedung tersebut?',
+      questionEn: 'From the previous problem, the actual height is $3{,}600$ cm. How many meters is the building height?',
+      answer: ['36'],
+      explanation: '$3.600$ cm $= \\dfrac{3.600}{100} = 36$ meter',
+      explanationEn: '$3{,}600$ cm $= \\dfrac{3{,}600}{100} = 36$ meters'
+    },
+    {
+      id: 'n73_e3', type: 'truefalse',
+      question: 'Soal maket gedung di atas merupakan perbandingan senilai karena semakin besar skala, semakin besar ukuran sebenarnya.',
+      questionEn: 'The building model problem above is direct proportion because the larger the scale, the larger the actual size.',
+      answer: true,
+      explanation: 'Benar! Skala tetap konstan ($1:150$). Jika ukuran maket bertambah, ukuran sebenarnya juga bertambah dengan rasio yang sama.',
+      explanationEn: 'True! The scale remains constant ($1:150$). If the model size increases, the actual size also increases by the same ratio.'
+    },
+    {
+      id: 'n73_e4', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal maket gedung:<br><br>\\(\\dfrac{1}{150} = \\dfrac{24}{x}\\)<br><br>$x = 24$ × \\boxed{n73_e4_z0}<br><br>$x =$ \\boxed{n73_e4_z1} cm<br><br>$x =$ \\boxed{n73_e4_z2} meter',
+      questionEn: 'Complete the building model calculation:<br><br>\\(\\dfrac{1}{150} = \\dfrac{24}{x}\\)<br><br>$x = 24$ × \\boxed{n73_e4_z0}<br><br>$x =$ \\boxed{n73_e4_z1} cm<br><br>$x =$ \\boxed{n73_e4_z2} meters',
+      answer: { 'n73_e4_z0': '150', 'n73_e4_z1': '3.600', 'n73_e4_z2': '36' },
+      draggables: ['150', '3.600', '36', '360'],
+      explanation: '$x = 24 \\times 150 = 3.600$ cm $= \\dfrac{3.600}{100} = 36$ meter',
+      explanationEn: '$x = 24 \\times 150 = 3{,}600$ cm $= \\dfrac{3{,}600}{100} = 36$ meters'
+    },
+    {
+      id: 'n73_e5', type: 'order',
+      question: 'Urutkan langkah menghitung tinggi gedung dari maket (skala $1:150$, tinggi maket $24$ cm):',
+      questionEn: 'Order the steps to calculate the building height from the model (scale $1:150$, model height $24$ cm):',
+      answer: [3, 2, 0, 1],
+      items: [
+        'Perkalian silang: $x = 24 \\times 150 = 3.600$ cm',
+        'Konversi: $3.600$ cm $= 36$ meter',
+        'Tulis model: $\\dfrac{1}{150} = \\dfrac{24}{x}$',
+        'Identifikasi: skala $1:150$, maket $= 24$ cm, nyata $= x$ cm'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data → (2) Tulis model $\\dfrac{1}{150} = \\dfrac{24}{x}$ → (3) Perkalian silang $x = 3.600$ cm → (4) Konversi $= 36$ meter',
+      explanationEn: 'Correct order: (1) Identify data → (2) Write model $\\dfrac{1}{150} = \\dfrac{24}{x}$ → (3) Cross multiply $x = 3{,}600$ cm → (4) Convert $= 36$ meters'
+    },
+    {
+      id: 'n73_e6', type: 'fill',
+      question: 'Perbandingan lebar dan tinggi sebuah monitor adalah $16 : 9$. Jika tinggi monitor $27$ cm, berapakah lebar monitor?',
+      questionEn: 'The width to height ratio of a monitor is $16 : 9$. If the height is $27$ cm, what is the width?',
+      answer: ['48'],
+      explanation: '$\\dfrac{16}{9} = \\dfrac{x}{27} \\Rightarrow x = \\dfrac{16 \\times 27}{9} = 16 \\times 3 = 48$ cm',
+      explanationEn: '$\\dfrac{16}{9} = \\dfrac{x}{27} \\Rightarrow x = \\dfrac{16 \\times 27}{9} = 16 \\times 3 = 48$ cm'
+    },
+    {
+      id: 'n73_e7', type: 'radio',
+      question: 'Manakah model matematika yang tepat untuk soal monitor $16:9$, tinggi $27$ cm?',
+      questionEn: 'Which math model is correct for the monitor problem $16:9$, height $27$ cm?',
+      answer: 'a',
+      options: [
+        { value: 'a', text: '$\\dfrac{16}{9} = \\dfrac{x}{27}$' },
+        { value: 'b', text: '$\\dfrac{9}{16} = \\dfrac{27}{x}$' },
+        { value: 'c', text: '$\\dfrac{16}{x} = \\dfrac{9}{27}$' },
+        { value: 'd', text: '$16 + 9 = x + 27$' }
+      ],
+      explanation: 'A benar: lebar di pembilang ($16$ dan $x$), tinggi di penyebut ($9$ dan $27$), posisi konsisten. Catatan: B juga benar secara matematis karena hanya menukar posisi.',
+      explanationEn: 'A is correct: width in numerator ($16$ and $x$), height in denominator ($9$ and $27$), consistent positions. Note: B is also mathematically correct as it just swaps positions.'
+    },
+    {
+      id: 'n73_e8', type: 'checkbox',
+      question: 'Manakah pernyataan yang <strong>benar</strong> tentang soal monitor di atas?',
+      questionEn: 'Which statements are <strong>true</strong> about the monitor problem above?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Rasio $16:9$ bisa disederhanakan, tapi sudah dalam bentuk paling sederhana' },
+        { value: 'b', text: '$\\dfrac{27}{9} = 3$, jadi lebar $= 16 \\times 3 = 48$ cm' },
+        { value: 'c', text: 'Jika tinggi $54$ cm, lebar menjadi $96$ cm — ini bukan perbandingan senilai' },
+        { value: 'd', text: 'Aspect ratio monitor adalah contoh perbandingan senilai di dunia nyata' }
+      ],
+      explanation: 'A benar (FPB $16$ dan $9$ adalah $1$), B benar (metode cepat), C salah (jika tinggi $54$ cm, lebar $96$ cm, rasio tetap $16:9$ — ini tetap senilai!), D benar.',
+      explanationEn: 'A is true (GCF of $16$ and $9$ is $1$), B is true (quick method), C is false (if height $54$ cm, width $96$ cm, ratio stays $16:9$ — still direct proportion!), D is true.'
+    },
+    {
+      id: 'n73_e9', type: 'pairing',
+      question: 'Cocokkan perangkat dengan rasio aspek yang paling umum:',
+      questionEn: 'Match the device with its most common aspect ratio:',
+      pairs: [
+        { left: 'Monitor widescreen', right: '$16 : 9$' },
+        { left: 'Layar smartphone', right: '$20 : 9$ atau $19{,}5 : 9$' },
+        { left: 'Foto polaroid', right: '$1 : 1$' },
+        { left: 'Film sinema ultra-wide', right: '$21 : 9$' }
+      ]
+    },
+    {
+      id: 'n73_e10', type: 'dragdrop',
+      question: 'Monitor rasio $16:9$, tinggi $27$ cm. Lengkapi dengan metode cepat:<br><br>Faktor: $\\dfrac{27}{9} =$ \\boxed{n73_e10_z0}<br><br>Lebar: $16$ × \\boxed{n73_e10_z1} $=$ \\boxed{n73_e10_z2} cm',
+      questionEn: 'Monitor ratio $16:9$, height $27$ cm. Complete using the quick method:<br><br>Factor: $\\dfrac{27}{9} =$ \\boxed{n73_e10_z0}<br><br>Width: $16$ × \\boxed{n73_e10_z1} $=$ \\boxed{n73_e10_z2} cm',
+      answer: { 'n73_e10_z0': '3', 'n73_e10_z1': '3', 'n73_e10_z2': '48' },
+      draggables: ['3', '3', '48', '54'],
+      explanation: 'Faktor $= \\dfrac{27}{9} = 3$. Lebar $= 16 \\times 3 = 48$ cm.',
+      explanationEn: 'Factor $= \\dfrac{27}{9} = 3$. Width $= 16 \\times 3 = 48$ cm.'
+    },
+    { id: 'n73_result', type: 'result' }
+  ]
+};
+
+NODES['node7_4'] = {
+  steps: [
+    {
+      id: 'n74_e1', type: 'fill',
+      question: 'Sebuah startup membutuhkan $15$ server untuk melayani $3.000$ pengguna. Jika pengguna naik menjadi $10.000$, berapa total server yang dibutuhkan?',
+      questionEn: 'A startup needs $15$ servers to serve $3{,}000$ users. If users increase to $10{,}000$, how many total servers are needed?',
+      answer: ['50'],
+      explanation: '$\\dfrac{15}{3.000} = \\dfrac{x}{10.000} \\Rightarrow x = \\dfrac{15 \\times 10.000}{3.000} = 5 \\times 10 = 50$ server',
+      explanationEn: '$\\dfrac{15}{3{,}000} = \\dfrac{x}{10{,}000} \\Rightarrow x = \\dfrac{15 \\times 10{,}000}{3{,}000} = 5 \\times 10 = 50$ servers'
+    },
+    {
+      id: 'n74_e2', type: 'fill',
+      question: 'Dari soal sebelumnya, berapa <strong>tambahan</strong> server yang dibutuhkan?',
+      questionEn: 'From the previous problem, how many <strong>additional</strong> servers are needed?',
+      answer: ['35'],
+      explanation: 'Tambahan $= 50 - 15 = 35$ server. Perhatikan kata "tambahan" — bukan total!',
+      explanationEn: 'Additional $= 50 - 15 = 35$ servers. Note the word "additional" — not total!'
+    },
+    {
+      id: 'n74_e3', type: 'truefalse',
+      question: 'Hubungan jumlah pengguna dan jumlah server yang dibutuhkan merupakan perbandingan senilai.',
+      questionEn: 'The relationship between the number of users and the number of servers needed is direct proportion.',
+      answer: true,
+      explanation: 'Benar! Lebih banyak pengguna → lebih banyak server yang dibutuhkan. Keduanya berubah searah dengan rasio konstan.',
+      explanationEn: 'True! More users → more servers needed. Both change in the same direction with a constant ratio.'
+    },
+    {
+      id: 'n74_e4', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal server:<br><br>\\(\\dfrac{15}{3.000} = \\dfrac{x}{10.000}\\)<br><br>Sederhanakan: penyebut menjadi \\boxed{n74_e4_z0}<br><br>\\(\\dfrac{1}{200} = \\dfrac{x}{10.000}\\)<br><br>$x =$ \\boxed{n74_e4_z1} server<br><br>Tambahan: \\boxed{n74_e4_z1} $- 15 =$ \\boxed{n74_e4_z2} server',
+      questionEn: 'Complete the server calculation:<br><br>\\(\\dfrac{15}{3{,}000} = \\dfrac{x}{10{,}000}\\)<br><br>Simplify: denominator becomes \\boxed{n74_e4_z0}<br><br>\\(\\dfrac{1}{200} = \\dfrac{x}{10{,}000}\\)<br><br>$x =$ \\boxed{n74_e4_z1} servers<br><br>Additional: \\boxed{n74_e4_z1} $- 15 =$ \\boxed{n74_e4_z2} servers',
+      answer: { 'n74_e4_z0': '200', 'n74_e4_z1': '50', 'n74_e4_z2': '35' },
+      draggables: ['200', '50', '35', '500'],
+      explanation: '$\\dfrac{15}{3.000} = \\dfrac{1}{200}$. Lalu $x = \\dfrac{10.000}{200} = 50$. Tambahan $= 50 - 15 = 35$.',
+      explanationEn: '$\\dfrac{15}{3{,}000} = \\dfrac{1}{200}$. Then $x = \\dfrac{10{,}000}{200} = 50$. Additional $= 50 - 15 = 35$.'
+    },
+    {
+      id: 'n74_e5', type: 'order',
+      question: 'Urutkan langkah menghitung tambahan server ($15$ server/$3.000$ pengguna → $10.000$ pengguna):',
+      questionEn: 'Order the steps to calculate additional servers ($15$ servers/$3{,}000$ users → $10{,}000$ users):',
+      answer: [3, 0, 2, 1],
+      items: [
+        'Perkalian silang: $x = \\dfrac{15 \\times 10.000}{3.000} = 50$ server',
+        'Hitung tambahan: $50 - 15 = 35$ server',
+        'Tulis model: $\\dfrac{15}{3.000} = \\dfrac{x}{10.000}$',
+        'Identifikasi: $15$ server $\\to$ $3.000$ pengguna, $x$ server $\\to$ $10.000$ pengguna'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data → (2) Perkalian silang $x = 50$ server → (3) Tulis model → (4) Tambahan $= 50 - 15 = 35$ server',
+      explanationEn: 'Correct order: (1) Identify data → (2) Cross multiply $x = 50$ servers → (3) Write model → (4) Additional $= 50 - 15 = 35$ servers'
+    },
+    {
+      id: 'n74_e6', type: 'fill',
+      question: 'Uang Yusuf dan Aisyah berbanding $3 : 5$. Jika uang Aisyah Rp$200.000$, berapa uang Yusuf?',
+      questionEn: 'Yusuf and Aisyah\'s money are in the ratio $3 : 5$. If Aisyah\'s money is Rp$200{,}000$, how much is Yusuf\'s money?',
+      answer: ['120.000', '120000'],
+      explanation: '$\\dfrac{3}{5} = \\dfrac{x}{200.000} \\Rightarrow x = \\dfrac{3 \\times 200.000}{5} = 3 \\times 40.000 = 120.000$',
+      explanationEn: '$\\dfrac{3}{5} = \\dfrac{x}{200{,}000} \\Rightarrow x = \\dfrac{3 \\times 200{,}000}{5} = 3 \\times 40{,}000 = 120{,}000$'
+    },
+    {
+      id: 'n74_e7', type: 'fill',
+      question: 'Dari soal sebelumnya, berapa jumlah <strong>total</strong> uang Yusuf dan Aisyah? (tulis angka saja tanpa Rp)',
+      questionEn: 'From the previous problem, what is the <strong>total</strong> amount of Yusuf and Aisyah\'s money? (write the number only without Rp)',
+      answer: ['320.000', '320000'],
+      explanation: 'Total $= 120.000 + 200.000 = 320.000$',
+      explanationEn: 'Total $= 120{,}000 + 200{,}000 = 320{,}000$'
+    },
+    {
+      id: 'n74_e8', type: 'radio',
+      question: 'Untuk soal uang Yusuf dan Aisyah ($3:5$, Aisyah Rp$200.000$), manakah model yang tepat untuk mencari uang Yusuf?',
+      questionEn: 'For Yusuf and Aisyah\'s money problem ($3:5$, Aisyah Rp$200{,}000$), which model is correct to find Yusuf\'s money?',
+      answer: 'b',
+      options: [
+        { value: 'a', text: '$\\dfrac{5}{3} = \\dfrac{x}{200.000}$' },
+        { value: 'b', text: '$\\dfrac{3}{5} = \\dfrac{x}{200.000}$' },
+        { value: 'c', text: '$\\dfrac{3}{5} = \\dfrac{200.000}{x}$' },
+        { value: 'd', text: '$3 + 5 = x + 200.000$' }
+      ],
+      explanation: 'B benar: posisi Yusuf ($3$) di atas sejajar dengan $x$, posisi Aisyah ($5$) di atas sejajar dengan $200.000$.',
+      explanationEn: 'B is correct: Yusuf\'s position ($3$) on top aligned with $x$, Aisyah\'s position ($5$) on top aligned with $200{,}000$.'
+    },
+    {
+      id: 'n74_e9', type: 'checkbox',
+      question: 'Manakah pernyataan yang <strong>benar</strong> tentang soal uang Yusuf dan Aisyah?',
+      questionEn: 'Which statements are <strong>true</strong> about Yusuf and Aisyah\'s money problem?',
+      answer: ['a', 'c', 'd'],
+      options: [
+        { value: 'a', text: 'Perbandingan $3:5$ berarti dari setiap $8$ bagian, Yusuf punya $3$ bagian dan Aisyah $5$ bagian' },
+        { value: 'b', text: 'Jika uang Aisyah Rp$200.000$, maka total uang Rp$1.000.000$' },
+        { value: 'c', text: 'Nilai $1$ bagian $= \\dfrac{200.000}{5} = 40.000$' },
+        { value: 'd', text: 'Uang Yusuf bisa dihitung dengan $3 \\times 40.000 = 120.000$' }
+      ],
+      explanation: 'A benar ($3+5=8$ bagian total), B salah (total $= 120.000 + 200.000 = 320.000$), C benar ($1$ bagian dari sisi Aisyah), D benar (metode alternatif).',
+      explanationEn: 'A is true ($3+5=8$ total parts), B is false (total $= 120{,}000 + 200{,}000 = 320{,}000$), C is true ($1$ part from Aisyah\'s side), D is true (alternative method).'
+    },
+    {
+      id: 'n74_e10', type: 'pairing',
+      question: 'Cocokkan soal perbandingan uang dengan jawaban yang benar:',
+      questionEn: 'Match the money ratio problem with the correct answer:',
+      pairs: [
+        { left: 'Yusuf $:$ Aisyah $= 3:5$, Aisyah Rp$200.000$, uang Yusuf?', right: 'Rp$120.000$' },
+        { left: 'Yusuf $:$ Aisyah $= 3:5$, Aisyah Rp$200.000$, total uang?', right: 'Rp$320.000$' },
+        { left: 'Yusuf $:$ Aisyah $= 3:5$, total Rp$320.000$, uang Aisyah?', right: 'Rp$200.000$' },
+        { left: 'Yusuf $:$ Aisyah $= 3:5$, Yusuf Rp$90.000$, uang Aisyah?', right: 'Rp$150.000$' }
+      ]
+    },
+    { id: 'n74_result', type: 'result' }
+  ]
+};
+
+NODES['node7_5'] = {
+  steps: [
+    {
+      id: 'n75_e1', type: 'fill',
+      question: 'Dalam $2$ jam, sebuah mesin pabrik menghasilkan $500$ unit barang. Jika mesin bekerja selama $7{,}5$ jam, berapa unit barang yang dihasilkan?',
+      questionEn: 'In $2$ hours, a factory machine produces $500$ units. If the machine works for $7.5$ hours, how many units are produced?',
+      answer: ['1875'],
+      explanation: '$\\dfrac{500}{2} = \\dfrac{x}{7{,}5} \\Rightarrow x = \\dfrac{500 \\times 7{,}5}{2} = 250 \\times 7{,}5 = 1.875$ unit',
+      explanationEn: '$\\dfrac{500}{2} = \\dfrac{x}{7.5} \\Rightarrow x = \\dfrac{500 \\times 7.5}{2} = 250 \\times 7.5 = 1{,}875$ units'
+    },
+    {
+      id: 'n75_e2', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal mesin pabrik:<br><br>\\(\\dfrac{500}{2} = \\dfrac{x}{7{,}5}\\)<br><br>Sederhanakan: $\\dfrac{500}{2} =$ \\boxed{n75_e2_z0} unit/jam<br><br>$x =$ \\boxed{n75_e2_z1} × \\boxed{n75_e2_z2}<br><br>$x =$ \\boxed{n75_e2_z3} unit',
+      questionEn: 'Complete the factory machine calculation:<br><br>\\(\\dfrac{500}{2} = \\dfrac{x}{7.5}\\)<br><br>Simplify: $\\dfrac{500}{2} =$ \\boxed{n75_e2_z0} units/hour<br><br>$x =$ \\boxed{n75_e2_z1} × \\boxed{n75_e2_z2}<br><br>$x =$ \\boxed{n75_e2_z3} units',
+      answer: { 'n75_e2_z0': '250', 'n75_e2_z1': '250', 'n75_e2_z2': '7,5', 'n75_e2_z3': '1.875' },
+      draggables: ['250', '7,5', '1.875', '1.500'],
+      explanation: '$\\dfrac{500}{2} = 250$ unit/jam. $x = 250 \\times 7{,}5 = 1.875$ unit.',
+      explanationEn: '$\\dfrac{500}{2} = 250$ units/hour. $x = 250 \\times 7.5 = 1{,}875$ units.'
+    },
+    {
+      id: 'n75_e3', type: 'truefalse',
+      question: 'Hubungan waktu kerja mesin dan jumlah unit yang dihasilkan merupakan perbandingan senilai.',
+      questionEn: 'The relationship between machine working time and units produced is direct proportion.',
+      answer: true,
+      explanation: 'Benar! Mesin bekerja lebih lama → menghasilkan lebih banyak unit. Keduanya berubah searah dengan rasio konstan ($250$ unit/jam).',
+      explanationEn: 'True! Machine works longer → produces more units. Both change in the same direction with a constant ratio ($250$ units/hour).'
+    },
+    {
+      id: 'n75_e4', type: 'radio',
+      question: 'Manakah model matematika yang tepat untuk soal mesin pabrik?',
+      questionEn: 'Which math model is correct for the factory machine problem?',
+      answer: 'a',
+      options: [
+        { value: 'a', text: '$\\dfrac{500}{2} = \\dfrac{x}{7{,}5}$' },
+        { value: 'b', text: '$\\dfrac{2}{500} = \\dfrac{x}{7{,}5}$' },
+        { value: 'c', text: '$\\dfrac{500}{x} = \\dfrac{7{,}5}{2}$' },
+        { value: 'd', text: '$500 \\times 2 = x \\times 7{,}5$' }
+      ],
+      explanation: 'A benar: unit di pembilang ($500$ dan $x$), jam di penyebut ($2$ dan $7{,}5$), posisi konsisten.',
+      explanationEn: 'A is correct: units in numerator ($500$ and $x$), hours in denominator ($2$ and $7.5$), consistent positions.'
+    },
+    {
+      id: 'n75_e5', type: 'fill',
+      question: 'Sebuah proyek UI Design: $3$ desainer bisa menyelesaikan $18$ modul dalam $6$ hari. Berapa modul yang diselesaikan $3$ desainer dalam $20$ hari?',
+      questionEn: 'A UI Design project: $3$ designers can complete $18$ modules in $6$ days. How many modules are completed by $3$ designers in $20$ days?',
+      answer: ['60'],
+      explanation: '$\\dfrac{18}{6} = \\dfrac{x}{20} \\Rightarrow x = \\dfrac{18 \\times 20}{6} = 3 \\times 20 = 60$ modul',
+      explanationEn: '$\\dfrac{18}{6} = \\dfrac{x}{20} \\Rightarrow x = \\dfrac{18 \\times 20}{6} = 3 \\times 20 = 60$ modules'
+    },
+    {
+      id: 'n75_e6', type: 'order',
+      question: 'Urutkan langkah menghitung modul dalam $20$ hari ($3$ desainer, $18$ modul/$6$ hari):',
+      questionEn: 'Order the steps to calculate modules in $20$ days ($3$ designers, $18$ modules/$6$ days):',
+      answer: [3, 2, 0, 1],
+      items: [
+        'Perkalian silang: $6x = 18 \\times 20 = 360$',
+        'Hitung: $x = \\dfrac{360}{6} = 60$ modul',
+        'Tulis model: $\\dfrac{18}{6} = \\dfrac{x}{20}$',
+        'Identifikasi: jumlah desainer tetap ($3$), $18$ modul/$6$ hari, $x$ modul/$20$ hari'
+      ],
+      explanation: 'Urutan benar: (1) Identifikasi data (desainer tetap) → (2) Tulis model $\\dfrac{18}{6} = \\dfrac{x}{20}$ → (3) Perkalian silang $6x = 360$ → (4) Hitung $x = 60$ modul',
+      explanationEn: 'Correct order: (1) Identify data (designers stay the same) → (2) Write model $\\dfrac{18}{6} = \\dfrac{x}{20}$ → (3) Cross multiply $6x = 360$ → (4) Calculate $x = 60$ modules'
+    },
+    {
+      id: 'n75_e7', type: 'checkbox',
+      question: 'Manakah pernyataan yang <strong>benar</strong>?',
+      questionEn: 'Which statements are <strong>true</strong>?',
+      answer: ['a', 'b', 'd'],
+      options: [
+        { value: 'a', text: 'Soal mesin pabrik ($2$ jam/$500$ unit → $7{,}5$ jam) adalah perbandingan senilai' },
+        { value: 'b', text: 'Soal proyek UI Design ($18$ modul/$6$ hari → $20$ hari) adalah perbandingan senilai karena jumlah desainer tetap' },
+        { value: 'c', text: 'Jika jumlah desainer berubah, maka soal UI Design tetap perbandingan senilai tanpa penyesuaian' },
+        { value: 'd', text: 'Produktivitas mesin pabrik ($250$ unit/jam) dan produktivitas desainer ($3$ modul/hari) keduanya bernilai konstan' }
+      ],
+      explanation: 'A benar (waktu dan unit senilai), B benar (desainer tetap, hanya waktu yang berubah → senilai), C salah (jika desainer berubah, ini bisa jadi berbalik nilai tergantung konteks), D benar (rasio konstan pada masing-masing soal).',
+      explanationEn: 'A is true (time and units are direct proportion), B is true (designers stay the same, only time changes → direct proportion), C is false (if designers change, this could be inverse proportion depending on context), D is true (constant ratio in each problem).'
+    },
+    {
+      id: 'n75_e8', type: 'dragdrop',
+      question: 'Lengkapi perhitungan soal proyek UI Design:<br><br>Produktivitas: $\\dfrac{18}{6} =$ \\boxed{n75_e8_z0} modul/hari<br><br>Modul dalam $20$ hari: \\boxed{n75_e8_z1} × $20 =$ \\boxed{n75_e8_z2} modul',
+      questionEn: 'Complete the UI Design project calculation:<br><br>Productivity: $\\dfrac{18}{6} =$ \\boxed{n75_e8_z0} modules/day<br><br>Modules in $20$ days: \\boxed{n75_e8_z1} × $20 =$ \\boxed{n75_e8_z2} modules',
+      answer: { 'n75_e8_z0': '3', 'n75_e8_z1': '3', 'n75_e8_z2': '60' },
+      draggables: ['3', '3', '60', '18'],
+      explanation: 'Produktivitas $= \\dfrac{18}{6} = 3$ modul/hari. Dalam $20$ hari: $3 \\times 20 = 60$ modul.',
+      explanationEn: 'Productivity $= \\dfrac{18}{6} = 3$ modules/day. In $20$ days: $3 \\times 20 = 60$ modules.'
+    },
+    {
+      id: 'n75_e9', type: 'pairing',
+      question: 'Cocokkan soal dengan jawaban yang benar:',
+      questionEn: 'Match the problem with the correct answer:',
+      pairs: [
+        { left: '$2$ jam → $500$ unit, $7{,}5$ jam → ?', right: '$1.875$ unit' },
+        { left: '$2$ jam → $500$ unit, $5$ jam → ?', right: '$1.250$ unit' },
+        { left: '$18$ modul/$6$ hari, $20$ hari → ?', right: '$60$ modul' },
+        { left: '$18$ modul/$6$ hari, $10$ hari → ?', right: '$30$ modul' }
+      ]
+    },
+    {
+      id: 'n75_e10', type: 'fill',
+      question: 'Dengan metode faktor perubahan: produktivitas desainer $3$ modul/hari. Jika $3$ desainer bekerja $20$ hari, berapa total modul? (Catatan: ini sama dengan soal proyek UI Design di atas)',
+      questionEn: 'Using the change factor method: designer productivity is $3$ modules/day. If $3$ designers work for $20$ days, what is the total modules? (Note: this is the same as the UI Design project above)',
+      answer: ['60'],
+      explanation: 'Metode cepat: $3$ modul/hari $\\times 20$ hari $= 60$ modul. Sama hasilnya dengan perkalian silang!',
+      explanationEn: 'Quick method: $3$ modules/day $\\times 20$ days $= 60$ modules. Same result as cross multiplication!'
+    },
+    { id: 'n75_result', type: 'result' }
+  ]
+};
+
+NODES['node8'] = {
+  steps: [
+    {
+      id: 'n8_t1', type: 'theory',
+      title: 'Ringkasan: Kunci Perbandingan Senilai',
+      content: '<p>Selamat! Kamu telah menyelesaikan seluruh materi <strong>Perbandingan Senilai</strong>. Berikut ringkasan kunci yang harus kamu ingat:</p><p><strong>1. Rumus Dasar:</strong></p><p>$$\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$$</p><p><strong>2. Ciri Perbandingan Senilai:</strong></p><ul><li>Kedua kuantitas berubah ke arah <strong>sama</strong></li><li>Rasio antar kuantitas selalu <strong>konstan</strong></li><li>Jika satu sisi dikali $n$, sisi lain juga dikali $n$</li></ul><p><strong>3. Dua Metode Penyelesaian:</strong></p><ul><li><strong>Perkalian silang:</strong> $a \\times d = b \\times c$</li><li><strong>Faktor perubahan:</strong> $k = \\dfrac{x_2}{x_1}$, lalu $y_2 = k \\times y_1$</li></ul><p><strong>4. Aplikasi Dunia Nyata:</strong></p><ul><li>Skala peta dan denah</li><li>Aspect ratio pada desain UI</li><li>Harga vs jumlah barang</li><li>Konversi satuan jarak</li></ul><p><strong>5. Tips Penting:</strong></p><ul><li>Selalu <strong>cek satuan</strong> sebelum menghitung</li><li><strong>Sederhanakan</strong> perbandingan jika memungkinkan</li><li><strong>Verifikasi</strong> jawaban dengan menyubstitusi kembali</li></ul>',
+      contentEn: 'Congratulations! You have completed the entire <strong>Direct Proportion</strong> material. Here is the key summary to remember:<br><strong>1. Basic Formula:</strong><br>$$\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$$<br><strong>2. Characteristics of Direct Proportion:</strong><br>- Both quantities change in the <strong>same direction</strong><br>- The ratio between quantities is always <strong>constant</strong><br>- If one side is multiplied by $n$, the other side is also multiplied by $n$<br><strong>3. Two Solving Methods:</strong><br>- <strong>Cross multiplication:</strong> $a \\times d = b \\times c$<br>- <strong>Change factor:</strong> $k = \\dfrac{x_2}{x_1}$, then $y_2 = k \\times y_1$<br><strong>4. Real-World Applications:</strong><br>- Map and floor plan scales<br>- Aspect ratio in UI design<br>- Price vs quantity<br>- Distance unit conversion<br><strong>5. Important Tips:</strong><br>- Always <strong>check units</strong> before calculating<br>- <strong>Simplify</strong> the ratio if possible<br>- <strong>Verify</strong> the answer by substituting back'
+    },
+    {
+      id: 'n8_t2', type: 'theory',
+      title: 'Refleksi',
+      content: '<p>Luangkan waktu sejenak untuk merefleksikan pembelajaran hari ini:</p><p><strong>Pertanyaan untuk diri sendiri:</strong></p><ol><li>Bagian mana yang paling kamu kuasai? (Skala peta? Aspect ratio? Harga vs jumlah?)</li><li>Bagian mana yang masih terasa sulit? (Perkalian silang? Konversi satuan? Menyusun model?)</li><li>Metode mana yang lebih kamu sukai — perkalian silang atau faktor perubahan?</li><li>Dalam kehidupan sehari-hari, kapan kamu pernah menggunakan perbandingan senilai tanpa menyadarinya?</li></ol><p><strong>Langkah Selanjutnya:</strong></p><p>Untuk memperkuat pemahaman, login ke platform belajar dan ulangi materi serta kerjakan latihan tambahan yang tersedia.</p>',
+      contentEn: 'Take a moment to reflect on today\'s learning:<br><strong>Questions for yourself:</strong><br>1. Which part do you master the most? (Map scale? Aspect ratio? Price vs quantity?)<br>2. Which part still feels difficult? (Cross multiplication? Unit conversion? Building models?)<br>3. Which method do you prefer — cross multiplication or change factor?<br>4. In daily life, when have you used direct proportion without realizing it?<br><strong>Next Steps:</strong><br>To strengthen your understanding, log in to the learning platform and review the material and complete additional exercises available.'
+    },
+    {
+      id: 'n8_t3', type: 'theory',
+      title: 'Akses Materi Online',
+      content: '<div class="consolidation-card"><h3>Kunjungi Platform Belajar</h3><p style="color:#cbd5e1;margin-bottom:8px">Untuk mengulang materi, melihat catatan belajar, dan mengerjakan latihan tambahan, silakan akses link di bawah ini:</p><a href="https://learn.algonova.id/login" target="_blank" rel="noopener noreferrer" class="lms-link"><i class="fas fa-external-link-alt"></i> learn.algonova.id/login</a><p style="color:#64748b;font-size:13px;margin-top:16px">Jangan lupa untuk selalu review materi sebelum sesi berikutnya. Semangat belajar!</p></div>',
+      contentEn: '<div class="consolidation-card"><h3>Visit the Learning Platform</h3><p style="color:#cbd5e1;margin-bottom:8px">To review the material, check your study notes, and complete additional exercises, please access the link below:</p><a href="https://learn.algonova.id/login" target="_blank" rel="noopener noreferrer" class="lms-link"><i class="fas fa-external-link-alt"></i> learn.algonova.id/login</a><p style="color:#64748b;font-size:13px;margin-top:16px">Don\'t forget to always review the material before the next session. Keep up the great work!</p></div>'
+    }
+  ]
+};
+
+
+
+/* ==========================================================
+   UTILITAS
+   ========================================================== */
+function $(sel){ return document.querySelector(sel); }
+function $$(sel){ return document.querySelectorAll(sel); }
+
+// Shuffle array (Fisher-Yates)
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+// Render KaTeX di dalam elemen
+function renderKaTeX(el){
+  if(!el || !window.renderMathInElement) return;
+  renderMathInElement(el, {
+    delimiters:[
+      {left:'$$',right:'$$',display:true},
+      {left:'$',right:'$',display:false},
+      {left:'\\(',right:'\\)',display:false},
+      {left:'\\[',right:'\\]',display:true}
+    ],
+    throwOnError:false
+  });
+}
+
+// Escape HTML
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Tanggal hari ini
+function todayStr(){
+  const d=new Date();
+  return d.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+}
+
+/* ==========================================================
+   MODAL
+   ========================================================== */
+function toggleModal(show){
+  $('#classRulesModal').classList.toggle('active', show);
+}
+ $('#classRulesModal').addEventListener('click', function(e){
+  if(e.target === this) toggleModal(false);
+});
+
+/* ==========================================================
+   NODE MAP - Rendering peta dengan node
+   ========================================================== */
+const MAP_ROW_H = 110;
+const MAP_COL_LEFT = 0.22;
+const MAP_COL_RIGHT = 0.78;
+const MAP_TOP_PAD = 120;
+
+function getNodePos(index){
+  const meta = NODE_META[index];
+  return {
+    x: meta.col === 0 ? MAP_COL_LEFT : MAP_COL_RIGHT,
+    y: MAP_TOP_PAD + index * MAP_ROW_H
+  };
+}
+
+function renderMap(){
+  const container = $('#mapContainer');
+  const nodesDiv = $('#mapNodes');
+  const svg = $('#mapSvg');
+
+  // Hitung tinggi container
+  const totalH = MAP_TOP_PAD + (NODE_META.length - 1) * MAP_ROW_H + 80;
+  container.style.minHeight = totalH + 'px';
+
+  // Gambar garis penghubung di SVG
+  let pathD = '';
+  for(let i = 0; i < NODE_META.length - 1; i++){
+    const p1 = getNodePos(i);
+    const p2 = getNodePos(i + 1);
+    // Konversi ke persen -> kita pakai viewBox yang sesuai
+    const x1 = p1.x * 100, y1 = p1.y;
+    const x2 = p2.x * 100, y2 = p2.y;
+    const cy1 = y1 + (y2 - y1) * 0.5;
+    pathD += `M ${x1} ${y1} C ${x1} ${cy1}, ${x2} ${cy1}, ${x2} ${y2} `;
+  }
+  svg.setAttribute('viewBox', `0 0 100 ${totalH}`);
+  svg.style.height = totalH + 'px';
+  svg.innerHTML = `<path d="${pathD}" class="map-path-line"/>`;
+
+  // Render node elements
+  let nodesHTML = '';
+  NODE_META.forEach((meta, i) => {
+    const pos = getNodePos(i);
+    const isCompleted = state.completed[meta.id] && state.completed[meta.id].size > 0;
+    const isActive = state.currentNode === meta.id;
+    const cls = ['map-node', isCompleted ? 'completed' : '', isActive ? 'active' : ''].filter(Boolean).join(' ');
+    const labelPos = meta.col === 0 ? 'bottom' : 'bottom';
+    const data = NODES[meta.id];
+    const totalEx = data ? data.steps.filter(s => s.type !== 'theory' && s.type !== 'result').length : 0;
+    const doneEx = state.completed[meta.id] ? state.completed[meta.id].size : 0;
+    const progText = totalEx > 0 ? `${doneEx}/${totalEx}` : '';
+
+    nodesHTML += `
+      <div class="${cls}" style="left:${pos.x*100}%;top:${pos.y}px;transform:translate(-50%,-50%)" 
+           onclick="openNode('${meta.id}')" data-node-id="${meta.id}">
+        <div class="map-node-circle"><span class="node-label">${meta.label}</span></div>
+        <div class="map-node-label ${labelPos}">
+          ${esc(meta.title)}
+          ${meta.time ? `<span class="map-node-time">${meta.time}</span>` : ''}
+          ${progText ? `<span class="map-node-time">${progText} selesai</span>` : ''}
+        </div>
+      </div>`;
+  });
+  nodesDiv.innerHTML = nodesHTML;
+}
+
+function updateMapNode(nodeId){
+  const el = document.querySelector(`.map-node[data-node-id="${nodeId}"]`);
+  if(!el) return;
+  const isCompleted = state.completed[nodeId] && state.completed[nodeId].size > 0;
+  el.classList.toggle('completed', isCompleted);
+  // Update progress text
+  const data = NODES[nodeId];
+  if(data){
+    const totalEx = data.steps.filter(s => s.type !== 'theory' && s.type !== 'result').length;
+    const doneEx = state.completed[nodeId].size;
+    const meta = NODE_META.find(n => n.id === nodeId);
+    const label = el.querySelector('.map-node-label');
+    if(label && meta){
+      let html = esc(meta.title);
+      if(meta.time) html += `<span class="map-node-time">${meta.time}</span>`;
+      if(totalEx > 0) html += `<span class="map-node-time">${doneEx}/${totalEx} selesai</span>`;
+      label.innerHTML = html;
+    }
+  }
+}
+
+/* ==========================================================
+   NAVIGASI - Buka/tutup node
+   ========================================================== */
+function openNode(nodeId){
+  if(!NODES[nodeId]){
+    // Tampilkan pesan jika data belum ada
+    alert('Materi untuk node ini belum tersedia. Pastikan semua bagian kode sudah digabungkan.');
+    return;
+  }
+  state.currentNode = nodeId;
+  state.currentStep = 0;
+
+  // Inisialisasi state khusus jika belum ada
+  if(!state.completed[nodeId]) state.completed[nodeId] = new Set();
+
+  $('#mapView').style.display = 'none';
+  $('#contentView').classList.add('active');
+  renderContent();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function closeNode(){
+  $('#contentView').classList.remove('active');
+  $('#mapView').style.display = '';
+  state.currentNode = null;
+  renderMap();
+}
+
+/* ==========================================================
+   CONTENT - Render seluruh konten node
+   ========================================================== */
+function renderContent(){
+  const nodeId = state.currentNode;
+  const data = NODES[nodeId];
+  const meta = NODE_META.find(n => n.id === nodeId);
+  if(!data || !meta) return;
+
+  const steps = data.steps;
+  const stepIdx = state.currentStep;
+  const step = steps[stepIdx];
+  const isAssignment = nodeId.startsWith('node7');
+  const exerciseSteps = steps.filter(s => s.type !== 'theory' && s.type !== 'result');
+  const doneCount = state.completed[nodeId].size;
+  const totalCount = exerciseSteps.length;
+  const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+
+  // Step indicator dots
+  let dotsHTML = '';
+  steps.forEach((s, i) => {
+    const isTheory = s.type === 'theory' || s.type === 'result';
+    const isDone = !isTheory && state.completed[nodeId].has(s.id);
+    const isCurrent = i === stepIdx;
+    const cls = ['step-dot', isTheory ? 'theory' : '', isDone ? 'done' : '', isCurrent ? 'current' : ''].filter(Boolean).join(' ');
+    dotsHTML += `<div class="${cls}" onclick="goToStep(${i})" title="${isTheory ? 'Teori' : 'Latihan'} ${i+1}">${i+1}</div>`;
+  });
+
+  let html = `
+    <button class="back-btn" onclick="closeNode()"><i class="fas fa-arrow-left"></i> Kembali ke Peta</button>
+    <div class="node-title-bar">
+      <h2>${esc(meta.title)}</h2>
+      <div class="node-time">${esc(meta.titleEn)}${meta.time ? ' &middot; ' + meta.time : ''}</div>
+    </div>
+    <div class="step-indicator">${dotsHTML}</div>
+    <div class="step-info">Langkah ${stepIdx+1} dari ${steps.length}${totalCount > 0 ? ' &middot; ' + doneCount + '/' + totalCount + ' latihan selesai' : ''}</div>
+    <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="fade-in-up" id="stepArea"></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="prevStep()" ${stepIdx === 0 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Sebelumnya</button>
+      <button class="nav-btn primary" onclick="nextStep()" ${stepIdx === steps.length - 1 ? 'disabled' : ''}>Selanjutnya <i class="fas fa-chevron-right"></i></button>
+    </div>
+  `;
+
+  $('#contentInner').innerHTML = html;
+
+  // Render step content
+  const area = $('#stepArea');
+  if(step.type === 'theory'){
+    renderTheory(area, step);
+  } else if(step.type === 'result'){
+    renderResult(area, nodeId, steps);
+  } else {
+    renderExercise(area, step, isAssignment);
+  }
+
+  renderKaTeX(area);
+}
+
+function goToStep(idx){
+  const data = NODES[state.currentNode];
+  if(idx >= 0 && idx < data.steps.length){
+    state.currentStep = idx;
+    renderContent();
+  }
+}
+function prevStep(){ goToStep(state.currentStep - 1); }
+function nextStep(){ goToStep(state.currentStep + 1); }
+
+/* ==========================================================
+   THEORY RENDERER
+   ========================================================== */
+function renderTheory(container, item){
+  container.innerHTML = `
+    <div class="theory-card">
+      ${item.title ? `<h3>${item.title}</h3>` : ''}
+      <div class="theory-body">${item.content}</div>
+      ${item.contentEn ? `<div class="theory-en">${item.contentEn}</div>` : ''}
+    </div>
+  `;
+  renderKaTeX(container);
+}
+
+/* ==========================================================
+   EXERCISE RENDERER - Dispatcher
+   ========================================================== */
+function renderExercise(container, item, isAssignment){
+  const isDone = state.completed[item.id];
+  let bodyHTML = '';
+  switch(item.type){
+    case 'fill': bodyHTML = renderFillBody(item, isDone); break;
+    case 'checkbox': bodyHTML = renderCheckboxBody(item, isDone); break;
+    case 'radio': bodyHTML = renderRadioBody(item, isDone); break;
+    case 'pairing': bodyHTML = renderPairingBody(item, isDone); break;
+    case 'truefalse': bodyHTML = renderTrueFalseBody(item, isDone); break;
+    case 'order': bodyHTML = renderOrderBody(item, isDone); break;
+    case 'dragdrop': bodyHTML = renderDragDropBody(item, isDone); break;
+    default: bodyHTML = `<p style="color:#ef4444">Tipe exercise tidak dikenali: ${item.type}</p>`;
+  }
+
+  const checkBtnClass = isDone ? 'btn-check btn-correct-show' : 'btn-check';
+  const checkBtnText = isDone ? '<i class="fas fa-check" style="margin-right:6px"></i>Benar' : '<i class="fas fa-check" style="margin-right:6px"></i>Periksa';
+  const checkDisabled = isDone ? 'disabled' : '';
+
+  container.innerHTML = `
+    <div class="exercise-wrapper" id="ew-${item.id}">
+      <div class="question-block">
+        <p class="question-text">${item.question}</p>
+        <p class="question-text-en">${item.questionEn || ''}</p>
+      </div>
+      <div class="exercise-body" id="body-${item.id}">${bodyHTML}</div>
+      <div class="exercise-actions">
+        <button class="${checkBtnClass}" id="check-${item.id}" onclick="checkAnswer('${item.id}')" ${checkDisabled}>${checkBtnText}</button>
+        <button class="btn-reset" onclick="resetAnswer('${item.id}')"><i class="fas fa-redo" style="margin-right:6px"></i>Reset</button>
+      </div>
+      <div class="explanation-block" id="exp-${item.id}" style="${isDone ? '' : 'display:none'}">
+        <div class="explanation-toggle ${isDone ? 'open' : ''}" onclick="toggleExp('${item.id}')">
+          <span><i class="fas fa-lightbulb" style="margin-right:6px;color:#f59e0b"></i>Penjelasan</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="explanation-content ${isDone ? 'open' : ''}">
+          <p>${item.explanation || ''}</p>
+          ${item.explanationEn ? `<p class="exp-en">${item.explanationEn}</p>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  renderKaTeX(container);
+
+  // Inisialisasi interaksi khusus
+  if(item.type === 'pairing') initPairing(item);
+  if(item.type === 'order') initOrder(item);
+  if(item.type === 'dragdrop') initDragDrop(item);
+}
+
+/* ==========================================================
+   FILL IN
+   ========================================================== */
+function renderFillBody(item, isDone){
+  const val = isDone ? (Array.isArray(item.answer) ? item.answer[0] : item.answer) : '';
+  const cls = isDone ? 'fill-input input-correct' : 'fill-input';
+  return `<input type="text" class="${cls}" id="input-${item.id}" value="${esc(val)}" ${isDone ? 'disabled' : ''} placeholder="Ketik jawaban...">`;
+}
+
+function checkFill(item){
+  const input = $(`#input-${item.id}`);
+  if(!input) return false;
+  const ua = input.value.trim();
+  const ca = item.answer;
+  let correct = false;
+  if(Array.isArray(ca)) correct = ca.some(a => a.trim() === ua);
+  else correct = ca.trim() === ua;
+  input.classList.add(correct ? 'input-correct' : 'input-wrong');
+  input.disabled = true;
+  state.studentAnswers[item.id] = ua;
+  return correct;
+}
+
+/* ==========================================================
+   CHECKBOX
+   ========================================================== */
+function renderCheckboxBody(item, isDone){
+  let html = '<div class="option-list">';
+  item.options.forEach((opt, i) => {
+    const selected = isDone && item.answer.includes(opt.value);
+    const cls = selected ? 'option-item selected option-correct' : 'option-item';
+    html += `
+      <label class="${cls}" data-type="checkbox" data-value="${opt.value}" onclick="toggleOption(this,'checkbox')">
+        <input type="checkbox" ${selected ? 'checked disabled' : ''}>
+        <span class="option-marker"><i class="fas fa-check"></i></span>
+        <span class="option-text">${opt.text}</span>
+      </label>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+/* ==========================================================
+   RADIO
+   ========================================================== */
+function renderRadioBody(item, isDone){
+  let html = '<div class="option-list">';
+  item.options.forEach((opt, i) => {
+    const selected = isDone && item.answer === opt.value;
+    const correctOpt = item.answer === opt.value;
+    const cls = isDone ? (correctOpt ? 'option-item selected option-correct' : 'option-item') : 'option-item';
+    html += `
+      <label class="${cls}" data-type="radio" data-value="${opt.value}" onclick="toggleOption(this,'radio')">
+        <input type="radio" name="radio-${item.id}" ${selected ? 'checked disabled' : ''}>
+        <span class="option-marker"><i class="fas fa-circle" style="font-size:8px"></i></span>
+        <span class="option-text">${opt.text}</span>
+      </label>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+// Handler untuk radio & checkbox
+function toggleOption(el, type){
+  if(el.classList.contains('option-correct')) return; // Sudah selesai, jangan ubah
+  const wrapper = el.closest('.option-list');
+  if(type === 'radio'){
+    wrapper.querySelectorAll('.option-item').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  } else {
+    el.classList.toggle('selected');
+    el.querySelector('input').checked = el.classList.contains('selected');
+  }
+}
+
+function getSelectedValues(itemId, type){
+  const wrapper = $(`#body-${itemId}`);
+  if(!wrapper) return [];
+  if(type === 'radio'){
+    const sel = wrapper.querySelector('.option-item.selected');
+    return sel ? [sel.dataset.value] : [];
+  }
+  return [...wrapper.querySelectorAll('.option-item.selected')].map(o => o.dataset.value);
+}
+
+function checkChoice(item){
+  const type = item.type;
+  const selected = getSelectedValues(item.id, type);
+  const correct = type === 'radio'
+    ? selected.length === 1 && selected[0] === item.answer
+    : selected.length === item.answer.length && selected.every(s => item.answer.includes(s));
+
+  // Tandai visual
+  const wrapper = $(`#body-${item.id}`);
+  wrapper.querySelectorAll('.option-item').forEach(o => {
+    const v = o.dataset.value;
+    o.querySelector('input').disabled = true;
+    if(item.answer.includes(v)){
+      o.classList.add('option-correct');
+    } else if(selected.includes(v)){
+      o.classList.add('option-wrong');
+    }
+  });
+
+  // Simpan jawaban teks
+  const labels = item.options.filter(o => selected.includes(o.value)).map(o => {
+    const tmp = document.createElement('div'); tmp.innerHTML = o.text; return tmp.textContent.trim();
+  });
+  state.studentAnswers[item.id] = labels.join('; ');
+  return correct;
+}
+
+/* ==========================================================
+   TRUE / FALSE
+   ========================================================== */
+function renderTrueFalseBody(item, isDone){
+  const selVal = isDone ? (item.answer ? 'true' : 'false') : '';
+  return `
+    <div class="tf-buttons">
+      <button class="tf-btn ${isDone && item.answer ? 'selected tf-correct' : isDone && !item.answer ? '' : ''}" 
+              data-value="true" onclick="selectTF(this,'${item.id}')">
+        <i class="fas fa-check-circle"></i> Benar
+      </button>
+      <button class="tf-btn ${isDone && !item.answer ? 'selected tf-correct' : isDone && item.answer ? '' : ''}" 
+              data-value="false" onclick="selectTF(this,'${item.id}')">
+        <i class="fas fa-times-circle"></i> Salah
+      </button>
+    </div>`;
+}
+
+function selectTF(btn, itemId){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  const wrapper = btn.closest('.tf-buttons');
+  wrapper.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function checkTrueFalse(item){
+  const wrapper = $(`#body-${item.id}`);
+  const sel = wrapper.querySelector('.tf-btn.selected');
+  if(!sel) return false;
+  const userVal = sel.dataset.value === 'true';
+  const correct = userVal === item.answer;
+  wrapper.querySelectorAll('.tf-btn').forEach(b => {
+    const v = b.dataset.value === 'true';
+    b.style.pointerEvents = 'none';
+    if(v === item.answer) b.classList.add('tf-correct');
+    else if(b.classList.contains('selected') && !correct) b.classList.add('tf-wrong');
+  });
+  state.studentAnswers[item.id] = userVal ? 'Benar' : 'Salah';
+  return correct;
+}
+
+/* ==========================================================
+   PAIRING
+   ========================================================== */
+function renderPairingBody(item, isDone){
+  const pairColors = ['pair-color-0','pair-color-1','pair-color-2','pair-color-3','pair-color-4'];
+  if(isDone){
+    // Tampilkan pasangan yang benar
+    let leftHTML = '<div class="pairing-col"><div class="pairing-col-label">Kolom A</div>';
+    let rightHTML = '<div class="pairing-col"><div class="pairing-col-label">Kolom B</div>';
+    item.pairs.forEach((p, i) => {
+      leftHTML += `<div class="pair-item pair-matched ${pairColors[i%5]}">${p.left}</div>`;
+      rightHTML += `<div class="pair-item pair-matched ${pairColors[i%5].replace('pair-color-','pair-color-r')}">${p.right}</div>`;
+    });
+    leftHTML += '</div>';
+    rightHTML += '</div>';
+    return `<div class="pairing-cols">${leftHTML}${rightHTML}</div>`;
+  }
+
+  // Shuffle kanan
+  const rightShuffled = shuffle(item.pairs.map((p, i) => ({ text: p.right, origIdx: i })));
+
+  let leftHTML = '<div class="pairing-col"><div class="pairing-col-label">Kolom A</div>';
+  let rightHTML = '<div class="pairing-col"><div class="pairing-col-label">Kolom B</div>';
+  item.pairs.forEach((p, i) => {
+    leftHTML += `<div class="pair-item" data-pair-idx="${i}" data-side="left" onclick="pairClick(this,'${item.id}')">${p.left}</div>`;
+  });
+  rightShuffled.forEach(r => {
+    rightHTML += `<div class="pair-item" data-pair-idx="${r.origIdx}" data-side="right" onclick="pairClick(this,'${item.id}')">${r.text}</div>`;
+  });
+  leftHTML += '</div>';
+  rightHTML += '</div>';
+  return `<div class="pairing-cols">${leftHTML}${rightHTML}</div>`;
+}
+
+function initPairing(item){
+  if(state.completed[state.currentNode]?.has(item.id)) return;
+  state.pairingState[item.id] = { selectedLeft: null, pairs: {} };
+}
+
+function pairClick(el, itemId){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  const ps = state.pairingState[itemId];
+  if(!ps) return;
+  const side = el.dataset.side;
+  const idx = el.dataset.pairIdx;
+
+  if(side === 'left'){
+    // Deselect sebelumnya
+    const body = $(`#body-${itemId}`);
+    body.querySelectorAll('.pair-item[data-side="left"]').forEach(e => e.classList.remove('pair-selected'));
+    el.classList.add('pair-selected');
+    ps.selectedLeft = idx;
+  } else if(side === 'right' && ps.selectedLeft !== null){
+    // Jika right sudah dipasang, lepaskan dulu
+    Object.keys(ps.pairs).forEach(k => {
+      if(ps.pairs[k] === idx) delete ps.pairs[k];
+    });
+
+    // Buat pasangan
+    ps.pairs[ps.selectedLeft] = idx;
+    ps.selectedLeft = null;
+
+    // Update visual
+    updatePairingVisual(itemId);
+  }
+}
+
+function updatePairingVisual(itemId){
+  const ps = state.pairingState[itemId];
+  const body = $(`#body-${itemId}`);
+  const pairColors = ['pair-color-0','pair-color-1','pair-color-2','pair-color-3','pair-color-4'];
+  let colorIdx = 0;
+  const usedRight = new Set();
+
+  // Reset semua
+  body.querySelectorAll('.pair-item').forEach(el => {
+    el.className = 'pair-item';
+    el.setAttribute('data-side', el.dataset.side);
+  });
+
+  // Tandai pasangan
+  Object.keys(ps.pairs).forEach(leftIdx => {
+    const rightIdx = ps.pairs[leftIdx];
+    const colorCls = pairColors[colorIdx % 5];
+    const leftEl = body.querySelector(`.pair-item[data-side="left"][data-pair-idx="${leftIdx}"]`);
+    const rightEl = body.querySelector(`.pair-item[data-side="right"][data-pair-idx="${rightIdx}"]`);
+    if(leftEl){ leftEl.classList.add('pair-matched', colorCls); }
+    if(rightEl){ rightEl.classList.add('pair-matched', colorCls.replace('pair-color-','pair-color-r')); }
+    usedRight.add(rightIdx);
+    colorIdx++;
+  });
+
+  // Deselect left
+  body.querySelectorAll('.pair-item[data-side="left"]').forEach(e => e.classList.remove('pair-selected'));
+  ps.selectedLeft = null;
+}
+
+function checkPairing(item){
+  const ps = state.pairingState[item.id];
+  if(!ps) return false;
+  const body = $(`#body-${item.id}`);
+  const pairColors = ['pair-color-0','pair-color-1','pair-color-2','pair-color-3','pair-color-4'];
+  let allCorrect = true;
+  let colorIdx = 0;
+
+  // Cek setiap pasangan
+  Object.keys(ps.pairs).forEach(leftIdx => {
+    const rightIdx = ps.pairs[leftIdx];
+    const correct = item.pairs[leftIdx] && parseInt(leftIdx) === item.pairs[leftIdx]._origIdx && rightIdx == item.pairs[leftIdx]._rightOrigIdx;
+    // Mapping sederhana: leftIdx (string) -> harus cocok dengan index di pairs array
+    // rightIdx harus = leftIdx (karena pasangan ke-i kiri dengan ke-i kanan)
+  });
+
+  // Logika sederhana: pasangan benar jika leftIdx === rightIdx (karena pairs[i].left harus cocok dengan pairs[i].right)
+  let correctCount = 0;
+  const totalPairs = item.pairs.length;
+  Object.keys(ps.pairs).forEach(leftIdx => {
+    if(ps.pairs[leftIdx] === leftIdx) correctCount++;
+  });
+  const correct = correctCount === totalPairs && Object.keys(ps.pairs).length === totalPairs;
+
+  // Tandai visual benar/salah
+  body.querySelectorAll('.pair-item').forEach(el => { el.style.pointerEvents = 'none'; });
+  Object.keys(ps.pairs).forEach(leftIdx => {
+    const rightIdx = ps.pairs[leftIdx];
+    const isMatch = leftIdx === rightIdx;
+    const leftEl = body.querySelector(`.pair-item[data-side="left"][data-pair-idx="${leftIdx}"]`);
+    const rightEl = body.querySelector(`.pair-item[data-side="right"][data-pair-idx="${rightIdx}"]`);
+    if(!isMatch){
+      if(leftEl) leftEl.classList.add('pair-wrong-match');
+      if(rightEl) rightEl.classList.add('pair-wrong-match');
+    }
+  });
+
+  // Simpan jawaban teks
+  const answerTexts = Object.keys(ps.pairs).map(li => {
+    const ri = ps.pairs[li];
+    const lText = item.pairs[li] ? item.pairs[li].left : '?';
+    const rText = item.pairs[ri] ? item.pairs[ri].right : '?';
+    return lText + ' ↔ ' + rText;
+  });
+  state.studentAnswers[item.id] = answerTexts.join('; ');
+  return correct;
+}
+
+/* ==========================================================
+   ORDER
+   ========================================================== */
+function renderOrderBody(item, isDone){
+  let items;
+  if(isDone){
+    items = item.answer.map(idx => ({ text: item.items[idx], correctIdx: idx }));
+  } else {
+    items = shuffle(item.items.map((text, idx) => ({ text, correctIdx: idx })));
+  }
+  let html = '<div class="order-list" id="order-list-' + item.id + '">';
+  items.forEach((it, i) => {
+    const cls = isDone ? 'order-item order-correct' : 'order-item';
+    html += `
+      <div class="${cls}" data-orig-idx="${it.correctIdx}">
+        <span class="order-num">${i+1}</span>
+        <span class="order-text">${it.text}</span>
+        ${!isDone ? `<div class="order-controls">
+          <button class="order-btn" onclick="moveOrder('${item.id}',this,-1)" ${i===0?'disabled':''}><i class="fas fa-chevron-up"></i></button>
+          <button class="order-btn" onclick="moveOrder('${item.id}',this,1)" ${i===items.length-1?'disabled':''}><i class="fas fa-chevron-down"></i></button>
+        </div>` : ''}
+      </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function initOrder(item){ /* Tidak perlu inisialisasi khusus */ }
+
+function moveOrder(itemId, btn, dir){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  const list = $(`#order-list-${itemId}`);
+  const item_el = btn.closest('.order-item');
+  if(dir === -1 && item_el.previousElementSibling){
+    list.insertBefore(item_el, item_el.previousElementSibling);
+  } else if(dir === 1 && item_el.nextElementSibling){
+    list.insertBefore(item_el.nextElementSibling, item_el);
+  }
+  // Update nomor
+  [...list.children].forEach((el, i) => {
+    el.querySelector('.order-num').textContent = i + 1;
+    const btns = el.querySelectorAll('.order-btn');
+    if(btns[0]) btns[0].disabled = i === 0;
+    if(btns[1]) btns[1].disabled = i === list.children.length - 1;
+  });
+}
+
+function checkOrder(item){
+  const listEl = $(`#order-list-${item.id}`);
+  if(!listEl) return false;
+  const currentOrder = [...listEl.children].map(el => parseInt(el.dataset.origIdx));
+  const correct = JSON.stringify(currentOrder) === JSON.stringify(item.answer);
+
+  // Disable tombol & tandai
+  listEl.querySelectorAll('.order-btn').forEach(b => b.disabled = true);
+  listEl.querySelectorAll('.order-item').forEach(el => {
+    el.classList.add(correct ? 'order-correct' : 'order-wrong');
+    el.style.cursor = 'default';
+  });
+
+  // Simpan jawaban
+  const texts = currentOrder.map(idx => {
+    const tmp = document.createElement('div'); tmp.innerHTML = item.items[idx]; return tmp.textContent.trim();
+  });
+  state.studentAnswers[item.id] = texts.join(' → ');
+  return correct;
+}
+
+/* ==========================================================
+   DRAG & DROP
+   ========================================================== */
+function renderDragDropBody(item, isDone){
+  var q = item.question.replace(/\x08/g, '');
+  if(q.indexOf('\boxed{') === -1 && q.indexOf('oxed{') !== -1){
+    q = q.split('oxed{').join('\boxed{');
+  }
+  var zoneIdx = 0;
+  var parts = q.split('\boxed{');
+  q = parts[0];
+  for(var i = 1; i < parts.length; i++){
+    var ci = parts[i].indexOf('}');
+    var id = parts[i].substring(0, ci);
+    var after = parts[i].substring(ci + 1);
+    var zId = item.id + '_z' + zoneIdx;
+    zoneIdx++;
+    if(isDone){
+      q += '<span class="dnd-zone dnd-zone-filled" data-zone-id="' + zId + '">' + (item.answer[zId] || '?') + '</span>' + after;
+    } else {
+      q += '<span class="dnd-zone" data-zone-id="' + zId + '" onclick="returnDnD(\'' + item.id + '\',\'' + zId + '\')"></span>' + after;
+    }
+  }
+  var bankHTML = '<div class="dnd-bank" id="bank-' + item.id + '"><div class="dnd-bank-label">Seret jawaban ke kotak kosong</div>';
+  item.draggables.forEach(function(d){
+    var val = typeof d === 'object' ? d.value : d;
+    var label = typeof d === 'object' ? d.label : d;
+    var isPlaced = isDone;
+    bankHTML += '<div class="dnd-draggable ' + (isPlaced ? 'dnd-placed' : '') + '" data-value="' + esc(val) + '" ' + (isPlaced ? '' : 'ondragstart="dndStart(event,\'' + item.id + '\')" ontouchstart="dndTouchStart(event,\'' + item.id + '\')"') + '>' + esc(label) + '</div>';
+  });
+  bankHTML += '</div>';
+  return '<div class="dnd-question">' + q + '</div>' + bankHTML;
+}
+
+function initDragDrop(item){
+  if(state.completed[state.currentNode]?.has(item.id)) return;
+  state.dndState[item.id] = {};
+  // Setup drop zones
+  const body = $(`#body-${item.id}`);
+  if(!body) return;
+  body.querySelectorAll('.dnd-zone').forEach(z => {
+    z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('dnd-zone-hover'); });
+    z.addEventListener('dragleave', () => z.classList.remove('dnd-zone-hover'));
+    z.addEventListener('drop', e => { e.preventDefault(); z.classList.remove('dnd-zone-hover'); dndDrop(item.id, z.dataset.zoneId, e.dataTransfer.getData('text/plain')); });
+  });
+}
+
+// Global drag state
+const dndGlobal = { active: false, itemId: null, ghost: null, value: null, offsetX: 0, offsetY: 0 };
+
+function dndStart(e, itemId){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  const val = e.target.dataset.value;
+  dndGlobal.active = true;
+  dndGlobal.itemId = itemId;
+  dndGlobal.value = val;
+  e.target.classList.add('dnd-dragging');
+  e.dataTransfer.setData('text/plain', val);
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function dndTouchStart(e, itemId){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  const el = e.target.closest('.dnd-draggable');
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  dndGlobal.active = true;
+  dndGlobal.itemId = itemId;
+  dndGlobal.value = el.dataset.value;
+  dndGlobal.offsetX = touch.clientX - rect.left;
+  dndGlobal.offsetY = touch.clientY - rect.top;
+  el.classList.add('dnd-dragging');
+
+  // Buat ghost
+  const ghost = document.createElement('div');
+  ghost.className = 'dnd-ghost';
+  ghost.textContent = el.textContent;
+  ghost.style.left = (touch.clientX - dndGlobal.offsetX) + 'px';
+  ghost.style.top = (touch.clientY - dndGlobal.offsetY) + 'px';
+  document.body.appendChild(ghost);
+  dndGlobal.ghost = ghost;
+}
+
+document.addEventListener('touchmove', e => {
+  if(!dndGlobal.active || !dndGlobal.ghost) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  dndGlobal.ghost.style.left = (touch.clientX - dndGlobal.offsetX) + 'px';
+  dndGlobal.ghost.style.top = (touch.clientY - dndGlobal.offsetY) + 'px';
+
+  // Highlight zone di bawah jari
+  const body = $(`#body-${dndGlobal.itemId}`);
+  if(body){
+    body.querySelectorAll('.dnd-zone').forEach(z => {
+      const r = z.getBoundingClientRect();
+      z.classList.toggle('dnd-zone-hover', touch.clientX >= r.left && touch.clientX <= r.right && touch.clientY >= r.top && touch.clientY <= r.bottom);
+    });
+  }
+}, { passive: false });
+
+document.addEventListener('touchend', e => {
+  if(!dndGlobal.active) return;
+  const touch = e.changedTouches[0];
+  const body = $(`#body-${dndGlobal.itemId}`);
+
+  if(body && dndGlobal.value){
+    body.querySelectorAll('.dnd-zone').forEach(z => {
+      const r = z.getBoundingClientRect();
+      if(touch.clientX >= r.left && touch.clientX <= r.right && touch.clientY >= r.top && touch.clientY <= r.bottom){
+        dndDrop(dndGlobal.itemId, z.dataset.zoneId, dndGlobal.value);
+      }
+      z.classList.remove('dnd-zone-hover');
+    });
+  }
+
+  // Bersihkan
+  if(dndGlobal.ghost) dndGlobal.ghost.remove();
+  const body2 = $(`#body-${dndGlobal.itemId}`);
+  if(body2) body2.querySelectorAll('.dnd-dragging').forEach(el => el.classList.remove('dnd-dragging'));
+  dndGlobal.active = false;
+  dndGlobal.ghost = null;
+  dndGlobal.value = null;
+});
+
+document.addEventListener('dragend', () => {
+  if(!dndGlobal.active) return;
+  const body = $(`#body-${dndGlobal.itemId}`);
+  if(body) body.querySelectorAll('.dnd-dragging').forEach(el => el.classList.remove('dnd-dragging'));
+  body?.querySelectorAll('.dnd-zone').forEach(z => z.classList.remove('dnd-zone-hover'));
+  dndGlobal.active = false;
+});
+
+function dndDrop(itemId, zoneId, value){
+  const body = $(`#body-${itemId}`);
+  if(!body) return;
+  if(!state.dndState[itemId]) state.dndState[itemId] = {};
+
+  // Jika zona sudah terisi, kembalikan isi lama ke bank
+  const zone = body.querySelector(`.dnd-zone[data-zone-id="${zoneId}"]`);
+  if(zone && zone.dataset.currentValue){
+    const oldVal = zone.dataset.currentValue;
+    const oldDrag = body.querySelector(`.dnd-draggable[data-value="${CSS.escape(oldVal)}"]`);
+    if(oldDrag) oldDrag.classList.remove('dnd-placed');
+  }
+
+  // Jika value sudah diletakkan di zona lain, kembalikan
+  Object.keys(state.dndState[itemId]).forEach(zId => {
+    if(state.dndState[itemId][zId] === value){
+      delete state.dndState[itemId][zId];
+      const otherZone = body.querySelector(`.dnd-zone[data-zone-id="${zId}"]`);
+      if(otherZone){ otherZone.textContent = ''; otherZone.classList.remove('dnd-zone-filled'); delete otherZone.dataset.currentValue; }
+    }
+  });
+
+  // Letakkan di zona
+  state.dndState[itemId][zoneId] = value;
+  if(zone){
+    zone.textContent = value;
+    zone.dataset.currentValue = value;
+    zone.classList.add('dnd-zone-filled');
+  }
+
+  // Tandai draggable sebagai placed
+  const drag = body.querySelector(`.dnd-draggable[data-value="${CSS.escape(value)}"]`);
+  if(drag) drag.classList.add('dnd-placed');
+}
+
+function returnDnD(itemId, zoneId){
+  if(state.completed[state.currentNode]?.has(itemId)) return;
+  const body = $(`#body-${itemId}`);
+  if(!body) return;
+  const zone = body.querySelector(`.dnd-zone[data-zone-id="${zoneId}"]`);
+  if(!zone || !zone.dataset.currentValue) return;
+  const val = zone.dataset.currentValue;
+  const drag = body.querySelector(`.dnd-draggable[data-value="${CSS.escape(val)}"]`);
+  if(drag) drag.classList.remove('dnd-placed');
+  zone.textContent = '';
+  zone.classList.remove('dnd-zone-filled');
+  delete zone.dataset.currentValue;
+  if(state.dndState[itemId]) delete state.dndState[itemId][zoneId];
+}
+
+function checkDragDrop(item){
+  const ds = state.dndState[item.id] || {};
+  let correct = true;
+  const body = $(`#body-${item.id}`);
+
+  // Cek setiap zona
+  body.querySelectorAll('.dnd-zone').forEach(z => {
+    const zId = z.dataset.zoneId;
+    const userVal = ds[zId] || '';
+    const correctVal = item.answer[zId] || '';
+    if(userVal !== correctVal){
+      correct = false;
+      z.classList.add('dnd-zone-wrong');
+    }
+    z.style.cursor = 'default';
+  });
+
+  // Disable semua draggable
+  body.querySelectorAll('.dnd-draggable').forEach(d => { d.style.pointerEvents = 'none'; d.draggable = false; });
+
+  // Simpan jawaban
+  const answers = Object.keys(item.answer).map(zId => ds[zId] || '-');
+  state.studentAnswers[item.id] = answers.join(', ');
+  return correct;
+}
+
+/* ==========================================================
+   CHECK ANSWER - Dispatcher utama
+   ========================================================== */
+function checkAnswer(itemId){
+  const nodeId = state.currentNode;
+  if(state.completed[nodeId]?.has(itemId)) return; // Sudah benar
+
+  // Cari item data
+  const data = NODES[nodeId];
+  const item = data.steps.find(s => s.id === itemId);
+  if(!item) return;
+
+  let correct = false;
+  switch(item.type){
+    case 'fill': correct = checkFill(item); break;
+    case 'checkbox': correct = checkChoice(item); break;
+    case 'radio': correct = checkChoice(item); break;
+    case 'truefalse': correct = checkTrueFalse(item); break;
+    case 'pairing': correct = checkPairing(item); break;
+    case 'order': correct = checkOrder(item); break;
+    case 'dragdrop': correct = checkDragDrop(item); break;
+  }
+
+  // Update UI
+  const ew = $(`#ew-${itemId}`);
+  if(ew) ew.classList.add(correct ? 'correct' : 'wrong');
+
+  const checkBtn = $(`#check-${itemId}`);
+  if(checkBtn){
+    if(correct){
+      checkBtn.className = 'btn-check btn-correct-show';
+      checkBtn.innerHTML = '<i class="fas fa-check" style="margin-right:6px"></i>Benar';
+      checkBtn.disabled = true;
+      state.completed[nodeId].add(itemId);
+      updateMapNode(nodeId);
+    } else {
+      checkBtn.disabled = false;
+      // Biarkan user coba lagi setelah reset
+    }
+  }
+
+  // Tampilkan penjelasan
+  const expBlock = $(`#exp-${itemId}`);
+  if(expBlock) expBlock.style.display = '';
+
+  renderKaTeX(ew);
+}
+
+/* ==========================================================
+   RESET ANSWER
+   ========================================================== */
+function resetAnswer(itemId){
+  const nodeId = state.currentNode;
+  const data = NODES[nodeId];
+  const item = data.steps.find(s => s.id === itemId);
+  if(!item) return;
+
+  // Hapus dari completed
+  state.completed[nodeId].delete(itemId);
+  delete state.studentAnswers[item.id];
+
+  // Reset UI
+  const ew = $(`#ew-${itemId}`);
+  if(ew) ew.classList.remove('correct', 'wrong');
+
+  const expBlock = $(`#exp-${itemId}`);
+  if(expBlock){
+    expBlock.style.display = 'none';
+    expBlock.querySelector('.explanation-toggle').classList.remove('open');
+    expBlock.querySelector('.explanation-content').classList.remove('open');
+  }
+
+  const checkBtn = $(`#check-${itemId}`);
+  if(checkBtn){
+    checkBtn.className = 'btn-check';
+    checkBtn.innerHTML = '<i class="fas fa-check" style="margin-right:6px"></i>Periksa';
+    checkBtn.disabled = false;
+  }
+
+  // Re-render body
+  const body = $(`#body-${itemId}`);
+  if(body){
+    let bodyHTML = '';
+    switch(item.type){
+      case 'fill': bodyHTML = renderFillBody(item, false); break;
+      case 'checkbox': bodyHTML = renderCheckboxBody(item, false); break;
+      case 'radio': bodyHTML = renderRadioBody(item, false); break;
+      case 'truefalse': bodyHTML = renderTrueFalseBody(item, false); break;
+      case 'pairing': bodyHTML = renderPairingBody(item, false); break;
+      case 'order': bodyHTML = renderOrderBody(item, false); break;
+      case 'dragdrop': bodyHTML = renderDragDropBody(item, false); break;
+    }
+    body.innerHTML = bodyHTML;
+    renderKaTeX(body);
+
+    // Re-init interaksi
+    if(item.type === 'pairing') initPairing(item);
+    if(item.type === 'dragdrop') initDragDrop(item);
+  }
+
+  updateMapNode(nodeId);
+}
+
+/* ==========================================================
+   EXPLANATION TOGGLE
+   ========================================================== */
+function toggleExp(itemId){
+  const block = $(`#exp-${itemId}`);
+  if(!block) return;
+  block.querySelector('.explanation-toggle').classList.toggle('open');
+  block.querySelector('.explanation-content').classList.toggle('open');
+}
+
+/* ==========================================================
+   RESULT RENDERER (untuk Assignment Node 7.x)
+   ========================================================== */
+function renderResult(container, nodeId, steps){
+  const exerciseSteps = steps.filter(s => s.type !== 'theory' && s.type !== 'result');
+  const meta = NODE_META.find(n => n.id === nodeId);
+  const totalEx = exerciseSteps.length;
+  let correctCount = 0;
+
+  // Tabel hasil
+  let rows = '';
+  exerciseSteps.forEach((item, i) => {
+    const isCorrect = state.completed[nodeId].has(item.id);
+    if(isCorrect) correctCount++;
+    const studentAns = state.studentAnswers[item.id] || '-';
+    // Correct answer text
+    let correctAnsText = '';
+    switch(item.type){
+      case 'fill': correctAnsText = Array.isArray(item.answer) ? item.answer[0] : item.answer; break;
+      case 'radio': correctAnsText = item.options.find(o => o.value === item.answer)?.text || item.answer; break;
+      case 'checkbox': correctAnsText = item.options.filter(o => item.answer.includes(o.value)).map(o => {const t=document.createElement('div');t.innerHTML=o.text;return t.textContent.trim()}).join('; '); break;
+      case 'truefalse': correctAnsText = item.answer ? 'Benar' : 'Salah'; break;
+      case 'pairing': correctAnsText = item.pairs.map(p => {const t1=document.createElement('div');t1.innerHTML=p.left;const t2=document.createElement('div');t2.innerHTML=p.right;return t1.textContent.trim()+' ↔ '+t2.textContent.trim()}).join('; '); break;
+      case 'order': correctAnsText = item.answer.map(idx => {const t=document.createElement('div');t.innerHTML=item.items[idx];return t.textContent.trim()}).join(' → '); break;
+      case 'dragdrop': correctAnsText = Object.values(item.answer).join(', '); break;
+    }
+    // Clean HTML tags dari correctAnsText
+    const tmpDiv = document.createElement('div'); tmpDiv.innerHTML = correctAnsText; correctAnsText = tmpDiv.textContent.trim();
+
+    rows += `<tr>
+      <td>${i+1}</td>
+      <td>${item.question.replace(/\$/g,'').replace(/\\\\/g,'').substring(0,80)}${item.question.length > 80 ? '...' : ''}</td>
+      <td>${esc(studentAns)}</td>
+      <td>${esc(correctAnsText)}</td>
+      <td class="${isCorrect ? 'correct-mark' : 'wrong-mark'}"><i class="fas fa-${isCorrect ? 'check-circle' : 'times-circle'}"></i></td>
+    </tr>`;
+  });
+
+  const scoreClass = correctCount === totalEx ? 'perfect' : correctCount >= totalEx * 0.7 ? 'good' : 'low';
+
+  // Ambil nama dari input jika ada
+  const nameInput = $(`.name-input-${nodeId}`);
+  const studentName = nameInput ? nameInput.value.trim() : '...';
+
+  const assessmentGroup = meta ? meta.title : nodeId;
+
+  container.innerHTML = `
+    <div class="name-input-wrap">
+      <label for="name-${nodeId}">Nama:</label>
+      <input type="text" class="name-input name-input-${nodeId}" id="name-${nodeId}" placeholder="Ketik nama lengkap..." value="${esc(studentName)}">
+    </div>
+    <div class="result-card">
+      <h3 style="color:#94a3b8;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px">Hasil Penilaian</h3>
+      <div class="result-score ${scoreClass}">${correctCount}/${totalEx}</div>
+      <div style="color:#64748b;font-size:13px;margin-bottom:20px">${correctCount === totalEx ? 'Sempurna! Luar biasa!' : correctCount >= totalEx * 0.7 ? 'Bagus! Terus berlatih!' : 'Jangan menyerah, coba lagi!'}</div>
+      <div style="overflow-x:auto">
+        <table class="result-table">
+          <thead>
+            <tr><th>No.</th><th>Soal</th><th>Jawaban Siswa</th><th>Jawaban Benar</th><th>Catatan</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <button class="btn-print" onclick="printResult('${nodeId}')"><i class="fas fa-print"></i> Cetak Hasil</button>
+    </div>
+  `;
+}
+
+/* ==========================================================
+   PRINT RESULT
+   ========================================================== */
+function printResult(nodeId){
+  const meta = NODE_META.find(n => n.id === nodeId);
+  const data = NODES[nodeId];
+  const steps = data.steps;
+  const exerciseSteps = steps.filter(s => s.type !== 'theory' && s.type !== 'result');
+  const nameInput = $(`.name-input-${nodeId}`);
+  const studentName = nameInput ? nameInput.value.trim() : '...';
+  const totalEx = exerciseSteps.length;
+  let correctCount = 0;
+
+  // Strip HTML tags tapi pertahankan LaTeX
+  function stripHTML(t){ const d=document.createElement('div'); d.innerHTML=t; return d.textContent||''; }
+  // Potong teks, pertahankan LaTeX di akhir agar tidak terpotong di tengah formula
+  function smartTruncate(raw, max){
+    let s = stripHTML(raw);
+    if(s.length <= max) return s;
+    // Cari $ terakhir sebelum batas untuk menghindari potong formula
+    let cut = max;
+    let lastDollar = s.lastIndexOf('$', max);
+    if(lastDollar > max * 0.5) cut = lastDollar + 1;
+    else {
+      let lastBackslash = s.lastIndexOf('\\', max);
+      if(lastBackslash > max * 0.5) cut = lastBackslash;
+    }
+    return s.substring(0, cut).trim() + '...';
+  }
+
+  let rows = '';
+  exerciseSteps.forEach((item, i) => {
+    const isCorrect = state.completed[nodeId].has(item.id);
+    if(isCorrect) correctCount++;
+    const studentAns = state.studentAnswers[item.id] || '-';
+
+    let correctAnsText = '';
+    switch(item.type){
+      case 'fill': correctAnsText = Array.isArray(item.answer) ? item.answer[0] : item.answer; break;
+      case 'radio': correctAnsText = item.options.find(o => o.value === item.answer)?.text || item.answer; break;
+      case 'checkbox': correctAnsText = item.options.filter(o => item.answer.includes(o.value)).map(o => stripHTML(o.text)).join('; '); break;
+      case 'truefalse': correctAnsText = item.answer ? 'Benar' : 'Salah'; break;
+      case 'pairing': correctAnsText = item.pairs.map(p => stripHTML(p.left) + ' \u2194 ' + stripHTML(p.right)).join('; '); break;
+      case 'order': correctAnsText = item.answer.map(idx => stripHTML(item.items[idx])).join(' \u2192 '); break;
+      case 'dragdrop': correctAnsText = Object.values(item.answer).join(', '); break;
+    }
+
+    // Kolom pertanyaan: pertahankan LaTeX untuk KaTeX render
+    const qHTML = smartTruncate(item.question, 90);
+    // Kolom jawaban benar: pertahankan LaTeX
+    const caHTML = smartTruncate(correctAnsText, 65);
+    // Kolom jawaban siswa: plain text
+    const saText = stripHTML(String(studentAns)).substring(0, 20);
+
+    rows += '<tr>'
+      +'<td style="padding:2px 3px;border:1px solid #aaa;text-align:center;font-size:8px;vertical-align:middle">'+(i+1)+'</td>'
+      +'<td style="padding:2px 3px;border:1px solid #aaa;font-size:7.5px;line-height:1.35">'+qHTML+'</td>'
+      +'<td style="padding:2px 3px;border:1px solid #aaa;text-align:center;font-size:7.5px;vertical-align:middle">'+esc(saText)+'</td>'
+      +'<td style="padding:2px 3px;border:1px solid #aaa;font-size:7.5px;line-height:1.35">'+caHTML+'</td>'
+      +'<td style="padding:2px 3px;border:1px solid #aaa;text-align:center;font-size:11px;vertical-align:middle;color:'+(isCorrect?'#16a34a':'#dc2626')+'">'+(isCorrect?'\u2713':'\u2717')+'</td>'
+      +'</tr>';
+  });
+
+  // Tanggal format Indonesia
+  const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const dg = new Date();
+  const dateStr = dg.getDate() + ' ' + bulan[dg.getMonth()] + ' ' + dg.getFullYear();
+
+  const printHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<title>Hasil - '+esc(meta.title)+'</title>'
+    +'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">'
+    +'<style>'
+    +'@page{size:A4;margin:10mm 8mm}'
+    +'*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{font-family:Arial,Helvetica,sans-serif;font-size:9px;color:#222;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
+    +'.hd{display:flex;flex-wrap:wrap;gap:0 16px;font-size:9px;line-height:1.5;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #ccc}'
+    +'.hd p{margin:0;white-space:nowrap}'
+    +'.hd strong{font-weight:700}'
+    +'.hd .title{font-size:13px;font-weight:700;width:100%;margin-bottom:2px}'
+    +'.hd .score{font-size:11px;font-weight:700;color:#111}'
+    +'table{width:100%;border-collapse:collapse;table-layout:fixed}'
+    +'th{background:#e5e7eb;font-weight:700;padding:3px;border:1px solid #aaa;text-align:left;font-size:7px;text-transform:uppercase;letter-spacing:.4px}'
+    +'td{padding:2px 3px;border:1px solid #aaa;vertical-align:top;overflow:hidden}'
+    +'.c1{width:18px;text-align:center}'
+    +'.c2{width:32%}'
+    +'.c3{width:14%;text-align:center}'
+    +'.c4{width:30%}'
+    +'.c5{width:18px;text-align:center}'
+    +'.sig{margin-top:10px;text-align:right;font-size:9px;line-height:1.4}'
+    +'.sig p{margin:0}'
+    +'.sig .line{margin-top:18px}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'
+    +'</style>'
+    +'</head><body>'
+    +'<div class="hd">'
+    +'<p class="title">MATH TUTORING by Deni</p>'
+    +'<p>Name: <strong>'+esc(studentName)+'</strong></p>'
+    +'<p>Date: '+dateStr+'</p>'
+    +'<p>Topic: Perbandingan Senilai</p>'
+    +'<p>Assessment Group: '+esc(meta.title)+'</p>'
+    +'<p class="score">Score: '+correctCount+' / '+totalEx+'</p>'
+    +'</div>'
+    +'<table>'
+    +'<thead><tr>'
+    +'<th class="c1">No.</th>'
+    +'<th class="c2">Question</th>'
+    +'<th class="c3">Student Answer</th>'
+    +'<th class="c4">Correct Answer</th>'
+    +'<th class="c5">Note</th>'
+    +'</tr></thead>'
+    +'<tbody>'+rows+'</tbody>'
+    +'</table>'
+    +'<div class="sig">'
+    +'<p>Checked by,</p>'
+    +'<p class="line"><strong>Deni</strong></p>'
+    +'</div>'
+    +'<'+ 'script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><' + '/script>'
+    +'<'+ 'script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><' + '/script>'
+    +'<'+ 'script>'
+    +'window.onload=function(){'
+    +'renderMathInElement(document.body,{'
+    +'delimiters:['
+    +'{left:"$$",right:"$$",display:true},'
+    +'{left:"$",right:"$",display:false},'
+    +'{left:"\\\\(",right:"\\\\)",display:false},'
+    +'{left:"\\\\[",right:"\\\\]",display:true}'
+    +'],throwOnError:false'
+    +'});'
+    +'setTimeout(function(){window.print()},600);'
+    +'};'
+    +'</' + 'script>'
+    +'</body></html>';
+
+  const w = window.open('', '_blank');
+  w.document.write(printHTML);
+  w.document.close();
+}
+
+/* ==========================================================
+   INIT
+   ========================================================== */
+function init(){
+  renderMap();
+}
+
+// Jalankan setelah DOM siap
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

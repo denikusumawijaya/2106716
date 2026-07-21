@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengukuran Dasar - Math Tutoring</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <!-- KaTeX JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #58cc02;
+            --primary-dark: #46a302;
+            --secondary: #1cb0f6;
+            --warning: #ff4b4b;
+            --bg-color: #fff;
+            --text-color: #3c3c3c;
+            --border-color: #e5e5e5;
+            --card-bg: #ffffff;
+            --path-line: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-secondary { background-color: var(--secondary); color: white; }
+        .btn-warning { background-color: var(--warning); color: white; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--border-color); color: var(--text-color); box-shadow: none;}
+        .btn-outline:active { transform: translateY(2px); }
+        .btn-disabled { background-color: #e5e5e5; color: #afafaf; cursor: not-allowed; box-shadow: none; transform: none;}
+
+        /* Duolingo Style Path */
+        .path-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .path-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .path-node::after {
+            content: '';
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 60px;
+            background-color: var(--path-line);
+            z-index: -1;
+        }
+
+        .path-node:last-child::after {
+            display: none;
+        }
+
+        .node-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--primary);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 0 var(--primary-dark);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .node-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 0 var(--primary-dark);
+        }
+
+        .node-btn:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 0 var(--primary-dark);
+        }
+
+        .node-btn.locked {
+            background-color: #e5e5e5;
+            color: #afafaf;
+            box-shadow: 0 8px 0 #d1d1d1;
+            cursor: not-allowed;
+        }
+
+        .node-btn.current {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        .node-label {
+            margin-top: 15px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .node-time {
+            font-size: 0.85rem;
+            color: #777;
+            background: #e5e5e5;
+            padding: 2px 8px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        /* Content Area / Modals */
+        .content-area {
+            display: none;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        /* Bilingual Text */
+        .bilingual p {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .bilingual .translation {
+            font-size: 0.9rem;
+            color: #777;
+            font-style: italic;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* Theory & Exercise Cards */
+        .card {
+            background: #f9f9f9;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .theory-box {
+            border-left: 5px solid var(--secondary);
+            background: #eef9ff;
+        }
+
+        .exercise-box {
+            border-left: 5px solid var(--warning);
+            background: #fff5f5;
+        }
+
+        .math-formula {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-top: 10px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: 700;
+            display: none;
+        }
+        .feedback.correct { color: var(--primary); display: block; }
+        .feedback.wrong { color: var(--warning); display: block; }
+
+        .explanation {
+            margin-top: 15px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+            display: none;
+        }
+        
+        .explanation.show { display: block; animation: slideDown 0.3s ease; }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .ex-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .svg-illustration {
+            display: block;
+            margin: 20px auto;
+            max-width: 200px;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                height: 297mm;
+                padding: 20mm;
+                display: block !important;
+            }
+            .no-print { display: none !important; }
+        }
+
+        #printArea { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand"><i class="fas fa-square-root-variable"></i> MATH TUTORING by Deni</div>
+        <button class="btn btn-warning no-print" onclick="resetAllProgress()"><i class="fas fa-trash"></i> Reset All Progress</button>
+    </nav>
+
+    <!-- Path Container -->
+    <div class="path-container" id="pathContainer">
+        <!-- Nodes will be generated here by JS in Part 4, but for structure we hardcode them -->
+        <div class="path-node">
+            <button class="node-btn current" onclick="showSection('home')"><i class="fas fa-house"></i></button>
+            <div class="node-label">Home</div>
+            <div class="node-time">Start</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section1')"><i class="fas fa-bolt"></i></button>
+            <div class="node-label">Spiral Review</div>
+            <div class="node-time">00:00 - 00:10</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section2')"><i class="fas fa-industry"></i></button>
+            <div class="node-label">Intro & Real-World</div>
+            <div class="node-time">00:10 - 00:15</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section3')"><i class="fas fa-ladder-water"></i></button>
+            <div class="node-label">Prior Knowledge</div>
+            <div class="node-time">00:15 - 00:20</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section4')"><i class="fas fa-gears"></i></button>
+            <div class="node-label">Problem Intro</div>
+            <div class="node-time">00:20 - 00:30</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section5')"><i class="fas fa-chalkboard-user"></i></button>
+            <div class="node-label">Guided Practice</div>
+            <div class="node-time">00:30 - 00:45</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('section6')"><i class="fas fa-laptop-code"></i></button>
+            <div class="node-label">Independent Practice</div>
+            <div class="node-time">00:50 - 01:00</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('assign1')"><i class="fas fa-file-pen"></i></button>
+            <div class="node-label">Assignment 1</div>
+        </div>
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('assign2')"><i class="fas fa-file-pen"></i></button>
+            <div class="node-label">Assignment 2</div>
+        </div>
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('assign3')"><i class="fas fa-file-pen"></i></button>
+            <div class="node-label">Assignment 3</div>
+        </div>
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('assign4')"><i class="fas fa-file-pen"></i></button>
+            <div class="node-label">Assignment 4</div>
+        </div>
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('assign5')"><i class="fas fa-file-pen"></i></button>
+            <div class="node-label">Assignment 5</div>
+        </div>
+
+        <div class="path-node">
+            <button class="node-btn" onclick="showSection('final')"><i class="fas fa-flag-checkered"></i></button>
+            <div class="node-label">Reflection</div>
+            <div class="node-time">01:00 - 01:05</div>
+        </div>
+    </div>
+
+    <!-- Content Area Container -->
+    <div id="contentWrapper" style="display: none; padding: 0 20px 50px;">
+        
+        <!-- HOME SECTION -->
+        <div class="content-area" id="home">
+            <div class="content-header">
+                <h1 class="section-title">Math Tutoring by Deni</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+            <div class="bilingual">
+                <p><strong>Topic: Pengukuran Dasar (Panjang, Berat, Waktu)</strong></p>
+                <span class="translation">Topic: Basic Measurement (Length, Weight, Time)</span>
+            </div>
+            
+            <!-- SVG Illustration -->
+            <svg class="svg-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="100" width="180" height="40" fill="#e5e5e5" rx="5"/>
+                <rect x="20" y="80" width="160" height="20" fill="#1cb0f6" rx="3"/>
+                <circle cx="50" cy="140" r="10" fill="#3c3c3c"/>
+                <circle cx="150" cy="140" r="10" fill="#3c3c3c"/>
+                <line x1="100" y1="60" x2="100" y2="20" stroke="#58cc02" stroke-width="4"/>
+                <circle cx="100" cy="20" r="15" fill="#ff4b4b"/>
+                <path d="M 80 100 L 120 100 L 110 80 L 90 80 Z" fill="#58cc02"/>
+            </svg>
+
+            <div class="bilingual card">
+                <p><i class="fas fa-check-circle" style="color:var(--primary)"></i> <strong>Aturan Kelas:</strong></p>
+                <span class="translation">Class Rules:</span>
+                <ol style="padding-left: 20px; margin-top: 10px;">
+                    <li>Berbicara secara bergantian. <br><small>Speak in turn.</small></li>
+                    <li>Meminta izin jika ingin meninggalkan kelas. <br><small>Ask permission if you need to leave the class.</small></li>
+                    <li>Menyalakan kamera dan microphone jika diperlukan. <br><small>Turn on camera and microphone if needed.</small></li>
+                </ol>
+            </div>
+            <button class="btn btn-primary no-print" style="width: 100%; margin-top: 20px;" onclick="showSection('section1')">Mulai Belajar <i class="fas fa-arrow-right"></i></button>
+        </div>
+
+        <!-- SECTION 1: Spiral Review Warm-up -->
+        <div class="content-area" id="section1">
+            <div class="content-header">
+                <h1 class="section-title">Spiral Review Warm-up</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-book-open"></i> Theory 1: Strategi Perkalian Cepat</h3>
+                <p>Dalam perkalian, kita bisa menggunakan strategi pengelompokan untuk mempermudah hitungan.</p>
+                <span class="translation">In multiplication, we can use grouping strategies to simplify calculations.</span>
+                <div class="math-formula">\( 125 \times 8 = (100 \times 8) + (25 \times 8) = 800 + 200 = 1000 \)</div>
+            </div>
+
+            <!-- Exercise 1.1, 1.2, 1.3 will go here -->
+            <div class="card exercise-box" id="ex1_1">
+                <p><strong>Soal 1:</strong> Hasil dari \( 125 \times 8 \) menggunakan strategi pengelompokan adalah...</p>
+                <input type="text" id="ans1_1" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_1"></div>
+                <div class="explanation" id="ex1_1_exp">
+                    <p><strong>Penjelasan:</strong> Kita bagi 125 menjadi 100 dan 25. \( 100 \times 8 = 800 \), lalu \( 25 \times 8 = 200 \). Totalnya \( 800 + 200 = 1000 \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('1_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_1', '1000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_1', '1_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_2" style="display:none;">
+                <p><strong>Soal 2:</strong> Jika ada 15 kotak berisi 60 baut, total bautnya adalah...</p>
+                <input type="text" id="ans1_2" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_2"></div>
+                <div class="explanation" id="ex1_2_exp">
+                    <p><strong>Penjelasan:</strong> \( 15 \times 60 \). Kita bisa hitung \( 15 \times 6 = 90 \), lalu tambahkan satu nol menjadi 900.</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_2', '1_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_2', '900')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_2', '1_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_3" style="display:none;">
+                <p><strong>Soal 3:</strong> Hasil dari \( 45 \times 12 \) adalah... (Petunjuk: Bagi 12 menjadi 10 dan 2)</p>
+                <input type="text" id="ans1_3" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_3"></div>
+                <div class="explanation" id="1_3_exp">
+                    <p><strong>Penjelasan:</strong> \( 45 \times 10 = 450 \), dan \( 45 \times 2 = 90 \). Jumlahkan: \( 450 + 90 = 540 \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_3', '1_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_3', '540')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_3', '1_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory1_2" style="display:none;">
+                <h3><i class="fas fa-book-open"></i> Theory 2: Konsep Pembagian</h3>
+                <p>Pembagian adalah membagi suatu jumlah secara merata. Misalnya, 1440 dibagi 12.</p>
+                <span class="translation">Division is splitting a quantity evenly. For example, 1440 divided by 12.</span>
+                <div class="math-formula">\( 1440 \div 12 = 120 \)</div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Selesaikan \( 1.440 \div 12 \) secara mental.</p>
+                <input type="text" id="ans1_4" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_4"></div>
+                <div class="explanation" id="1_4_exp">
+                    <p><strong>Penjelasan:</strong> Bagi 144 dengan 12 sama dengan 12, lalu tambahkan satu nol dari 1440, jadi 120.</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_4', '1_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_4', '120')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_4', '1_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_5" style="display:none;">
+                <p><strong>Soal 5:</strong> Bagikan 750 gram bahan kimia ke dalam 25 tabung reaksi. Berapa berat per tabung?</p>
+                <input type="text" id="ans1_5" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb1_5"></div>
+                <div class="explanation" id="1_5_exp">
+                    <p><strong>Penjelasan:</strong> \( 750 \div 25 \). Karena \( 25 \times 3 = 75 \), maka \( 25 \times 30 = 750 \). Jadi, 30 gram per tabung.</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_5', '1_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_5', '30')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_5', '1_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_6" style="display:none;">
+                <p><strong>Soal 6:</strong> Sebuah pabrik memproduksi 960 mainan dalam 8 jam. Berapa mainan yang diproduksi per jam?</p>
+                <input type="text" id="ans1_6" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_6"></div>
+                <div class="explanation" id="1_6_exp">
+                    <p><strong>Penjelasan:</strong> \( 960 \div 8 \). \( 96 \div 8 = 12 \), jadi \( 960 \div 8 = 120 \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_6', '1_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_6', '120')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_6', '1_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory1_3" style="display:none;">
+                <h3><i class="fas fa-book-open"></i> Theory 3: Persiapan Pengukuran</h3>
+                <p>Operasi dasar ini menjadi fondasi penting untuk menghitung konversi satuan panjang, berat, dan waktu.</p>
+                <span class="translation">These basic operations are the foundation for calculating length, weight, and time conversions.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex1_7" style="display:none;">
+                <p><strong>Soal 7:</strong> Jika \( 1 \text{ m} = 100 \text{ cm} \), maka \( 12 \text{ m} = \dots \text{ cm} \)?</p>
+                <input type="text" id="ans1_7" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_7"></div>
+                <div class="explanation" id="1_7_exp">
+                    <p><strong>Penjelasan:</strong> \( 12 \times 100 = 1200 \text{ cm} \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_7', '1_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_7', '1200')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_7', '1_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_8" style="display:none;">
+                <p><strong>Soal 8:</strong> Jika \( 1 \text{ kg} = 1000 \text{ g} \), maka \( 5 \text{ kg} = \dots \text{ g} \)?</p>
+                <input type="text" id="ans1_8" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_8"></div>
+                <div class="explanation" id="1_8_exp">
+                    <p><strong>Penjelasan:</strong> \( 5 \times 1000 = 5000 \text{ g} \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_8', '1_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_8', '5000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_8', '1_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_9" style="display:none;">
+                <p><strong>Soal 9:</strong> Berapa hasil dari \( 3600 \div 60 \)? (Ini adalah detik dalam 1 menit)</p>
+                <input type="text" id="ans1_9" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb1_9"></div>
+                <div class="explanation" id="1_9_exp">
+                    <p><strong>Penjelasan:</strong> \( 3600 \div 60 = 60 \). Hapus satu nol dari keduanya, sisa \( 360 \div 6 = 60 \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_9', '1_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_9', '60')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('1_9', '1_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex1_10" style="display:none;">
+                <p><strong>Soal 10:</strong> Sebuah truk mengangkut 2000 kg muatan. Jika diubah ke ton, berapa ton muatannya? (1 ton = 1000 kg)</p>
+                <input type="text" id="ans1_10" placeholder="Jawaban Anda (ton)">
+                <div class="feedback" id="fb1_10"></div>
+                <div class="explanation" id="1_10_exp">
+                    <p><strong>Penjelasan:</strong> \( 2000 \div 1000 = 2 \text{ ton} \).</p>
+                </div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('1_10', '1_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('1_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('1_10', '2')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('section2')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF SECTION 1 -->
+        
+        <!-- SECTION 2: Introduction & Real-World Connection -->
+        <div class="content-area" id="section2">
+            <div class="content-header">
+                <h1 class="section-title">Introduction & Real-World Connection</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-industry"></i> Theory 1: Peran Pengukuran dalam Industri</h3>
+                <p>Bayangkan kamu adalah seorang manajer logistik di perusahaan manufaktur pesawat. Salah hitung sedikit saja, operasional bisa terhenti.</p>
+                <span class="translation">Imagine you are a logistics manager in an aircraft manufacturing company. A slight miscalculation can halt operations.</span>
+                <svg class="svg-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20,100 L100,60 L180,100 L180,110 L20,110 Z" fill="#1cb0f6"/>
+                    <circle cx="60" cy="110" r="10" fill="#3c3c3c"/>
+                    <circle cx="140" cy="110" r="10" fill="#3c3c3c"/>
+                    <rect x="90" y="40" width="20" height="20" fill="#ff4b4b"/>
+                </svg>
+            </div>
+
+            <div class="card exercise-box" id="ex2_1">
+                <p><strong>Soal 1:</strong> Sebuah pesawat memiliki kapasitas angkut 5 ton. Jika 1 ton = 1000 kg, maka kapasitasnya adalah... kg.</p>
+                <input type="text" id="ans2_1" placeholder="Jawaban Anda (kg)">
+                <div class="feedback" id="fb2_1"></div>
+                <div class="explanation" id="2_1_exp"><p><strong>Penjelasan:</strong> \( 5 \times 1000 = 5000 \text{ kg} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('2_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_1', '5000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_1', '2_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_2" style="display:none;">
+                <p><strong>Soal 2:</strong> Komponen A berbobot 1200 kg. Jika ditambah komponen B 800 kg, total beratnya adalah... kg.</p>
+                <input type="text" id="ans2_2" placeholder="Jawaban Anda (kg)">
+                <div class="feedback" id="fb2_2"></div>
+                <div class="explanation" id="2_2_exp"><p><strong>Penjelasan:</strong> \( 1200 + 800 = 2000 \text{ kg} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_2', '2_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_2', '2000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_2', '2_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_3" style="display:none;">
+                <p><strong>Soal 3:</strong> Dari soal sebelumnya, total berat 2000 kg jika dikonversi ke ton menjadi... ton.</p>
+                <input type="text" id="ans2_3" placeholder="Jawaban Anda (ton)">
+                <div class="feedback" id="fb2_3"></div>
+                <div class="explanation" id="2_3_exp"><p><strong>Penjelasan:</strong> \( 2000 \div 1000 = 2 \text{ ton} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_3', '2_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_3', '2')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_3', '2_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory2_2" style="display:none;">
+                <h3><i class="fas fa-stopwatch"></i> Theory 2: Throughput (Durasi Waktu)</h3>
+                <p>Throughput adalah waktu yang dibutuhkan dari awal proses hingga akhir. Kita harus standarisasi satuan waktunya.</p>
+                <span class="translation">Throughput is the time taken from the start to the end of a process. We must standardize the time units.</span>
+                <div class="math-formula">\( 1 \text{ menit} = 60 \text{ detik} \), \( 1 \text{ jam} = 3600 \text{ detik} \)</div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Merakit komponen A butuh 120 detik. Jika dikonversi ke menit, waktunya adalah... menit.</p>
+                <input type="text" id="ans2_4" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb2_4"></div>
+                <div class="explanation" id="2_4_exp"><p><strong>Penjelasan:</strong> \( 120 \div 60 = 2 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_4', '2_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_4', '2')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_4', '2_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_5" style="display:none;">
+                <p><strong>Soal 5:</strong> Proses finishing memakan waktu 2 jam. Jika diubah ke detik, menjadi... detik.</p>
+                <input type="text" id="ans2_5" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb2_5"></div>
+                <div class="explanation" id="2_5_exp"><p><strong>Penjelasan:</strong> \( 2 \times 3600 = 7200 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_5', '2_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_5', '7200')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_5', '2_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_6" style="display:none;">
+                <p><strong>Soal 6:</strong> Pengiriman barang memakan 1,5 jam. Berapa menit durasinya?</p>
+                <input type="text" id="ans2_6" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb2_6"></div>
+                <div class="explanation" id="2_6_exp"><p><strong>Penjelasan:</strong> \( 1,5 \times 60 = 90 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_6', '2_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_6', '90')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_6', '2_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory2_3" style="display:none;">
+                <h3><i class="fas fa-ruler-combined"></i> Theory 3: Presisi Metrik</h3>
+                <p>Dalam logistik, menjaga presisi (ketelitian) sangat penting. Kesalahan konversi panjang bisa menyebabkan komponen tidak pas.</p>
+                <span class="translation">In logistics, maintaining precision is crucial. Incorrect length conversions can cause components not to fit.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex2_7" style="display:none;">
+                <p><strong>Soal 7:</strong> Sebuah kabel sepanjang 500 cm. Berapa meter kabel tersebut?</p>
+                <input type="text" id="ans2_7" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb2_7"></div>
+                <div class="explanation" id="2_7_exp"><p><strong>Penjelasan:</strong> \( 500 \div 100 = 5 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_7', '2_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_7', '5')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_7', '2_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_8" style="display:none;">
+                <p><strong>Soal 8:</strong> Sisa bahan 0,5 kg. Jika diubah ke gram, menjadi... gram.</p>
+                <input type="text" id="ans2_8" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb2_8"></div>
+                <div class="explanation" id="2_8_exp"><p><strong>Penjelasan:</strong> \( 0,5 \times 1000 = 500 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_8', '2_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_8', '500')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_8', '2_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_9" style="display:none;">
+                <p><strong>Soal 9:</strong> Mesin memproses 100 gram material per menit. Dalam 5 menit, berapa gram material yang diproses?</p>
+                <input type="text" id="ans2_9" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb2_9"></div>
+                <div class="explanation" id="2_9_exp"><p><strong>Penjelasan:</strong> \( 100 \times 5 = 500 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_9', '2_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_9', '500')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('2_9', '2_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex2_10" style="display:none;">
+                <p><strong>Soal 10:</strong> Total throughput 3 jam. Jika istirahat 30 menit, berapa menit waktu produksi bersihnya?</p>
+                <input type="text" id="ans2_10" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb2_10"></div>
+                <div class="explanation" id="2_10_exp"><p><strong>Penjelasan:</strong> \( (3 \times 60) - 30 = 180 - 30 = 150 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('2_10', '2_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('2_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('2_10', '150')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('section3')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF SECTION 2 -->
+
+        <!-- SECTION 3: Review of Prior Knowledge -->
+        <div class="content-area" id="section3">
+            <div class="content-header">
+                <h1 class="section-title">Review of Prior Knowledge</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-ladder-water"></i> Theory 1: Tangga Satuan Metrik (Panjang)</h3>
+                <p>Setiap langkah ke bawah berarti kali 10, dan setiap langkah ke atas berarti bagi 10.</p>
+                <span class="translation">Each step down means multiply by 10, and each step up means divide by 10.</span>
+                <div class="math-formula">
+                    km &rarr; hm &rarr; dam &rarr; m &rarr; dm &rarr; cm &rarr; mm<br>
+                    (x10) (x10) (x10) (x10) (x10) (x10)
+                </div>
+                <svg class="svg-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="50" y="120" width="100" height="20" fill="#58cc02"/>
+                    <rect x="60" y="100" width="80" height="20" fill="#46a302"/>
+                    <rect x="70" y="80" width="60" height="20" fill="#1cb0f6"/>
+                    <rect x="80" y="60" width="40" height="20" fill="#ff4b4b"/>
+                    <text x="100" y="135" font-size="10" text-anchor="middle" fill="white">m</text>
+                </svg>
+            </div>
+
+            <div class="card exercise-box" id="ex3_1">
+                <p><strong>Soal 1:</strong> Dari meter (m) ke milimeter (mm), kita turun berapa tangga?</p>
+                <input type="text" id="ans3_1" placeholder="Jawaban Anda (tangga)">
+                <div class="feedback" id="fb3_1"></div>
+                <div class="explanation" id="3_1_exp"><p><strong>Penjelasan:</strong> m &rarr; dm (1) &rarr; cm (2) &rarr; mm (3). Turun 3 tangga.</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('3_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_1', '3')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_1', '3_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_2" style="display:none;">
+                <p><strong>Soal 2:</strong> 5 meter = ... cm. (Turun 2 tangga = kali 100)</p>
+                <input type="text" id="ans3_2" placeholder="Jawaban Anda">
+                <div class="feedback" id="fb3_2"></div>
+                <div class="explanation" id="3_2_exp"><p><strong>Penjelasan:</strong> \( 5 \times 100 = 500 \text{ cm} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_2', '3_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_2', '500')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_2', '3_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_3" style="display:none;">
+                <p><strong>Soal 3:</strong> 2000 mm = ... m. (Naik 3 tangga = bagi 1000)</p>
+                <input type="text" id="ans3_3" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb3_3"></div>
+                <div class="explanation" id="3_3_exp"><p><strong>Penjelasan:</strong> \( 2000 \div 1000 = 2 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_3', '3_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_3', '2')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_3', '3_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory3_2" style="display:none;">
+                <h3><i class="fas fa-weight-hanging"></i> Theory 2: Tangga Satuan Metrik (Berat)</h3>
+                <p>Tangga berat: ton &rarr; kuintal &rarr; kg &rarr; hg &rarr; dag &rarr; g &rarr; dg &rarr; cg &rarr; mg.</p>
+                <span class="translation">Weight ladder: ton to quintal to kg down to mg. Each step is x10 or /10. Note: 1 kuintal = 100 kg, 1 ton = 1000 kg.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex3_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Dari gram (g) ke kilogram (kg), kita bergerak ke arah mana?</p>
+                <input type="text" id="ans3_4" placeholder="Naik / Turun?">
+                <div class="feedback" id="fb3_4"></div>
+                <div class="explanation" id="3_4_exp"><p><strong>Penjelasan:</strong> Kg ada di atas g. Jadi kita bergerak ke atas (naik tangga).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_4', '3_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_4', 'naik')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_4', '3_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_5" style="display:none;">
+                <p><strong>Soal 5:</strong> 3 kg = ... gram.</p>
+                <input type="text" id="ans3_5" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb3_5"></div>
+                <div class="explanation" id="3_5_exp"><p><strong>Penjelasan:</strong> Naik 3 tangga dari g ke kg berarti kali 1000. Maka turun 3 tangga dari kg ke g adalah bagi... tunggu, turun 3 tangga berarti KALI 1000. \( 3 \times 1000 = 3000 \text{ g} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_5', '3_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_5', '3000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_5', '3_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_6" style="display:none;">
+                <p><strong>Soal 6:</strong> 5000 gram = ... kg.</p>
+                <input type="text" id="ans3_6" placeholder="Jawaban Anda (kg)">
+                <div class="feedback" id="fb3_6"></div>
+                <div class="explanation" id="3_6_exp"><p><strong>Penjelasan:</strong> Naik 3 tangga berarti bagi 1000. \( 5000 \div 1000 = 5 \text{ kg} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_6', '3_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_6', '5')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_6', '3_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory3_3" style="display:none;">
+                <h3><i class="fas fa-clock"></i> Theory 3: Konversi Waktu (Basis 60)</h3>
+                <p>Tidak seperti metrik yang berbasis 10, waktu berbasis 60. \( 1 \text{ menit} = 60 \text{ detik} \), \( 1 \text{ jam} = 60 \text{ menit} \).</p>
+                <span class="translation">Unlike the metric system which is base 10, time is base 60.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex3_7" style="display:none;">
+                <p><strong>Soal 7:</strong> 2 jam = ... menit.</p>
+                <input type="text" id="ans3_7" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb3_7"></div>
+                <div class="explanation" id="3_7_exp"><p><strong>Penjelasan:</strong> \( 2 \times 60 = 120 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_7', '3_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_7', '120')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_7', '3_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_8" style="display:none;">
+                <p><strong>Soal 8:</strong> 180 detik = ... menit.</p>
+                <input type="text" id="ans3_8" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb3_8"></div>
+                <div class="explanation" id="3_8_exp"><p><strong>Penjelasan:</strong> \( 180 \div 60 = 3 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_8', '3_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_8', '3')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_8', '3_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_9" style="display:none;">
+                <p><strong>Soal 9:</strong> 1 jam 30 menit = ... menit.</p>
+                <input type="text" id="ans3_9" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb3_9"></div>
+                <div class="explanation" id="3_9_exp"><p><strong>Penjelasan:</strong> \( (1 \times 60) + 30 = 90 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_9', '3_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_9', '90')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('3_9', '3_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex3_10" style="display:none;">
+                <p><strong>Soal 10:</strong> 2,5 jam = ... detik.</p>
+                <input type="text" id="ans3_10" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb3_10"></div>
+                <div class="explanation" id="3_10_exp"><p><strong>Penjelasan:</strong> \( 2,5 \times 3600 = 9000 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('3_10', '3_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('3_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('3_10', '9000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('section4')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF SECTION 3 -->
+
+        <!-- SECTION 4: Problem Introduction -->
+        <div class="content-area" id="section4">
+            <div class="content-header">
+                <h1 class="section-title">Problem Introduction</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-gears"></i> Theory 1: Standarisasi Berat</h3>
+                <p>Mesin memproses 2,5 kg bahan, lalu ditambah 750 gram. Kita tidak bisa langsung menjumlahkan. Harus disamakan dulu ke satuan gram.</p>
+                <span class="translation">The machine processes 2.5 kg, then 750g is added. We cannot add directly. Must standardize to grams first.</span>
+                <svg class="svg-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="50" y="50" width="100" height="80" rx="5" fill="#e5e5e5" stroke="#3c3c3c"/>
+                    <rect x="60" y="60" width="80" height="40" fill="#1cb0f6"/>
+                    <circle cx="100" cy="40" r="10" fill="#ff4b4b"/>
+                    <line x1="100" y1="50" x2="100" y2="40" stroke="#3c3c3c" stroke-width="2"/>
+                </svg>
+            </div>
+
+            <div class="card exercise-box" id="ex4_1">
+                <p><strong>Soal 1:</strong> Ubah 2,5 kg menjadi gram.</p>
+                <input type="text" id="ans4_1" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb4_1"></div>
+                <div class="explanation" id="4_1_exp"><p><strong>Penjelasan:</strong> \( 2,5 \times 1000 = 2500 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('4_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_1', '2500')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_1', '4_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_2" style="display:none;">
+                <p><strong>Soal 2:</strong> Jumlahkan 2500 gram dengan 750 gram.</p>
+                <input type="text" id="ans4_2" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb4_2"></div>
+                <div class="explanation" id="4_2_exp"><p><strong>Penjelasan:</strong> \( 2500 + 750 = 3250 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_2', '4_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_2', '3250')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_2', '4_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_3" style="display:none;">
+                <p><strong>Soal 3:</strong> Jika total bahan 3250 gram, ubahlah kembali ke kilogram (gunakan desimal).</p>
+                <input type="text" id="ans4_3" placeholder="Jawaban Anda (kg)">
+                <div class="feedback" id="fb4_3"></div>
+                <div class="explanation" id="4_3_exp"><p><strong>Penjelasan:</strong> \( 3250 \div 1000 = 3,25 \text{ kg} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_3', '4_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_3', '3,25')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_3', '4_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory4_2" style="display:none;">
+                <h3><i class="fas fa-stopwatch"></i> Theory 2: Standarisasi Waktu</h3>
+                <p>Mesin memproses 2,5 kg dalam 3 menit 20 detik. Untuk mencari kecepatan, ubah ke detik: \( (3 \times 60) + 20 \).</p>
+                <span class="translation">Machine processes 2.5 kg in 3 mins 20 secs. To find speed, convert to seconds: (3 x 60) + 20.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex4_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Ubah 3 menit menjadi detik.</p>
+                <input type="text" id="ans4_4" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb4_4"></div>
+                <div class="explanation" id="4_4_exp"><p><strong>Penjelasan:</strong> \( 3 \times 60 = 180 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_4', '4_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_4', '180')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_4', '4_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_5" style="display:none;">
+                <p><strong>Soal 5:</strong> Jumlahkan 180 detik dengan 20 detik.</p>
+                <input type="text" id="ans4_5" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb4_5"></div>
+                <div class="explanation" id="4_5_exp"><p><strong>Penjelasan:</strong> \( 180 + 20 = 200 \text{ detik} \). Jadi 3 menit 20 detik = 200 detik.</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_5', '4_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_5', '200')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_5', '4_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_6" style="display:none;">
+                <p><strong>Soal 6:</strong> 5 menit 15 detik = ... detik.</p>
+                <input type="text" id="ans4_6" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb4_6"></div>
+                <div class="explanation" id="4_6_exp"><p><strong>Penjelasan:</strong> \( (5 \times 60) + 15 = 300 + 15 = 315 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_6', '4_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_6', '315')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_6', '4_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory4_3" style="display:none;">
+                <h3><i class="fas fa-tachometer-alt"></i> Theory 3: Kecepatan Proses (Throughput)</h3>
+                <p>Mesin memproses 2500 gram dalam 200 detik. Jika kecepatan tetap, untuk 3250 gram butuh waktu: \( \frac{3250 \times 200}{2500} \).</p>
+                <span class="translation">Machine processes 2500g in 200s. If speed is constant, 3250g will take: (3250 * 200) / 2500.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex4_7" style="display:none;">
+                <p><strong>Soal 7:</strong> Berapa gram bahan yang diproses dalam 1 detik? (2500 gram / 200 detik)</p>
+                <input type="text" id="ans4_7" placeholder="Jawaban Anda (gram/detik)">
+                <div class="feedback" id="fb4_7"></div>
+                <div class="explanation" id="4_7_exp"><p><strong>Penjelasan:</strong> \( 2500 \div 200 = 12,5 \text{ gram/detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_7', '4_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_7', '12,5')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_7', '4_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_8" style="display:none;">
+                <p><strong>Soal 8:</strong> Jika kecepatan 12,5 gram/detik, berapa detik untuk 3250 gram?</p>
+                <input type="text" id="ans4_8" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb4_8"></div>
+                <div class="explanation" id="4_8_exp"><p><strong>Penjelasan:</strong> \( 3250 \div 12,5 = 260 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_8', '4_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_8', '260')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_8', '4_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_9" style="display:none;">
+                <p><strong>Soal 9:</strong> Ubah 260 detik ke format menit dan detik.</p>
+                <input type="text" id="ans4_9" placeholder="Jawaban Anda (menit detik)">
+                <div class="feedback" id="fb4_9"></div>
+                <div class="explanation" id="4_9_exp"><p><strong>Penjelasan:</strong> \( 260 \div 60 = 4 \text{ sisa } 20 \). Jadi 4 menit 20 detik.</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_9', '4_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_9', '4 menit 20 detik')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('4_9', '4_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex4_10" style="display:none;">
+                <p><strong>Soal 10:</strong> Jika mesin memproses 5000 gram dengan kecepatan yang sama (12,5 g/s), berapa detik waktunya?</p>
+                <input type="text" id="ans4_10" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb4_10"></div>
+                <div class="explanation" id="4_10_exp"><p><strong>Penjelasan:</strong> \( 5000 \div 12,5 = 400 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('4_10', '4_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('4_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('4_10', '400')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('section5')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- SECTION 5: Guided Practice -->
+        <div class="content-area" id="section5">
+            <div class="content-header">
+                <h1 class="section-title">Guided Practice</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-ruler-horizontal"></i> Theory 1: Standarisasi Panjang</h3>
+                <p>Langkah 1: Ubah 4,2 km + 800 m menjadi meter. Km ke m turun 3 tangga (kali 1000).</p>
+                <span class="translation">Step 1: Convert 4.2 km + 800 m to meters. Km to m goes down 3 steps (multiply by 1000).</span>
+            </div>
+
+            <div class="card exercise-box" id="ex5_1">
+                <p><strong>Soal 1:</strong> Ubah 4,2 km menjadi meter.</p>
+                <input type="text" id="ans5_1" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb5_1"></div>
+                <div class="explanation" id="5_1_exp"><p><strong>Penjelasan:</strong> \( 4,2 \times 1000 = 4200 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('5_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_1', '4200')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_1', '5_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_2" style="display:none;">
+                <p><strong>Soal 2:</strong> Jumlahkan 4200 m dengan 800 m.</p>
+                <input type="text" id="ans5_2" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb5_2"></div>
+                <div class="explanation" id="5_2_exp"><p><strong>Penjelasan:</strong> \( 4200 + 800 = 5000 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_2', '5_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_2', '5000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_2', '5_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_3" style="display:none;">
+                <p><strong>Soal 3:</strong> Kurangi 1 km dengan 300 m. Berikan jawaban dalam meter.</p>
+                <input type="text" id="ans5_3" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb5_3"></div>
+                <div class="explanation" id="5_3_exp"><p><strong>Penjelasan:</strong> \( 1000 - 300 = 700 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_3', '5_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_3', '700')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_3', '5_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory5_2" style="display:none;">
+                <h3><i class="fas fa-scale-balanced"></i> Theory 2: Standarisasi Berat</h3>
+                <p>Langkah 2: Kurangi 5 kg dengan 1.250 gram. Ubah keduanya ke gram atau kg. Kita coba ke gram.</p>
+                <span class="translation">Step 2: Subtract 5 kg by 1,250 grams. Convert both to grams or kg. Let's try grams.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex5_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Ubah 5 kg menjadi gram.</p>
+                <input type="text" id="ans5_4" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb5_4"></div>
+                <div class="explanation" id="5_4_exp"><p><strong>Penjelasan:</strong> \( 5 \times 1000 = 5000 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_4', '5_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_4', '5000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_4', '5_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_5" style="display:none;">
+                <p><strong>Soal 5:</strong> Kurangi 5000 gram dengan 1.250 gram.</p>
+                <input type="text" id="ans5_5" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb5_5"></div>
+                <div class="explanation" id="5_5_exp"><p><strong>Penjelasan:</strong> \( 5000 - 1250 = 3750 \text{ gram} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_5', '5_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_5', '3750')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_5', '5_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_6" style="display:none;">
+                <p><strong>Soal 6:</strong> Ubah hasil di atas (3750 gram) kembali ke kilogram (kg).</p>
+                <input type="text" id="ans5_6" placeholder="Jawaban Anda (kg)">
+                <div class="feedback" id="fb5_6"></div>
+                <div class="explanation" id="5_6_exp"><p><strong>Penjelasan:</strong> \( 3750 \div 1000 = 3,75 \text{ kg} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_6', '5_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_6', '3,75')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_6', '5_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory5_3" style="display:none;">
+                <h3><i class="fas fa-clock-rotate-left"></i> Theory 3: Throughput (Waktu Proses)</h3>
+                <p>Langkah 3: Jika sebuah proses memakan waktu 45 detik per unit, berapa menit untuk 80 unit?</p>
+                <span class="translation">Step 3: If a process takes 45 seconds per unit, how many minutes for 80 units?</span>
+            </div>
+
+            <div class="card exercise-box" id="ex5_7" style="display:none;">
+                <p><strong>Soal 7:</strong> Hitung total detik untuk 80 unit. (45 detik x 80)</p>
+                <input type="text" id="ans5_7" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb5_7"></div>
+                <div class="explanation" id="5_7_exp"><p><strong>Penjelasan:</strong> \( 45 \times 80 = 3600 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_7', '5_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_7', '3600')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_7', '5_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_8" style="display:none;">
+                <p><strong>Soal 8:</strong> Ubah 3600 detik ke menit.</p>
+                <input type="text" id="ans5_8" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb5_8"></div>
+                <div class="explanation" id="5_8_exp"><p><strong>Penjelasan:</strong> \( 3600 \div 60 = 60 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_8', '5_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_8', '60')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_8', '5_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_9" style="display:none;">
+                <p><strong>Soal 9:</strong> Jika 1 unit butuh 45 detik, berapa unit yang dihasilkan dalam 9 menit? (9 menit = 540 detik)</p>
+                <input type="text" id="ans5_9" placeholder="Jawaban Anda (unit)">
+                <div class="feedback" id="fb5_9"></div>
+                <div class="explanation" id="5_9_exp"><p><strong>Penjelasan:</strong> \( 540 \div 45 = 12 \text{ unit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_9', '5_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_9', '12')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('5_9', '5_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex5_10" style="display:none;">
+                <p><strong>Soal 10:</strong> Throughput mesin adalah 120 menit untuk 60 unit. Berapa detik per unit?</p>
+                <input type="text" id="ans5_10" placeholder="Jawaban Anda (detik/unit)">
+                <div class="feedback" id="fb5_10"></div>
+                <div class="explanation" id="5_10_exp"><p><strong>Penjelasan:</strong> \( 120 \text{ mnt} = 7200 \text{ dtk} \). \( 7200 \div 60 = 120 \text{ detik/unit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('5_10', '5_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('5_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('5_10', '120')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('section6')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF SECTION 5 -->
+
+        <!-- SECTION 6: Independent Practice -->
+        <div class="content-area" id="section6">
+            <div class="content-header">
+                <h1 class="section-title">Independent Practice</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+
+            <div class="bilingual card theory-box">
+                <h3><i class="fas fa-vector-square"></i> Theory 1: Operasi Campuran Panjang</h3>
+                <p>Selesaikan operasi yang melibatkan lebih dari satu satuan. Contoh: (0,5 km + 25 dam) - 1500 cm.</p>
+                <span class="translation">Solve operations involving more than one unit. Example: (0.5 km + 25 dam) - 1500 cm.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex6_1">
+                <p><strong>Soal 1:</strong> Ubah 0,5 km dan 25 dam ke meter. (Pisahkan jawaban dengan koma, contoh: 500, 250)</p>
+                <input type="text" id="ans6_1" placeholder="Jawaban Anda (m, m)">
+                <div class="feedback" id="fb6_1"></div>
+                <div class="explanation" id="6_1_exp"><p><strong>Penjelasan:</strong> \( 0,5 \text{ km} = 500 \text{ m} \). \( 25 \text{ dam} = 250 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="resetEx('6_1')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_1', '500, 250')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_1', '6_2')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_2" style="display:none;">
+                <p><strong>Soal 2:</strong> Jumlahkan hasil di atas (500 m + 250 m).</p>
+                <input type="text" id="ans6_2" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb6_2"></div>
+                <div class="explanation" id="6_2_exp"><p><strong>Penjelasan:</strong> \( 500 + 250 = 750 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_2', '6_1')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_2')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_2', '750')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_2', '6_3')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_3" style="display:none;">
+                <p><strong>Soal 3:</strong> Kurangi hasil di atas (750 m) dengan 1500 cm. (Ingat 1500 cm = 15 m)</p>
+                <input type="text" id="ans6_3" placeholder="Jawaban Anda (m)">
+                <div class="feedback" id="fb6_3"></div>
+                <div class="explanation" id="6_3_exp"><p><strong>Penjelasan:</strong> \( 750 - 15 = 735 \text{ m} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_3', '6_2')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_3')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_3', '735')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_3', '6_4')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory6_2" style="display:none;">
+                <h3><i class="fas fa-flask"></i> Theory 2: Operasi Campuran Berat & Konversi</h3>
+                <p>Hitung: 3,2 kg + 450 gram - 0,05 kuintal. (Asumsi 1 kuintal = 100 kg). Ubah semuanya ke gram.</p>
+                <span class="translation">Calculate: 3.2 kg + 450 g - 0.05 quintal. (Assume 1 quintal = 100 kg). Convert all to grams.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex6_4" style="display:none;">
+                <p><strong>Soal 4:</strong> Ubah 3,2 kg ke gram.</p>
+                <input type="text" id="ans6_4" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb6_4"></div>
+                <div class="explanation" id="6_4_exp"><p><strong>Penjelasan:</strong> \( 3,2 \times 1000 = 3200 \text{ g} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_4', '6_3')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_4')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_4', '3200')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_4', '6_5')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_5" style="display:none;">
+                <p><strong>Soal 5:</strong> Ubah 0,05 kuintal ke gram. (1 kuintal = 100 kg)</p>
+                <input type="text" id="ans6_5" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb6_5"></div>
+                <div class="explanation" id="6_5_exp"><p><strong>Penjelasan:</strong> \( 0,05 \times 100 \text{ kg} = 5 \text{ kg} \). \( 5 \times 1000 = 5000 \text{ g} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_5', '6_4')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_5')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_5', '5000')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_5', '6_6')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_6" style="display:none;">
+                <p><strong>Soal 6:</strong> Hitung: 3200 g + 450 g - 5000 g.</p>
+                <input type="text" id="ans6_6" placeholder="Jawaban Anda (gram)">
+                <div class="feedback" id="fb6_6"></div>
+                <div class="explanation" id="6_6_exp"><p><strong>Penjelasan:</strong> \( 3200 + 450 = 3650 \). \( 3650 - 5000 = -1350 \text{ g} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_6', '6_5')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_6')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_6', '-1350')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_6', '6_7')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="bilingual card theory-box" id="theory6_3" style="display:none;">
+                <h3><i class="fas fa-hourglass-half"></i> Theory 3: Analisis Durasi Waktu</h3>
+                <p>Menghitung sisa waktu produksi setelah dikurangi waktu istirahat 15 menit dari total durasi 2,5 jam untuk 5 tahap proses yang sama.</p>
+                <span class="translation">Calculating remaining production time after subtracting 15 mins rest from a total of 2.5 hours for 5 identical process stages.</span>
+            </div>
+
+            <div class="card exercise-box" id="ex6_7" style="display:none;">
+                <p><strong>Soal 7:</strong> Ubah total durasi 2,5 jam ke menit.</p>
+                <input type="text" id="ans6_7" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb6_7"></div>
+                <div class="explanation" id="6_7_exp"><p><strong>Penjelasan:</strong> \( 2,5 \times 60 = 150 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_7', '6_6')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_7')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_7', '150')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_7', '6_8')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_8" style="display:none;">
+                <p><strong>Soal 8:</strong> Kurangi total durasi dengan waktu istirahat (15 menit).</p>
+                <input type="text" id="ans6_8" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb6_8"></div>
+                <div class="explanation" id="6_8_exp"><p><strong>Penjelasan:</strong> \( 150 - 15 = 135 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_8', '6_7')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_8')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_8', '135')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_8', '6_9')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_9" style="display:none;">
+                <p><strong>Soal 9:</strong> Waktu bersih produksi (135 menit) dibagi untuk 5 tahap proses. Berapa menit per tahap?</p>
+                <input type="text" id="ans6_9" placeholder="Jawaban Anda (menit)">
+                <div class="feedback" id="fb6_9"></div>
+                <div class="explanation" id="6_9_exp"><p><strong>Penjelasan:</strong> \( 135 \div 5 = 27 \text{ menit} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_9', '6_8')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_9')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_9', '27')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-secondary" onclick="nextEx('6_9', '6_10')">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="card exercise-box" id="ex6_10" style="display:none;">
+                <p><strong>Soal 10:</strong> Waktu per tahap (27 menit) jika diubah ke detik adalah...</p>
+                <input type="text" id="ans6_10" placeholder="Jawaban Anda (detik)">
+                <div class="feedback" id="fb6_10"></div>
+                <div class="explanation" id="6_10_exp"><p><strong>Penjelasan:</strong> \( 27 \times 60 = 1620 \text{ detik} \).</p></div>
+                <div class="ex-actions">
+                    <button class="btn btn-outline" onclick="prevEx('6_10', '6_9')"><i class="fas fa-arrow-left"></i> Prev</button>
+                    <button class="btn btn-outline" onclick="resetEx('6_10')"><i class="fas fa-rotate"></i> Reset</button>
+                    <button class="btn btn-primary" onclick="checkAnswer('6_10', '1620')"><i class="fas fa-check"></i> Cek</button>
+                    <button class="btn btn-primary" onclick="showSection('assign1')"><i class="fas fa-flag-checkered"></i> Selesai Section</button>
+                </div>
+            </div>
+        </div>
+        <!-- END OF SECTION 6 -->
+
+        <!-- ASSIGNMENT 1: Konversi Panjang -->
+        <div class="content-area" id="assign1">
+            <div class="content-header">
+                <h1 class="section-title">Assignment 1: Konversi Panjang</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            <div class="bilingual card theory-box">
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Print Result di bawah.</p>
+                <span class="translation">Complete the 10 questions below. When finished, click the Print Result button.</span>
+            </div>
+            <!-- 10 Exercises will be generated here by JS in Part 4 -->
+            <div id="assign1_container"></div>
+            <button class="btn btn-secondary no-print" style="width: 100%; margin-top: 20px;" onclick="printAssignment('Assignment 1')"><i class="fas fa-print"></i> Print Result</button>
+        </div>
+
+        <!-- ASSIGNMENT 2: Konversi Berat -->
+        <div class="content-area" id="assign2">
+            <div class="content-header">
+                <h1 class="section-title">Assignment 2: Konversi Berat</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            <div class="bilingual card theory-box">
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Print Result di bawah.</p>
+                <span class="translation">Complete the 10 questions below. When finished, click the Print Result button.</span>
+            </div>
+            <div id="assign2_container"></div>
+            <button class="btn btn-secondary no-print" style="width: 100%; margin-top: 20px;" onclick="printAssignment('Assignment 2')"><i class="fas fa-print"></i> Print Result</button>
+        </div>
+
+        <!-- ASSIGNMENT 3: Konversi Waktu -->
+        <div class="content-area" id="assign3">
+            <div class="content-header">
+                <h1 class="section-title">Assignment 3: Konversi Waktu</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            <div class="bilingual card theory-box">
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Print Result di bawah.</p>
+                <span class="translation">Complete the 10 questions below. When finished, click the Print Result button.</span>
+            </div>
+            <div id="assign3_container"></div>
+            <button class="btn btn-secondary no-print" style="width: 100%; margin-top: 20px;" onclick="printAssignment('Assignment 3')"><i class="fas fa-print"></i> Print Result</button>
+        </div>
+
+        <!-- ASSIGNMENT 4: Operasi Hitung -->
+        <div class="content-area" id="assign4">
+            <div class="content-header">
+                <h1 class="section-title">Assignment 4: Operasi Hitung</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            <div class="bilingual card theory-box">
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Print Result di bawah.</p>
+                <span class="translation">Complete the 10 questions below. When finished, click the Print Result button.</span>
+            </div>
+            <div id="assign4_container"></div>
+            <button class="btn btn-secondary no-print" style="width: 100%; margin-top: 20px;" onclick="printAssignment('Assignment 4')"><i class="fas fa-print"></i> Print Result</button>
+        </div>
+
+        <!-- ASSIGNMENT 5: Problem Solving -->
+        <div class="content-area" id="assign5">
+            <div class="content-header">
+                <h1 class="section-title">Assignment 5: Problem Solving</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            <div class="bilingual card theory-box">
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Print Result di bawah.</p>
+                <span class="translation">Complete the 10 questions below. When finished, click the Print Result button.</span>
+            </div>
+            <div id="assign5_container"></div>
+            <button class="btn btn-secondary no-print" style="width: 100%; margin-top: 20px;" onclick="printAssignment('Assignment 5')"><i class="fas fa-print"></i> Print Result</button>
+        </div>
+        
+        <!-- CONSOLIDATION & REFLECTION -->
+        <div class="content-area" id="final">
+            <div class="content-header">
+                <h1 class="section-title">Consolidation & Reflection</h1>
+                <button class="btn btn-outline no-print" onclick="showPath()"><i class="fas fa-arrow-left"></i> Back to Path</button>
+            </div>
+            
+            <div class="bilingual card theory-box" style="text-align: center; border-left: 5px solid var(--primary);">
+                <h3><i class="fas fa-flag-checkered"></i> Selamat! Kamu telah menyelesaikan pelajaran hari ini!</h3>
+                <p>Kuncinya selalu satu: <strong>Standarisasi satuan sebelum berhitung.</strong></p>
+                <span class="translation">The key is always one: <strong>Standardize units before calculating.</strong></span>
+            </div>
+
+            <svg class="svg-illustration" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="75" r="50" fill="#58cc02"/>
+                <path d="M70 80 L90 100 L130 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            </svg>
+
+            <div class="bilingual card">
+                <p><strong>Apa bagian paling menantang bagimu hari ini?</strong></p>
+                <span class="translation">What was the most challenging part for you today?</span>
+                <textarea placeholder="Tulis refleksi kamu di sini..." style="width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 2px solid var(--border-color); min-height: 80px;"></textarea>
+            </div>
+
+            <div class="bilingual card">
+                <p><strong>Langkah Selanjutnya:</strong></p>
+                <span class="translation">Next Steps:</span>
+                <p style="margin-top: 10px;">Jangan lupa untuk login ke platform pembelajaran untuk mengakses rekaman dan latihan tambahan.</p>
+                <span class="translation">Don't forget to log in to the learning platform to access recordings and additional exercises.</span>
+            </div>
+
+            <a href="https://learn.algonova.id/login" target="_blank" style="text-decoration: none;">
+                <button class="btn btn-primary no-print" style="width: 100%; margin-top: 20px; font-size: 1.1rem;">
+                    <i class="fas fa-external-link-alt"></i> Masuk ke learn.algonova.id
+                </button>
+            </a>
+        </div>
+        <!-- END OF CONSOLIDATION -->
+
+    </div> <!-- End of contentWrapper -->
+
+    <!-- Print Area Template -->
+    <div id="printArea">
+        <h2 style="text-align: center; margin-bottom: 20px;">MATH TUTORING by Deni</h2>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 14px;">
+            <div>
+                <p><strong>Name:</strong> ..............................</p>
+                <p><strong>Date:</strong> ..............................</p>
+            </div>
+            <div>
+                <p><strong>Topic:</strong> Pengukuran Dasar</p>
+                <p><strong>Assignment Group:</strong> <span id="printGroupName"></span></p>
+            </div>
+        </div>
+        <p style="text-align: right; margin-bottom: 10px;"><strong>Score:</strong> ........ / 10</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+                <tr style="background: #f0f0f0;">
+                    <th style="border: 1px solid #ccc; padding: 8px; width: 5%;">No.</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; width: 45%;">Question</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; width: 20%;">Student Answer</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; width: 20%;">Correct Answer</th>
+                    <th style="border: 1px solid #ccc; padding: 8px; width: 10%;">Note (✓/✗)</th>
+                </tr>
+            </thead>
+            <tbody id="printBody">
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+        <div style="margin-top: 40px; text-align: right; font-size: 14px;">
+            <p>Checked by,</p>
+            <br><br>
+            <p><strong>Deni</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // Assignment Data
+        const assignmentsData = {
+            assign1: {
+                title: "Assignment 1: Konversi Panjang",
+                questions: [
+                    { q: "Konversikan 4,75 kilometer menjadi milimeter.", a: "4750000" },
+                    { q: "Hitunglah 0,5 km + 25 dam dalam satuan meter.", a: "750" },
+                    { q: "Hitunglah dalam satuan SI (meter): 12 mil + 5 yard. (1 mil = 1609m, 1 yard = 0,914m)", a: "19312.57" },
+                    { q: "1500 cm sama dengan ... meter.", a: "15" },
+                    { q: "2,4 kilometer sama dengan ... meter.", a: "2400" },
+                    { q: "50000 milimeter sama dengan ... meter.", a: "50" },
+                    { q: "1 dekameter (dam) sama dengan ... sentimeter.", a: "1000" },
+                    { q: "0,02 kilometer sama dengan ... sentimeter.", a: "2000" },
+                    { q: "Hitunglah (0,5 km + 25 dam) - 1500 cm dalam meter.", a: "735" },
+                    { q: "Sebuah pipa air memiliki panjang 0,02 km. Jika dipotong sepanjang 4500 mm setiap bagian, berapa banyak potongan penuh yang didapat dan berapa sisa panjangnya dalam cm? (Format: X potong, Y cm)", a: "4 potong, 200 cm" }
+                ]
+            },
+            assign2: {
+                title: "Assignment 2: Konversi Berat",
+                questions: [
+                    { q: "Hitunglah: 3,2 kg + 450 gram - 0,05 kuintal = ... gram. (1 kuintal = 100 kg)", a: "-1350" },
+                    { q: "0,075 ton sama dengan ... gram.", a: "75000" },
+                    { q: "Bagikan 750 gram bahan kimia ke dalam 25 tabung reaksi. Berapa berat per tabung?", a: "30" },
+                    { q: "2,5 kilogram sama dengan ... gram.", a: "2500" },
+                    { q: "Kurangi 5 kg dengan 1.250 gram. Berikan jawaban dalam kg.", a: "3.75" },
+                    { q: "12 gram material diproses setiap 15 detik. Berapa kilogram material yang diproses dalam waktu 1 jam nonstop? (1 jam = 3600 detik)", a: "2.88" },
+                    { q: "1 ton sama dengan ... kilogram.", a: "1000" },
+                    { q: "5000 gram sama dengan ... kilogram.", a: "5" },
+                    { q: "0,05 kuintal sama dengan ... gram.", a: "5000" },
+                    { q: "Sebuah wadah berisi 0,075 ton beras. Jika beras tersebut dibagi ke dalam plastik ukuran 2500 mg, berapa banyak plastik yang dibutuhkan?", a: "30000" }
+                ]
+            },
+            assign3: {
+                title: "Assignment 3: Konversi Waktu",
+                questions: [
+                    { q: "Jumlahkan 2 jam 45 menit 50 detik dengan 1 jam 35 menit 25 detik. Berikan hasil dalam format Jam:Menit:Detik.", a: "04:21:15" },
+                    { q: "Sebuah film berdurasi 145 menit. Ubah durasi tersebut ke format Jam dan Menit.", a: "2 jam 25 menit" },
+                    { q: "3 menit 20 detik sama dengan ... detik.", a: "200" },
+                    { q: "2,5 jam sama dengan ... menit.", a: "150" },
+                    { q: "1 jam sama dengan ... detik.", a: "3600" },
+                    { q: "Sebuah film berdurasi 145 menit. Jika film mulai diputar pukul 19:30, pukul berapa film tersebut berakhir?", a: "21:55" },
+                    { q: "540 detik sama dengan ... menit.", a: "9" },
+                    { q: "4 menit 30 detik sama dengan ... detik.", a: "270" },
+                    { q: "2,5 jam sama dengan ... detik.", a: "9000" },
+                    { q: "Total throughput 120 proses dimana tiap proses butuh 4,5 menit. Ubah total waktunya ke jam.", a: "9" }
+                ]
+            },
+            assign4: {
+                title: "Assignment 4: Operasi Hitung",
+                questions: [
+                    { q: "Ubah 4,2 km + 800 m menjadi meter.", a: "5000" },
+                    { q: "Kurangi 5 kg dengan 1.250 gram. Berikan jawaban dalam kg.", a: "3.75" },
+                    { q: "Jika sebuah proses memakan waktu 45 detik per unit, berapa menit yang dibutuhkan untuk 80 unit?", a: "60" },
+                    { q: "Hitunglah dalam meter: (0,5 km + 25 dam) - 1500 cm.", a: "735" },
+                    { q: "Hitunglah dalam gram: 3200 + 450 - 5000.", a: "-1350" },
+                    { q: "Waktu bersih produksi 135 menit dibagi untuk 5 tahap proses. Berapa menit per tahap?", a: "27" },
+                    { q: "Mesin memproses 2500 gram dalam 200 detik. Jika ditambah bahan hingga total 3250 gram, berapa total waktu dalam detik?", a: "260" },
+                    { q: "1,5 jam ditambah 90 menit. Berikan jawaban dalam jam.", a: "3" },
+                    { q: "2,4 km dikurangi 400 m. Berikan jawaban dalam meter.", a: "2000" },
+                    { q: "10 kg dikurangi 5000 gram. Berikan jawaban dalam kg.", a: "5" }
+                ]
+            },
+            assign5: {
+                title: "Assignment 5: Problem Solving",
+                questions: [
+                    { q: "Pipa air panjang 0,02 km dipotong 4500 mm tiap bagian. Berapa potong penuh didapat dan sisa panjangnya (cm)? (Format: X potong, Y cm)", a: "4 potong, 200 cm" },
+                    { q: "Mesin produksi memproses 12 gram material setiap 15 detik. Berapa kg material yang diproses dalam 1 jam nonstop?", a: "2.88" },
+                    { q: "Pabrik harus menyelesaikan 120 komponen (4,5 menit/komponen). Mulai 08:00, istirahat 45 menit. Pukul berapa selesai? (Format: HH:MM)", a: "17:45" },
+                    { q: "Hitunglah dalam meter: 12 mil + 5 yard. (1 mil = 1609m, 1 yard = 0,914m)", a: "19312.57" },
+                    { q: "Wadah berisi 0,075 ton beras dibagi ke plastik 2500 mg. Berapa banyak plastik?", a: "30000" },
+                    { q: "Jumlahkan 2 jam 45 menit 50 detik dengan 1 jam 35 menit 25 detik. (Format: JJ:MM:DD)", a: "04:21:15" },
+                    { q: "Konversikan 4,75 kilometer menjadi milimeter.", a: "4750000" },
+                    { q: "Hitunglah: 3,2 kg + 450 gram - 0,05 kuintal = ... gram.", a: "-1350" },
+                    { q: "Film 145 menit mulai 19:30. Pukul berapa selesai?", a: "21:55" },
+                    { q: "Hitunglah dalam meter: (0,5 km + 25 dam) - 1500 cm.", a: "735" }
+                ]
+            }
+        };
+
+        // Generate Assignments
+        function generateAssignments() {
+            for(let key in assignmentsData) {
+                let container = document.getElementById(key + '_container');
+                let data = assignmentsData[key];
+                let html = '';
+                
+                data.questions.forEach((item, index) => {
+                    let i = index + 1;
+                    // Tambahkan display:none untuk soal ke-2 sampai ke-10
+                    let hiddenStyle = i > 1 ? 'style="display:none;"' : '';
+                    
+                    html += `
+                        <div class="card exercise-box" id="ex_${key}_${i}" ${hiddenStyle}>
+                            <p><strong>Soal ${i}:</strong> ${item.q}</p>
+                            <input type="text" id="ans_${key}_${i}" placeholder="Jawaban Anda">
+                            <div class="feedback" id="fb_${key}_${i}"></div>
+                            <div class="explanation" id="exp_${key}_${i}">
+                                <p><strong>Penjelasan:</strong> Jawaban yang benar adalah <strong>${item.a}</strong>. Pastikan kamu menyamakan satuan sebelum menghitung!</p>
+                            </div>
+                            <div class="ex-actions">
+                                ${i > 1 ? `<button class="btn btn-outline" onclick="prevAssignEx('${key}', ${i})"><i class="fas fa-arrow-left"></i> Prev</button>` : `<button class="btn btn-outline" style="opacity: 0.5; pointer-events: none;"><i class="fas fa-arrow-left"></i> Prev</button>`}
+                                <button class="btn btn-outline" onclick="resetAssignEx('${key}', ${i})"><i class="fas fa-rotate"></i> Reset</button>
+                                <button class="btn btn-primary" onclick="checkAssignEx('${key}', ${i})"><i class="fas fa-check"></i> Cek</button>
+                                ${i < 10 ? `<button class="btn btn-secondary" onclick="nextAssignEx('${key}', ${i})">Next <i class="fas fa-arrow-right"></i></button>` : `<button class="btn btn-primary" onclick="showSection('final')"><i class="fas fa-flag-checkered"></i> Selesai</button>`}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        }
+
+        function checkAssignEx(key, index) {
+            let val = document.getElementById('ans_' + key + '_' + index).value.trim().toLowerCase();
+            let correct = assignmentsData[key].questions[index-1].a.toLowerCase();
+            let fb = document.getElementById('fb_' + key + '_' + index);
+            let exp = document.getElementById('exp_' + key + '_' + index);
+            
+            let valNormalized = val.replace(',', '.');
+            let correctNormalized = correct.replace(',', '.');
+
+            if(valNormalized === correctNormalized) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! (Correct!)';
+            } else {
+                fb.className = 'feedback wrong';
+                fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. Coba lihat penjelasan! (Not quite. Check explanation!)';
+            }
+            if(exp) exp.classList.add('show');
+        }
+
+        function resetAssignEx(key, index) {
+            document.getElementById('ans_' + key + '_' + index).value = '';
+            document.getElementById('fb_' + key + '_' + index).className = 'feedback';
+            document.getElementById('fb_' + key + '_' + index).innerHTML = '';
+            let exp = document.getElementById('exp_' + key + '_' + index);
+            if(exp) exp.classList.remove('show');
+        }
+
+        function nextAssignEx(key, index) {
+            document.getElementById('ex_' + key + '_' + index).style.display = 'none';
+            let next = document.getElementById('ex_' + key + '_' + (index + 1));
+            if(next) {
+                next.style.display = 'block';
+                next.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        function prevAssignEx(key, index) {
+            document.getElementById('ex_' + key + '_' + index).style.display = 'none';
+            let prev = document.getElementById('ex_' + key + '_' + (index - 1));
+            if(prev) {
+                prev.style.display = 'block';
+                prev.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        function printAssignment(groupName) {
+            let key = 'assign1';
+            if(groupName.includes('1')) key = 'assign1';
+            if(groupName.includes('2')) key = 'assign2';
+            if(groupName.includes('3')) key = 'assign3';
+            if(groupName.includes('4')) key = 'assign4';
+            if(groupName.includes('5')) key = 'assign5';
+
+            let data = assignmentsData[key];
+            let printBody = document.getElementById('printBody');
+            let printGroupName = document.getElementById('printGroupName');
+            
+            printGroupName.innerText = data.title;
+            printBody.innerHTML = '';
+
+            data.questions.forEach((item, index) => {
+                let i = index + 1;
+                let studentAns = document.getElementById('ans_' + key + '_' + i).value;
+                
+                // Normalisasi jawaban untuk perbandingan (huruf kecil, koma jadi titik)
+                let valNorm = studentAns.trim().toLowerCase().replace(',', '.');
+                let corrNorm = item.a.trim().toLowerCase().replace(',', '.');
+
+                // Tentukan simbol centang atau silang
+                let noteMark = (valNorm === corrNorm && valNorm !== '') ? '✓' : '✗';
+                let noteColor = (valNorm === corrNorm && valNorm !== '') ? '#58cc02' : '#ff4b4b';
+                
+                printBody.innerHTML += `
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${i}</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">${item.q}</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">${studentAns}</td>
+                        <td style="border: 1px solid #ccc; padding: 8px;">${item.a}</td>
+                        <td style="border: 1px solid #ccc; padding: 8px; text-align: center; font-size: 16px; font-weight: bold; color: ${noteColor};">${noteMark}</td>
+                    </tr>
+                `;
+            });
+
+            window.print();
+        }
+
+        // Unified Navigation & Core Logic
+        function showPath() {
+            document.getElementById('pathContainer').style.display = 'block';
+            document.getElementById('contentWrapper').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        function showSection(sectionId) {
+            document.getElementById('pathContainer').style.display = 'none';
+            document.getElementById('contentWrapper').style.display = 'block';
+            
+            let areas = document.querySelectorAll('.content-area');
+            areas.forEach(area => area.style.display = 'none');
+            
+            let target = document.getElementById(sectionId);
+            if(target) {
+                target.style.display = 'block';
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // FIX: Cari elemen explanation di dalam card soal yang spesifik agar selalu ketemu
+        function checkAnswer(id, correct) {
+            let val = document.getElementById('ans' + id).value.trim().toLowerCase();
+            let fb = document.getElementById('fb' + id);
+            let card = document.getElementById('ex' + id);
+            let exp = card ? card.querySelector('.explanation') : null;
+            
+            let valNorm = val.replace(',', '.');
+            let corrNorm = correct.toLowerCase().replace(',', '.');
+
+            if(valNorm === corrNorm) {
+                fb.className = 'feedback correct';
+                fb.innerHTML = '<i class="fas fa-check-circle"></i> Benar! (Correct!)';
+            } else {
+                fb.className = 'feedback wrong';
+                fb.innerHTML = '<i class="fas fa-times-circle"></i> Belum tepat. Coba lagi! (Not quite. Try again!)';
+            }
+            if(exp) exp.classList.add('show');
+        }
+
+        // FIX: Cari elemen explanation di dalam card soal yang spesifik agar selalu ketemu
+        function resetEx(id) {
+            document.getElementById('ans' + id).value = '';
+            document.getElementById('fb' + id).className = 'feedback';
+            document.getElementById('fb' + id).innerHTML = '';
+            let card = document.getElementById('ex' + id);
+            let exp = card ? card.querySelector('.explanation') : null;
+            if(exp) exp.classList.remove('show');
+        }
+
+        function nextEx(currentId, nextId) {
+            document.getElementById('ex' + currentId).style.display = 'none';
+            
+            // Cek apakah ada teori yang perlu dimunculkan
+            let sec = currentId.split('_')[0];
+            let num = parseInt(currentId.split('_')[1]);
+            
+            // Teori 2 muncul setelah Soal 3 (sebelum Soal 4)
+            if (num === 3) {
+                let theoryToShow = document.getElementById('theory' + sec + '_2');
+                if (theoryToShow) theoryToShow.style.display = 'block';
+            }
+            // Teori 3 muncul setelah Soal 6 (sebelum Soal 7)
+            if (num === 6) {
+                let theoryToShow = document.getElementById('theory' + sec + '_3');
+                if (theoryToShow) theoryToShow.style.display = 'block';
+            }
+
+            let nextElement = document.getElementById('ex' + nextId);
+            if(nextElement) {
+                nextElement.style.display = 'block';
+                nextElement.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        function prevEx(currentId, prevId) {
+            document.getElementById('ex' + currentId).style.display = 'none';
+            
+            // Cek apakah ada teori yang perlu disembunyikan saat mundur
+            let sec = currentId.split('_')[0];
+            let num = parseInt(currentId.split('_')[1]);
+            
+            // Sembunyikan Teori 2 jika mundur dari Soal 4 ke Soal 3
+            if (num === 4) {
+                let theoryToHide = document.getElementById('theory' + sec + '_2');
+                if (theoryToHide) theoryToHide.style.display = 'none';
+            }
+            // Sembunyikan Teori 3 jika mundur dari Soal 7 ke Soal 6
+            if (num === 7) {
+                let theoryToHide = document.getElementById('theory' + sec + '_3');
+                if (theoryToHide) theoryToHide.style.display = 'none';
+            }
+
+            let prevElement = document.getElementById('ex' + prevId);
+            if(prevElement) {
+                prevElement.style.display = 'block';
+                prevElement.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        function resetAllProgress() {
+            if(confirm('Reset semua progres? (Reset all progress?)')) {
+                location.reload();
+            }
+        }
+
+        // Initial Setup
+        generateAssignments();
+
+        // Render KaTeX on load
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ]
+                });
+            }
+        });
+    </script>
+</body>
+</html>

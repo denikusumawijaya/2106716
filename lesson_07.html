@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perbandingan Berbalik Nilai - Math Tutoring</title>
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEC9;
+            --accent: #FD79A8;
+            --success: #00B894;
+            --danger: #FF7675;
+            --warning: #FDCB6E;
+            --dark: #2D3436;
+            --light: #DFE6E9;
+            --bg: #F0F3F5;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Translasi Bahasa Inggris */
+        .trans {
+            display: block;
+            font-size: 0.85em;
+            color: #636e72;
+            font-style: italic;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        /* Navbar & Header */
+        header {
+            background: var(--card-bg);
+            padding: 15px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-reset-all {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-reset-all:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(255, 118, 117, 0.4);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Duolingo Path Navigation */
+        .path-nav {
+            width: 300px;
+            background: linear-gradient(180deg, #a8e6cf 0%, #dcedc1 100%);
+            padding: 40px 20px;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+            overflow-x: auto;
+            border-right: 2px solid rgba(0,0,0,0.05);
+        }
+
+        .path-node {
+            background: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1), 0 10px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            border: 4px solid transparent;
+        }
+
+        .path-node:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.1), 0 12px 20px rgba(0,0,0,0.2);
+        }
+
+        .path-node.active {
+            border-color: var(--primary);
+            transform: scale(1.1);
+            animation: bounce 2s infinite;
+        }
+
+        .path-node.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .path-node.completed svg {
+            fill: white;
+        }
+
+        .path-node svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--dark);
+        }
+
+        .path-node::after {
+            content: attr(data-title);
+            position: absolute;
+            left: 80px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .path-node:hover::after {
+            opacity: 1;
+        }
+
+        .path-connector {
+            width: 4px;
+            height: 40px;
+            background: rgba(255,255,255,0.7);
+            margin: -45px auto 5px;
+            border-radius: 2px;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.15); }
+        }
+
+        h1, h2, h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        h2.section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Theory & Exercise Blocks */
+        .theory-block {
+            background: #EBF5FB;
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .exercise-block {
+            background: #FFFFFF;
+            border: 2px solid var(--light);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: border-color 0.3s;
+        }
+
+        .exercise-block:focus-within {
+            border-color: var(--primary);
+        }
+
+        .exercise-question {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .math-inline {
+            display: inline-block;
+        }
+
+        .exercise-input-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            width: 150px;
+            transition: 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn-check {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 4px 0 #009688;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #009688;
+        }
+
+        .btn-check:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #009688;
+        }
+
+        .btn-nav {
+            background: var(--light);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-nav.prev {
+            float: left;
+        }
+        .btn-nav.next, .btn-nav.reset {
+            float: right;
+            margin-left: 10px;
+        }
+        
+        .btn-nav.reset {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Collapsible Explanation */
+        .collapsible {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none; /* Hidden by default */
+        }
+
+        .collapsible.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .collapsible-header {
+            background: var(--warning);
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .collapsible-body {
+            background: #FFFEF5;
+            padding: 15px;
+            border: 1px solid var(--warning);
+            border-top: none;
+        }
+
+        .correct-feedback { color: var(--success); }
+        .wrong-feedback { color: var(--danger); }
+
+        /* Illustrations */
+        .svg-illustration {
+            display: block;
+            margin: 20px auto;
+            max-width: 200px;
+            height: auto;
+        }
+
+        /* Print Layout (A4) */
+        .print-area {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                min-height: 297mm;
+                padding: 20mm;
+                font-size: 12pt;
+                color: black;
+            }
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+                border-bottom: 2px solid black;
+                padding-bottom: 10px;
+            }
+            
+            .print-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+            
+            .print-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            
+            .print-table th, .print-table td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+                font-size: 10pt;
+            }
+            
+            .print-sign {
+                margin-top: 40px;
+                text-align: right;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .path-nav {
+                display: none; /* Simplify for mobile */
+            }
+            .content-area {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6C5CE7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="#00CEC9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="#FD79A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Math Tutoring by Deni
+        </div>
+        <button class="btn-reset-all" onclick="resetAllProgress()">Reset All Progress</button>
+    </header>
+
+    <div class="main-container">
+        <!-- Path Navigation -->
+        <nav class="path-nav" id="pathNav">
+            <!-- Nodes will be injected here by JS -->
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content-area" id="contentArea">
+            <!-- Section content will be injected here by JS -->
+        </main>
+    </div>
+
+    <!-- Print Area Template -->
+    <div class="print-area" id="printArea">
+        <div class="print-header">
+            <h2>MATH TUTORING by Deni</h2>
+        </div>
+        <div class="print-info">
+            <p><strong>Name:</strong> ________________________</p>
+            <p><strong>Date:</strong> ________________________</p>
+            <p><strong>Topic:</strong> Perbandingan Berbalik Nilai</p>
+            <p><strong>Assignment Group:</strong> <span id="printGroupName">-</span></p>
+            <p><strong>Score:</strong> <span id="printScore">-</span> / 10</p>
+        </div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Question</th>
+                    <th>Student Answer</th>
+                    <th>Correct Answer</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+                <!-- Rows injected by JS -->
+            </tbody>
+        </table>
+        <div class="print-sign">
+            <p>Checked by,</p>
+            <br><br><br>
+            <p><strong>Deni</strong></p>
+        </div>
+    </div>
+
+    <!-- KaTeX Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        // --- DATA & STATE MANAGEMENT ---
+        const LESSON_SECTIONS = [
+            { id: 'rules', title: 'Class Rules', icon: 'rules' },
+            { id: 'sec1', title: 'Spiral Review Warm-up', icon: 'warmup' },
+            { id: 'sec2', title: 'Introduction', icon: 'intro' },
+            { id: 'sec3', title: 'Prior Knowledge', icon: 'prior' },
+            { id: 'sec4', title: 'Problem Introduction', icon: 'problem' },
+            { id: 'sec5', title: 'Guided Practice', icon: 'guided' },
+            { id: 'sec6', title: 'Independent Practice', icon: 'independent' },
+            { id: 'assign1', title: 'Assignment 1', icon: 'assign1' },
+            { id: 'assign2', title: 'Assignment 2', icon: 'assign2' },
+            { id: 'assign3', title: 'Assignment 3', icon: 'assign3' },
+            { id: 'assign4', title: 'Assignment 4', icon: 'assign4' },
+            { id: 'assign5', title: 'Assignment 5', icon: 'assign5' },
+            { id: 'consolidation', title: 'Consolidation', icon: 'final' }
+        ];
+
+        let userProgress = JSON.parse(localStorage.getItem('mathProgress')) || {};
+
+        function saveProgress() {
+            localStorage.setItem('mathProgress', JSON.stringify(userProgress));
+        }
+
+        function resetAllProgress() {
+            if(confirm("Apakah Anda yakin ingin mereset SEMUA progress? (Are you sure you want to reset ALL progress?)")) {
+                localStorage.removeItem('mathProgress');
+                userProgress = {};
+                location.reload();
+            }
+        }
+
+        // --- RENDERING PATH ---
+        function renderPath() {
+            const pathNav = document.getElementById('pathNav');
+            pathNav.innerHTML = '';
+            
+            LESSON_SECTIONS.forEach((sec, index) => {
+                const node = document.createElement('div');
+                node.className = 'path-node';
+                node.dataset.id = sec.id;
+                node.dataset.title = sec.title;
+                
+                if (userProgress[sec.id]) node.classList.add('completed');
+                if (index === 0 || userProgress[LESSON_SECTIONS[index-1].id]) {
+                    // accessible
+                } else {
+                    node.style.opacity = '0.5';
+                }
+
+                node.innerHTML = getIconSVG(sec.icon);
+                node.onclick = () => showSection(sec.id);
+                pathNav.appendChild(node);
+
+                if (index < LESSON_SECTIONS.length - 1) {
+                    const connector = document.createElement('div');
+                    connector.className = 'path-connector';
+                    pathNav.appendChild(connector);
+                }
+            });
+        }
+
+        function getIconSVG(name) {
+            // Basic SVGs for nodes
+            const icons = {
+                rules: '<svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
+                warmup: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+                intro: '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                prior: '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                problem: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                guided: '<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                independent: '<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                assign1: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                assign2: '<svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-4 12l-2-2 1.41-1.41L10 13.17l3.59-3.59L15 11l-5 5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                assign3: '<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                assign4: '<svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                assign5: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
+                final: '<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="none" stroke="currentColor" stroke-width="2"/></svg>'
+            };
+            return icons[name] || icons.rules;
+        }
+
+        // --- RENDERING CONTENT ---
+        // This will be populated in subsequent parts
+        const CONTENT_DATA = {}; 
+
+        function renderMath(target) {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(target, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            } else {
+                setTimeout(() => renderMath(target), 100);
+            }
+        }
+
+        function showSection(id) {
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = '';
+            
+            const sectionData = CONTENT_DATA[id];
+            if (!sectionData) return;
+
+            const card = document.createElement('div');
+            card.className = 'section-card active';
+            card.innerHTML = sectionData.html;
+            
+            contentArea.appendChild(card);
+            
+            // Render Math with fallback
+            renderMath(card);
+
+            // Update path active state
+            document.querySelectorAll('.path-node').forEach(n => n.classList.remove('active'));
+            const activeNode = document.querySelector(`.path-node[data-id="${id}"]`);
+            if (activeNode) activeNode.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // --- EXERCISE LOGIC ---
+        function checkAnswer(exId, correctAnswer, assignGroup = null) {
+            const input = document.getElementById(`input-${exId}`);
+            const userAns = input.value.trim();
+            const feedback = document.getElementById(`feedback-${exId}`);
+            const collapsible = document.getElementById(`collapse-${exId}`);
+            
+            if (!userAns) {
+                alert("Silakan masukkan jawaban. (Please enter your answer.)");
+                return;
+            }
+
+            const isCorrect = parseFloat(userAns) === parseFloat(correctAnswer);
+            
+            if (isCorrect) {
+                feedback.innerHTML = "<span class='correct-feedback'>Benar! (Correct!)</span>";
+                input.style.borderColor = "var(--success)";
+                input.style.backgroundColor = "#E8F8F5";
+                
+                // Mark section as completed if it's not an assignment
+                if (!assignGroup) {
+                    const sectionId = exId.split('-')[0];
+                    userProgress[sectionId] = true;
+                    saveProgress();
+                    renderPath();
+                }
+            } else {
+                feedback.innerHTML = "<span class='wrong-feedback'>Belum tepat. Coba lagi atau lihat penjelasan. (Not quite right. Try again or see explanation.)</span>";
+                input.style.borderColor = "var(--danger)";
+            }
+            
+            collapsible.classList.add('active');
+        }
+
+        function resetExercise(exId) {
+            const input = document.getElementById(`input-${exId}`);
+            input.value = "";
+            input.style.borderColor = "var(--light)";
+            input.style.backgroundColor = "white";
+            document.getElementById(`feedback-${exId}`).innerHTML = "";
+            document.getElementById(`collapse-${exId}`).classList.remove('active');
+        }
+
+        function nextExercise(currentId, nextId) {
+            if (nextId) {
+                const nextEl = document.getElementById(`ex-${nextId}`);
+                if (nextEl) {
+                    nextEl.style.display = 'block'; // Tampilkan soal berikutnya
+                    setTimeout(() => {
+                        nextEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    }, 100);
+                }
+            } else {
+                // Jika tidak ada nextId, cari tombol end section atau tombol submit
+                const sectionId = currentId.split('-')[0]; // Perbaikan parsing ID
+                const endEl = document.getElementById(`end-${sectionId}`);
+                if (endEl) {
+                    endEl.style.display = 'block';
+                    endEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+                } else {
+                    // Jika di Assignment (tidak ada endEl), scroll ke tombol Submit
+                    const submitBtn = document.querySelector(`.section-card.active .btn-check[onclick^="submitAssignment"]`);
+                    if (submitBtn) {
+                        submitBtn.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    } else {
+                        alert("Ini adalah latihan terakhir di sesi ini. (This is the last exercise in this session.)");
+                    }
+                }
+            }
+        }
+
+        function prevExercise(prevId) {
+            if (prevId) {
+                const prevEl = document.getElementById(`ex-${prevId}`);
+                if (prevEl) {
+                    // Pastikan elemen sebelumnya terlihat saat di-scroll
+                    prevEl.style.display = 'block'; 
+                    prevEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+                }
+            }
+        }
+        
+        function toggleCollapse(id) {
+            const col = document.getElementById(`collapse-${id}`);
+            col.classList.toggle('active');
+        }
+
+        // --- CONTENT DATA PART 2: RULES & SECTION 1 ---
+        CONTENT_DATA['rules'] = {
+            html: `
+                <h2 class="section-title">Class Rules <span class="trans">Aturan Kelas</span></h2>
+                <p>Selamat datang di sesi belajar kita! Sebelum kita mulai, mari kita sepakati aturan kelas berikut agar pembelajaran berjalan dengan lancar.
+                <span class="trans">Welcome to our learning session! Before we begin, let's agree on the following class rules so that learning runs smoothly.</span></p>
+                
+                <div class="theory-block">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <div>1. Berbicara secara bergantian. <span class="trans">Speak in turns.</span></div>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            <div>2. Meminta izin jika ingin meninggalkan kelas. <span class="trans">Ask permission if you want to leave the class.</span></div>
+                        </li>
+                        <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 15px;">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                            <div>3. Menyalakan kamera dan microphone jika diperlukan. <span class="trans">Turn on camera and microphone if needed.</span></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <p>Silakan klik tombol di bawah untuk memulai petualangan matematika kita! <span class="trans">Please click the button below to start our math adventure!</span></p>
+                <button class="btn-check" onclick="showSection('sec1')" style="float: right;">Start Lesson <span class="trans">Mulai Pelajaran</span></button>
+                <div style="clear: both;"></div>
+            `
+        };
+
+        CONTENT_DATA['sec1'] = {
+            html: `
+                <h2 class="section-title">Spiral Review Warm-up (00:00-00:10)</h2>
+                <p>Mari kita panaskan otak kita dengan 'Quick Math Sprint'. Strategi perkalian dan pembagian cepat akan sangat berguna untuk pelajaran hari ini!
+                <span class="trans">Let's warm up our brains with 'Quick Math Sprint'. Fast multiplication and division strategies will be very useful for today's lesson!</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Strategi Perkalian Cepat <span class="trans">Fast Multiplication Strategy</span></h3>
+                    <p>Mengalikan angka dengan 25 bisa dipermudah dengan trik bagi 4 lalu kalikan 100. Mengapa? Karena $25 = \\frac{100}{4}$. Sehingga rumusnya menjadi: $x \\times 25 = \\frac{x}{4} \\times 100$.</p>
+                    <svg class="svg-illustration" viewBox="0 0 100 100" width="150">
+                        <circle cx="50" cy="50" r="40" fill="#FF7675" opacity="0.2"/>
+                        <text x="50" y="45" text-anchor="middle" font-family="Poppins" font-size="14" fill="#2D3436">x 25</text>
+                        <text x="50" y="65" text-anchor="middle" font-family="Poppins" font-size="12" fill="#6C5CE7">= (x/4) x 100</text>
+                    </svg>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec1-1">
+                    <div class="exercise-question">1. Hitunglah $25 \\times 16$ menggunakan trik bagi 4! <span class="trans">Calculate $25 \\times 16$ using the divide by 4 trick!</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-1" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-1', 400)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-1"></div>
+                    <div class="collapsible" id="collapse-sec1-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>Karena $25 = \\frac{100}{4}$, maka $16 \\times 25 = 16 \\times \\frac{100}{4} = 4 \\times 100 = 400$.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-1', 'sec1-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-2" style="display:none;">
+                    <div class="exercise-question">2. Selesaikan $15 \\times 6$ dalam 5 detik. <span class="trans">Solve $15 \\times 6$ in 5 seconds.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-2" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-2', 90)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-2"></div>
+                    <div class="collapsible" id="collapse-sec1-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>Bagi 15 menjadi $10 + 5$. Maka $(10 \\times 6) + (5 \\times 6) = 60 + 30 = 90$. Atau sederhananya $15 \\times 2 = 30$, lalu $30 \\times 3 = 90$.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-2', 'sec1-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-3" style="display:none;">
+                    <div class="exercise-question">3. Hitunglah $25 \\times 32$ menggunakan trik cepat. <span class="trans">Calculate $25 \\times 32$ using the fast trick.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-3" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-3', 800)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-3"></div>
+                    <div class="collapsible" id="collapse-sec1-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>$32 \\times 25 = 32 \\times \\frac{100}{4} = 8 \\times 100 = 800$.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-3', 'sec1-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block" id="theory-sec1-2" style="display:none;">
+                    <h3>Konsep Pembagian <span class="trans">Division Concept</span></h3>
+                    <p>Pembagian adalah kebalikan dari perkalian. Dalam pembagian cepat, kita bisa memfaktorkan pembilang dan penyebut. Sebagai contoh, $144 : 12$. Kita tahu $144 = 12 \\times 12$, sehingga hasilnya adalah 12.</p>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec1-4" style="display:none;">
+                    <div class="exercise-question">4. Hitunglah $144 : 12$. <span class="trans">Calculate $144 : 12$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-4" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-4', 12)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-4"></div>
+                    <div class="collapsible" id="collapse-sec1-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>Karena $12 \\times 12 = 144$, maka $144 : 12 = 12$.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-4', 'sec1-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-5" style="display:none;">
+                    <div class="exercise-question">5. Hitunglah $350 : 7$. <span class="trans">Calculate $350 : 7$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-5" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-5', 50)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-5"></div>
+                    <div class="collapsible" id="collapse-sec1-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>Hilangkan nol, jadi $35 : 7 = 5$. Kembalikan nol, hasilnya 50.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-5', 'sec1-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-6" style="display:none;">
+                    <div class="exercise-question">6. Sebuah server membagi 360 tugas secara merata ke 12 core CPU. Berapa tugas yang diterima setiap core? <span class="trans">A server divides 360 tasks evenly among 12 CPU cores. How many tasks does each core receive?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-6" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-6', 30)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-6"></div>
+                    <div class="collapsible" id="collapse-sec1-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body">
+                            <p>Ini adalah pembagian sederhana: $360 : 12 = 30$. Setiap core mendapat 30 tugas.</p>
+                        </div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-6', 'sec1-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block" id="theory-sec1-3" style="display:none;">
+                    <h3>Pembagian dalam Kehidupan Sehari-hari <span class="trans">Division in Everyday Life</span></h3>
+                    <p>Pembagian digunakan untuk membagi sumber daya secara merata, seperti membagi file ke dalam folder atau membagi带宽 (bandwidth) ke beberapa perangkat.</p>
+                    <svg class="svg-illustration" viewBox="0 0 200 100" width="200">
+                        <rect x="10" y="40" width="40" height="20" fill="#00CEC9"/>
+                        <text x="30" y="55" text-anchor="middle" font-size="10" fill="white">File</text>
+                        <path d="M50 50 L90 20 M50 50 L90 50 M50 50 L90 80" stroke="#6C5CE7" stroke-width="2" fill="none"/>
+                        <rect x="90" y="10" width="40" height="20" fill="#6C5CE7"/>
+                        <rect x="90" y="40" width="40" height="20" fill="#6C5CE7"/>
+                        <rect x="90" y="70" width="40" height="20" fill="#6C5CE7"/>
+                    </svg>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec1-7" style="display:none;">
+                    <div class="exercise-question">7. Jika 350 file dibagi ke 7 folder, berapa file per folder? <span class="trans">If 350 files are divided into 7 folders, how many files per folder?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-7" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-7', 50)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-7"></div>
+                    <div class="collapsible" id="collapse-sec1-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$350 : 7 = 50$ file per folder.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-7', 'sec1-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-8" style="display:none;">
+                    <div class="exercise-question">8. 480 data dibagi ke 12 worker proses. Berapa data per worker? <span class="trans">480 data divided among 12 process workers. How much data per worker?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-8" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-8', 40)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-8"></div>
+                    <div class="collapsible" id="collapse-sec1-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$480 : 12 = 40$ data per worker.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-8', 'sec1-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-9" style="display:none;">
+                    <div class="exercise-question">9. Bandwidth 100 Mbps dibagi rata ke 4 perangkat. Berapa kecepatan tiap perangkat? <span class="trans">100 Mbps bandwidth divided equally among 4 devices. What is the speed of each device?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-9" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-9', 25)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-9"></div>
+                    <div class="collapsible" id="collapse-sec1-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$100 : 4 = 25$ Mbps per perangkat.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-9', 'sec1-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec1-10" style="display:none;">
+                    <div class="exercise-question">10. 900 halaman dokumen dicetak oleh 3 printer secara merata. Berapa halaman per printer? <span class="trans">900 document pages printed by 3 printers evenly. How many pages per printer?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec1-10" placeholder="Jawabanmu">
+                        <button class="btn-check" onclick="checkAnswer('sec1-10', 300)">Check</button>
+                    </div>
+                    <div id="feedback-sec1-10"></div>
+                    <div class="collapsible" id="collapse-sec1-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec1-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$900 : 3 = 300$ halaman per printer.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec1-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec1-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec1-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div id="end-sec1" style="display:none; text-align:center; margin-top:30px;">
+                    <h3>Seksi 1 Selesai! <span class="trans">Section 1 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('sec2')">Lanjut ke Introduction <span class="trans">Next to Introduction</span></button>
+                </div>
+            `
+        };
+
+        // --- CONTENT DATA PART 3: SECTION 2 & SECTION 3 ---
+        CONTENT_DATA['sec2'] = {
+            html: `
+                <h2 class="section-title">Introduction & Real-World Connection (00:10-00:15)</h2>
+                <p>Pernahkah kamu memperhatikan, kenapa saat mendownload file, semakin besar kecepatan internetnya, semakin sedikit waktu yang dibutuhkan? Atau dalam server, jika kita menambah jumlah core CPU, waktu proses data jadi lebih singkat? Inilah yang disebut Perbandingan Berbalik Nilai.
+                <span class="trans">Have you ever noticed why when downloading a file, the greater the internet speed, the less time it takes? Or in a server, if we add CPU cores, the data processing time becomes shorter? This is called Inverse Proportion.</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Hubungan Kecepatan dan Waktu <span class="trans">Relationship Between Speed and Time</span></h3>
+                    <p>Dalam komputasi dan internet, kecepatan ($v$) dan waktu ($t$) saling berbanding terbalik jika ukuran file atau tugas tetap. Semakin cepat, semakin sedikit waktu yang dibutuhkan. Hasil kalinya selalu konstan: $v_1 \\times t_1 = v_2 \\times t_2$.</p>
+                    <svg class="svg-illustration" viewBox="0 0 200 100" width="200">
+                        <rect x="10" y="40" width="30" height="20" fill="#00CEC9"/>
+                        <text x="25" y="55" text-anchor="middle" font-size="10" fill="white">File</text>
+                        <path d="M40 50 L80 50 L80 20 L120 20" stroke="#6C5CE7" stroke-width="2" fill="none"/>
+                        <path d="M40 50 L80 50 L80 80 L120 80" stroke="#FD79A8" stroke-width="2" fill="none"/>
+                        <text x="140" y="25" font-size="10" fill="#6C5CE7">Cepat, Waktu Singkat</text>
+                        <text x="140" y="85" font-size="10" fill="#FD79A8">Lambat, Waktu Lama</text>
+                    </svg>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec2-1">
+                    <div class="exercise-question">1. Jika kecepatan internet 5 Mbps, download selesai dalam 40 detik. Berapa waktu download jika kecepatannya 10 Mbps? <span class="trans">If internet speed is 5 Mbps, download finishes in 40 seconds. What is the download time if the speed is 10 Mbps?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-1" placeholder="Jawaban (detik)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-1', 20)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-1"></div>
+                    <div class="collapsible" id="collapse-sec2-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$5 \\times 40 = 10 \\times t_2$. Maka $200 = 10 \\times t_2$. $t_2 = 20$ detik.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-1', 'sec2-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-2" style="display:none;">
+                    <div class="exercise-question">2. Kecepatan 2 Mbps membutuhkan 100 detik. Jika kecepatan 4 Mbps, waktu yang dibutuhkan? <span class="trans">Speed of 2 Mbps takes 100 seconds. If speed is 4 Mbps, time needed?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-2" placeholder="Jawaban (detik)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-2', 50)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-2"></div>
+                    <div class="collapsible" id="collapse-sec2-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$2 \\times 100 = 4 \\times t_2$. $200 = 4 \\times t_2$. $t_2 = 50$ detik.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-2', 'sec2-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-3" style="display:none;">
+                    <div class="exercise-question">3. Sebuah render video 4K selesai dalam 60 jam oleh 3 komputer. Jika kita menggunakan 5 komputer, berapa jam waktu pengerjaannya? <span class="trans">A 4K video render finishes in 60 hours by 3 computers. If we use 5 computers, how many hours will it take?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-3" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-3', 36)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-3"></div>
+                    <div class="collapsible" id="collapse-sec2-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$3 \\times 60 = 5 \\times t_2$. $180 = 5 \\times t_2$. $t_2 = 36$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-3', 'sec2-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block" id="theory-sec2-2" style="display:none;">
+                    <h3>Core CPU dan Waktu Eksekusi <span class="trans">CPU Cores and Execution Time</span></h3>
+                    <p>Di server, menambah core CPU akan mempercepat proses data. Jumlah core ($c$) dan waktu ($t$) berbanding terbalik. $c_1 \\times t_1 = c_2 \\times t_2$.</p>
+                    <svg class="svg-illustration" viewBox="0 0 100 100" width="120">
+                        <rect x="10" y="10" width="80" height="80" fill="none" stroke="#2D3436" stroke-width="2"/>
+                        <rect x="20" y="20" width="25" height="25" fill="#6C5CE7"/>
+                        <rect x="55" y="20" width="25" height="25" fill="#6C5CE7"/>
+                        <rect x="20" y="55" width="25" height="25" fill="#6C5CE7"/>
+                        <rect x="55" y="55" width="25" height="25" fill="#6C5CE7"/>
+                        <text x="50" y="95" text-anchor="middle" font-size="10" fill="#2D3436">CPU Cores</text>
+                    </svg>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec2-4" style="display:none;">
+                    <div class="exercise-question">4. Server memproses database 12 menit dengan 4 core. Jika diinginkan selesai 8 menit, berapa core yang dibutuhkan? <span class="trans">Server processes database in 12 mins with 4 cores. If wanted to finish in 8 mins, how many cores are needed?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-4" placeholder="Jawaban (core)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-4', 6)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-4"></div>
+                    <div class="collapsible" id="collapse-sec2-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$4 \\times 12 = c_2 \\times 8$. $48 = 8c_2$. $c_2 = 6$ core.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-4', 'sec2-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-5" style="display:none;">
+                    <div class="exercise-question">5. 2 core CPU butuh 30 jam untuk training AI. Jika pakai 6 core, berapa jam waktu training? <span class="trans">2 CPU cores need 30 hours for AI training. If using 6 cores, how many hours for training?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-5" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-5', 10)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-5"></div>
+                    <div class="collapsible" id="collapse-sec2-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$2 \\times 30 = 6 \\times t_2$. $60 = 6t_2$. $t_2 = 10$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-5', 'sec2-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-6" style="display:none;">
+                    <div class="exercise-question">6. 8 core butuh 15 menit untuk compile kode. Jika hanya pakai 4 core, berapa menit waktu compile? <span class="trans">8 cores need 15 mins to compile code. If only using 4 cores, how many minutes to compile?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-6" placeholder="Jawaban (menit)">
+                        <button class="btn-check" onclick="checkAnswer('sec2-6', 30)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-6"></div>
+                    <div class="collapsible" id="collapse-sec2-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 15 = 4 \\times t_2$. $120 = 4t_2$. $t_2 = 30$ menit.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-6', 'sec2-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block" id="theory-sec2-3" style="display:none;">
+                    <h3>Konstanta Perbandingan <span class="trans">Proportionality Constant</span></h3>
+                    <p>Dalam perbandingan berbalik nilai, hasil kali dua variabel selalu tetap. Nilai tetap ini disebut konstanta ($k$). $x \\times y = k$. Jika $x$ naik, $y$ turun agar $k$ tetap.</p>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec2-7" style="display:none;">
+                    <div class="exercise-question">7. Diketahui $x = 4$ dan $y = 5$. Berapakah konstanta $k$? <span class="trans">Given $x = 4$ and $y = 5$. What is the constant $k$?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-7" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec2-7', 20)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-7"></div>
+                    <div class="collapsible" id="collapse-sec2-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$k = x \\times y = 4 \\times 5 = 20$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-7', 'sec2-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-8" style="display:none;">
+                    <div class="exercise-question">8. Jika $x = 12$ dan $y = 3$, carilah konstanta $k$. <span class="trans">If $x = 12$ and $y = 3$, find the constant $k$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-8" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec2-8', 36)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-8"></div>
+                    <div class="collapsible" id="collapse-sec2-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$k = 12 \\times 3 = 36$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-8', 'sec2-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-9" style="display:none;">
+                    <div class="exercise-question">9. Jika konstanta $k = 24$ dan $x = 8$, berapakah nilai $y$? <span class="trans">If constant $k = 24$ and $x = 8$, what is the value of $y$?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-9" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec2-9', 3)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-9"></div>
+                    <div class="collapsible" id="collapse-sec2-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$x \\times y = k \\Rightarrow 8 \\times y = 24 \\Rightarrow y = 3$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-9', 'sec2-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec2-10" style="display:none;">
+                    <div class="exercise-question">10. Jika $k = 60$ dan $y = 5$, carilah nilai $x$. <span class="trans">If $k = 60$ and $y = 5$, find the value of $x$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec2-10" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec2-10', 12)">Check</button>
+                    </div>
+                    <div id="feedback-sec2-10"></div>
+                    <div class="collapsible" id="collapse-sec2-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec2-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$x \\times 5 = 60 \\Rightarrow x = 12$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec2-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec2-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec2-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div id="end-sec2" style="display:none; text-align:center; margin-top:30px;">
+                    <h3>Seksi 2 Selesai! <span class="trans">Section 2 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('sec3')">Lanjut ke Review <span class="trans">Next to Review</span></button>
+                </div>
+            `
+        };
+
+        CONTENT_DATA['sec3'] = {
+            html: `
+                <h2 class="section-title">Review of Prior Knowledge (00:15-00:20)</h2>
+                <p>Sebelumnya kita tahu perbandingan senilai: 'Ingin beli 2 lisensi software harganya 200rb, maka 4 lisensi jadi 400rb'. Naik-naik, turun-turun. Tapi hari ini berbeda. Di perbandingan berbalik nilai, jika satu variabel naik, pasangannya justru turun.
+                <span class="trans">Previously we knew direct proportion: 'Want to buy 2 software licenses for 200k, so 4 licenses become 400k'. Up-up, down-down. But today is different. In inverse proportion, if one variable goes up, its partner goes down.</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Perbandingan Senilai <span class="trans">Direct Proportion</span></h3>
+                    <p>Pada perbandingan senilai, saat $x$ naik, $y$ juga naik. Rasio antara keduanya selalu tetap: $\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$. Grafiknya berupa garis lurus.</p>
+                    <svg class="svg-illustration" viewBox="0 0 100 100" width="120">
+                        <line x1="10" y1="90" x2="90" y2="90" stroke="#2D3436" stroke-width="2"/>
+                        <line x1="10" y1="10" x2="10" y2="90" stroke="#2D3436" stroke-width="2"/>
+                        <line x1="10" y1="90" x2="90" y2="10" stroke="#00CEC9" stroke-width="3"/>
+                        <text x="50" y="50" font-size="10" fill="#00CEC9">y = ax</text>
+                    </svg>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec3-1">
+                    <div class="exercise-question">1. 2 lisensi software harganya 200rb. Berapa harga 4 lisensi? (dalam ribu) <span class="trans">2 software licenses cost 200k. How much for 4 licenses? (in thousands)</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-1" placeholder="Jawaban (ribu)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-1', 400)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-1"></div>
+                    <div class="collapsible" id="collapse-sec3-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Perbandingan senilai: $\\frac{2}{200} = \\frac{4}{x}$. $x = 400$ ribu.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-1', 'sec3-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-2" style="display:none;">
+                    <div class="exercise-question">2. 3 server biaya 900 USD. Berapa biaya 5 server? <span class="trans">3 servers cost 900 USD. How much for 5 servers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-2" placeholder="Jawaban (USD)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-2', 1500)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-2"></div>
+                    <div class="collapsible" id="collapse-sec3-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$\\frac{3}{900} = \\frac{5}{x}$. $x = 1500$ USD.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-2', 'sec3-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-3" style="display:none;">
+                    <div class="exercise-question">3. 4 jam waktu komputasi menghabiskan 240 Watt. Berapa Watt untuk 7 jam? <span class="trans">4 hours of compute time consumes 240 Watts. How many Watts for 7 hours?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-3" placeholder="Jawaban (Watt)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-3', 420)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-3"></div>
+                    <div class="collapsible" id="collapse-sec3-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$\\frac{4}{240} = \\frac{7}{x}$. $x = 420$ Watt.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-3', 'sec3-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block" id="theory-sec3-2" style="display:none;">
+                    <h3>Perbandingan Berbalik Nilai <span class="trans">Inverse Proportion</span></h3>
+                    <p>Saat $x$ naik, $y$ turun. Hasil kalinya konstan: $x_1 \\times y_1 = x_2 \\times y_2$. Grafiknya berupa kurva yang menurun.</p>
+                    <svg class="svg-illustration" viewBox="0 0 100 100" width="120">
+                        <line x1="10" y1="90" x2="90" y2="90" stroke="#2D3436" stroke-width="2"/>
+                        <line x1="10" y1="10" x2="10" y2="90" stroke="#2D3436" stroke-width="2"/>
+                        <path d="M 10 20 Q 40 20 90 80" stroke="#FD79A8" stroke-width="3" fill="none"/>
+                        <text x="50" y="50" font-size="10" fill="#FD79A8">y = k/x</text>
+                    </svg>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec3-4" style="display:none;">
+                    <div class="exercise-question">4. 4 pekerja butuh 10 hari. 5 pekerja butuh berapa hari? <span class="trans">4 workers need 10 days. How many days for 5 workers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-4" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-4', 8)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-4"></div>
+                    <div class="collapsible" id="collapse-sec3-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$4 \\times 10 = 5 \\times x$. $40 = 5x$. $x = 8$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-4', 'sec3-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-5" style="display:none;">
+                    <div class="exercise-question">5. 3 mesin butuh 15 jam. 5 mesin butuh berapa jam? <span class="trans">3 machines need 15 hours. How many hours for 5 machines?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-5" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-5', 9)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-5"></div>
+                    <div class="collapsible" id="collapse-sec3-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$3 \\times 15 = 5 \\times x$. $45 = 5x$. $x = 9$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-5', 'sec3-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-6" style="display:none;">
+                    <div class="exercise-question">6. 8 truck mengangkut barang dalam 10 trip. Berapa trip untuk 10 truck? <span class="trans">8 trucks transport goods in 10 trips. How many trips for 10 trucks?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-6" placeholder="Jawaban (trip)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-6', 8)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-6"></div>
+                    <div class="collapsible" id="collapse-sec3-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 10 = 10 \\times x$. $80 = 10x$. $x = 8$ trip.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-6', 'sec3-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block" id="theory-sec3-3" style="display:none;">
+                    <h3>Identifikasi Jenis Perbandingan <span class="trans">Identifying Proportion Type</span></h3>
+                    <p>Kunci utama adalah analisis logika: Jika "NAIK-NAIK" maka Senilai. Jika "NAIK-TURUN" maka Berbalik Nilai.</p>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec3-7" style="display:none;">
+                    <div class="exercise-question">7. 5 pompa air menguras kolam dalam 6 jam. Berapa jam untuk 10 pompa? <span class="trans">5 water pumps drain a pool in 6 hours. How many hours for 10 pumps?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-7" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-7', 3)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-7"></div>
+                    <div class="collapsible" id="collapse-sec3-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Berbalik Nilai. $5 \\times 6 = 10 \\times x$. $x = 3$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-7', 'sec3-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-8" style="display:none;">
+                    <div class="exercise-question">8. 2 kg apel harganya 40rb. Berapa harga 6 kg? <span class="trans">2 kg of apples cost 40k. How much for 6 kg?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-8" placeholder="Jawaban (ribu)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-8', 120)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-8"></div>
+                    <div class="collapsible" id="collapse-sec3-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Senilai. $\\frac{2}{40} = \\frac{6}{x}$. $x = 120$ ribu.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-8', 'sec3-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-9" style="display:none;">
+                    <div class="exercise-question">9. 10 pekerja membangun tembok 6 hari. Berapa hari untuk 15 pekerja? <span class="trans">10 workers build a wall in 6 days. How many days for 15 workers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-9" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-9', 4)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-9"></div>
+                    <div class="collapsible" id="collapse-sec3-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Berbalik Nilai. $10 \\times 6 = 15 \\times x$. $60 = 15x$. $x = 4$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-9', 'sec3-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec3-10" style="display:none;">
+                    <div class="exercise-question">10. Mobil melaju 50 km/jam tiba dalam 3 jam. Jika kecepatan 150 km/jam, berapa jam perjalanan? <span class="trans">Car travels at 50 km/h arrives in 3 hours. If speed is 150 km/h, how many hours is the trip?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec3-10" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec3-10', 1)">Check</button>
+                    </div>
+                    <div id="feedback-sec3-10"></div>
+                    <div class="collapsible" id="collapse-sec3-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec3-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Berbalik Nilai. $50 \\times 3 = 150 \\times x$. $150 = 150x$. $x = 1$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec3-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec3-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec3-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div id="end-sec3" style="display:none; text-align:center; margin-top:30px;">
+                    <h3>Seksi 3 Selesai! <span class="trans">Section 3 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('sec4')">Lanjut ke Problem Intro <span class="trans">Next to Problem Intro</span></button>
+                </div>
+            `
+        };
+
+        // --- CONTENT DATA PART 4: SECTION 4 & SECTION 5 ---
+        CONTENT_DATA['sec4'] = {
+            html: `
+                <h2 class="section-title">Problem Introduction (00:20-00:30)</h2>
+                <p>Mari kita lihat kasus Informatika ini. Sebuah server memerlukan waktu 12 menit untuk memproses database jika menggunakan 4 core CPU. Jika perusahaan ingin prosesnya selesai dalam 8 menit, berapa banyak core yang harus disiapkan? Ingat rumusnya: $(Core A \\times Waktu A) = (Core B \\times Waktu B)$.
+                <span class="trans">Let's look at this Informatics case. A server takes 12 minutes to process a database using 4 CPU cores. If the company wants the process to finish in 8 minutes, how many cores must be prepared? Remember the formula: $(Core A \\times Time A) = (Core B \\times Time B)$.</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Identifikasi Variabel <span class="trans">Variable Identification</span></h3>
+                    <p>Dalam soal cerita, langkah pertama adalah mengidentifikasi variabel. Misalnya, $x$ adalah jumlah core, dan $y$ adalah waktu. Kita mencari $x_2$ jika $x_1 = 4$, $y_1 = 12$, dan $y_2 = 8$.</p>
+                    <svg class="svg-illustration" viewBox="0 0 200 100" width="200">
+                        <rect x="10" y="20" width="40" height="40" fill="#6C5CE7"/>
+                        <text x="30" y="45" text-anchor="middle" fill="white" font-size="10">x1=4</text>
+                        <rect x="10" y="70" width="40" height="20" fill="#00CEC9"/>
+                        <text x="30" y="85" text-anchor="middle" fill="white" font-size="10">y1=12</text>
+                        <path d="M60 60 L100 60" stroke="#2D3436" stroke-width="2" marker-end="url(#arrow)"/>
+                        <rect x="110" y="20" width="40" height="40" fill="#FD79A8"/>
+                        <text x="130" y="45" text-anchor="middle" fill="white" font-size="10">x2=?</text>
+                        <rect x="110" y="70" width="40" height="20" fill="#FDCB6E"/>
+                        <text x="130" y="85" text-anchor="middle" fill="white" font-size="10">y2=8</text>
+                        <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#2D3436"/></marker></defs>
+                    </svg>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec4-1">
+                    <div class="exercise-question">1. Diketahui $x_1 = 4$ dan $y_1 = 12$. Berapakah konstanta $k$ pada kasus server di atas? <span class="trans">Given $x_1 = 4$ and $y_1 = 12$. What is the constant $k$ in the server case above?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-1" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec4-1', 48)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-1"></div>
+                    <div class="collapsible" id="collapse-sec4-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$k = x_1 \\times y_1 = 4 \\times 12 = 48$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-1', 'sec4-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-2">
+                    <div class="exercise-question">2. Jika $k = 48$ dan $y_2 = 8$, berapakah nilai $x_2$? <span class="trans">If $k = 48$ and $y_2 = 8$, what is the value of $x_2$?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-2" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec4-2', 6)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-2"></div>
+                    <div class="collapsible" id="collapse-sec4-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$x_2 = \\frac{k}{y_2} = \\frac{48}{8} = 6$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-2', 'sec4-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-3">
+                    <div class="exercise-question">3. Jadi, berapa banyak core yang harus disiapkan agar proses selesai dalam 8 menit? <span class="trans">So, how many cores must be prepared so the process finishes in 8 minutes?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-3" placeholder="Jawaban (core)">
+                        <button class="btn-check" onclick="checkAnswer('sec4-3', 6)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-3"></div>
+                    <div class="collapsible" id="collapse-sec4-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Dari perhitungan sebelumnya, dibutuhkan 6 core.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-3', 'sec4-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block">
+                    <h3>Menyusun Persamaan Perkalian Silang <span class="trans">Formulating Cross-Multiplication Equation</span></h3>
+                    <p>Untuk menyelesaikan masalah perbandingan berbalik nilai, kita susun persamaannya: $x_1 \\times y_1 = x_2 \\times y_2$. Kita bisa memasukkan nilai yang diketahui, lalu mencari nilai yang ditanyakan.</p>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec4-4">
+                    <div class="exercise-question">4. Jika $x_1=5, y_1=10, x_2=2$, carilah nilai $y_2$. <span class="trans">If $x_1=5, y_1=10, x_2=2$, find the value of $y_2$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-4" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec4-4', 25)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-4"></div>
+                    <div class="collapsible" id="collapse-sec4-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$5 \\times 10 = 2 \\times y_2 \\Rightarrow 50 = 2y_2 \\Rightarrow y_2 = 25$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-4', 'sec4-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-5">
+                    <div class="exercise-question">5. Jika $x_1=8, y_1=3, y_2=6$, carilah nilai $x_2$. <span class="trans">If $x_1=8, y_1=3, y_2=6$, find the value of $x_2$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-5" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec4-5', 4)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-5"></div>
+                    <div class="collapsible" id="collapse-sec4-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 3 = x_2 \\times 6 \\Rightarrow 24 = 6x_2 \\Rightarrow x_2 = 4$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-5', 'sec4-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-6">
+                    <div class="exercise-question">6. Jika $x_1=10, y_1=4, x_2=5$, carilah nilai $y_2$. <span class="trans">If $x_1=10, y_1=4, x_2=5$, find the value of $y_2$.</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-6" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec4-6', 8)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-6"></div>
+                    <div class="collapsible" id="collapse-sec4-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$10 \\times 4 = 5 \\times y_2 \\Rightarrow 40 = 5y_2 \\Rightarrow y_2 = 8$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-6', 'sec4-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block">
+                    <h3>Menyelesaikan Masalah Nyata <span class="trans">Solving Real-World Problems</span></h3>
+                    <p>Ketika dihadapkan pada masalah kompleks, selalu ubah kalimat menjadi persamaan matematika. Identifikasi apa yang naik dan apa yang turun, lalu tentukan apakah itu perbandingan senilai atau berbalik nilai.</p>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec4-7">
+                    <div class="exercise-question">7. Server butuh 10 menit dengan 8 core. Jika butuh 20 menit, berapa core yang dipakai? <span class="trans">Server needs 10 mins with 8 cores. If it needs 20 mins, how many cores are used?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-7" placeholder="Jawaban (core)">
+                        <button class="btn-check" onclick="checkAnswer('sec4-7', 4)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-7"></div>
+                    <div class="collapsible" id="collapse-sec4-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 10 = x_2 \\times 20 \\Rightarrow 80 = 20x_2 \\Rightarrow x_2 = 4$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-7', 'sec4-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-8">
+                    <div class="exercise-question">8. 12 core memproses data 24 menit. Jika hanya 9 core, berapa menit waktu proses? <span class="trans">12 cores process data in 24 mins. If only 9 cores, how many minutes is the process time?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-8" placeholder="Jawaban (menit)">
+                        <button class="btn-check" onclick="checkAnswer('sec4-8', 32)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-8"></div>
+                    <div class="collapsible" id="collapse-sec4-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$12 \\times 24 = 9 \\times y_2 \\Rightarrow 288 = 9y_2 \\Rightarrow y_2 = 32$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-8', 'sec4-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-9">
+                    <div class="exercise-question">9. 15 core butuh 8 menit. Jika diinginkan 12 menit, berapa core? <span class="trans">15 cores need 8 mins. If 12 mins is desired, how many cores?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-9" placeholder="Jawaban (core)">
+                        <button class="btn-check" onclick="checkAnswer('sec4-9', 10)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-9"></div>
+                    <div class="collapsible" id="collapse-sec4-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$15 \\times 8 = x_2 \\times 12 \\Rightarrow 120 = 12x_2 \\Rightarrow x_2 = 10$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-9', 'sec4-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec4-10">
+                    <div class="exercise-question">10. 6 core butuh 30 menit. Jika 15 menit, berapa core? <span class="trans">6 cores need 30 mins. If 15 mins, how many cores?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec4-10" placeholder="Jawaban (core)">
+                        <button class="btn-check" onclick="checkAnswer('sec4-10', 12)">Check</button>
+                    </div>
+                    <div id="feedback-sec4-10"></div>
+                    <div class="collapsible" id="collapse-sec4-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec4-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$6 \\times 30 = x_2 \\times 15 \\Rightarrow 180 = 15x_2 \\Rightarrow x_2 = 12$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec4-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec4-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec4-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:30px;">
+                    <h3>Seksi 4 Selesai! <span class="trans">Section 4 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('sec5')">Lanjut ke Guided Practice <span class="trans">Next to Guided Practice</span></button>
+                </div>
+            `
+        };
+
+        CONTENT_DATA['sec5'] = {
+            html: `
+                <h2 class="section-title">Guided Practice (00:30-00:45)</h2>
+                <p>Ayo kita kerjakan bersama di layar. Kasus 1: Sebuah render video 4K selesai dalam 60 jam oleh 3 komputer. Jika kita menyewa 2 komputer tambahan (total jadi 5), berapa jam waktu pengerjaannya?
+                <span class="trans">Let's do it together on the screen. Case 1: A 4K video render finishes in 60 hours by 3 computers. If we rent 2 additional computers (total 5), how many hours will it take?</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Pemodelan Kasus Render Video <span class="trans">Modeling Video Render Case</span></h3>
+                    <p>Langkah pertama: tuliskan persamaannya. $3 \\times 60 = 5 \\times Waktu Baru$. Ini adalah perbandingan berbalik nilai karena semakin banyak komputer, semakin singkat waktu render.</p>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec5-1">
+                    <div class="exercise-question">1. Dari kasus di atas, berapakah nilai konstanta $k$? <span class="trans">From the case above, what is the constant value $k$?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-1" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec5-1', 180)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-1"></div>
+                    <div class="collapsible" id="collapse-sec5-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$k = 3 \\times 60 = 180$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-1', 'sec5-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-2">
+                    <div class="exercise-question">2. Jika menggunakan 5 komputer, berapakah waktu yang dibutuhkan? <span class="trans">If using 5 computers, what is the time needed?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-2" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-2', 36)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-2"></div>
+                    <div class="collapsible" id="collapse-sec5-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$3 \\times 60 = 5 \\times y_2 \\Rightarrow 180 = 5y_2 \\Rightarrow y_2 = 36$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-2', 'sec5-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-3">
+                    <div class="exercise-question">3. Jika target waktu 30 jam, berapa komputer tambahan yang dibutuhkan dari 3 komputer awal? <span class="trans">If the target time is 30 hours, how many additional computers are needed from the initial 3?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-3" placeholder="Jawaban (komputer)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-3', 3)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-3"></div>
+                    <div class="collapsible" id="collapse-sec5-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$3 \\times 60 = x_2 \\times 30 \\Rightarrow 180 = 30x_2 \\Rightarrow x_2 = 6$. Tambahan = $6 - 3 = 3$ komputer.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-3', 'sec5-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block">
+                    <h3>Kasus Kompresi Data <span class="trans">Data Compression Case</span></h3>
+                    <p>10 worker memproses data dalam 4 hari. Jika dikerjakan 16 worker jadi berapa hari? $10 \\times 4 = 16 \\times x_2$.</p>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec5-4">
+                    <div class="exercise-question">4. Dari kasus kompresi data di atas, carilah nilai $x_2$ (hari dengan 16 worker). <span class="trans">From the data compression case above, find the value of $x_2$ (days with 16 workers).</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-4" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-4', 2.5)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-4"></div>
+                    <div class="collapsible" id="collapse-sec5-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$10 \\times 4 = 16 \\times x_2 \\Rightarrow 40 = 16x_2 \\Rightarrow x_2 = 2.5$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-4', 'sec5-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-5">
+                    <div class="exercise-question">5. 8 worker butuh 6 hari. Jika 12 worker, berapa hari? <span class="trans">8 workers need 6 days. If 12 workers, how many days?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-5" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-5', 4)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-5"></div>
+                    <div class="collapsible" id="collapse-sec5-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 6 = 12 \\times x_2 \\Rightarrow 48 = 12x_2 \\Rightarrow x_2 = 4$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-5', 'sec5-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-6">
+                    <div class="exercise-question">6. 15 worker butuh 8 hari. Jika 10 worker, berapa hari? <span class="trans">15 workers need 8 days. If 10 workers, how many days?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-6" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-6', 12)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-6"></div>
+                    <div class="collapsible" id="collapse-sec5-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$15 \\times 8 = 10 \\times x_2 \\Rightarrow 120 = 10x_2 \\Rightarrow x_2 = 12$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-6', 'sec5-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block">
+                    <h3>Analisis Efisiensi Sumber Daya <span class="trans">Resource Efficiency Analysis</span></h3>
+                    <p>Seringkali soal menanyakan "tambahan" sumber daya. Hati-hati! Hitung dulu total kebutuhan, lalu kurangi dengan sumber daya awal.</p>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec5-7">
+                    <div class="exercise-question">7. 4 komputer render 30 jam. Ditambah 2 komputer (total 6), berapa jam? <span class="trans">4 computers render 30 hours. Added 2 computers (total 6), how many hours?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-7" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-7', 20)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-7"></div>
+                    <div class="collapsible" id="collapse-sec5-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$4 \\times 30 = 6 \\times x_2 \\Rightarrow 120 = 6x_2 \\Rightarrow x_2 = 20$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-7', 'sec5-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-8">
+                    <div class="exercise-question">8. 6 worker butuh 12 hari. Ditambah 2 worker (total 8), berapa hari? <span class="trans">6 workers need 12 days. Added 2 workers (total 8), how many days?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-8" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-8', 9)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-8"></div>
+                    <div class="collapsible" id="collapse-sec5-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$6 \\times 12 = 8 \\times x_2 \\Rightarrow 72 = 8x_2 \\Rightarrow x_2 = 9$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-8', 'sec5-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-9">
+                    <div class="exercise-question">9. 5 mesin butuh 10 jam. Ditambah 5 mesin (total 10), berapa jam? <span class="trans">5 machines need 10 hours. Added 5 machines (total 10), how many hours?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-9" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-9', 5)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-9"></div>
+                    <div class="collapsible" id="collapse-sec5-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$5 \\times 10 = 10 \\times x_2 \\Rightarrow 50 = 10x_2 \\Rightarrow x_2 = 5$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-9', 'sec5-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec5-10">
+                    <div class="exercise-question">10. 10 server butuh 15 menit. 4 server rusak (sisa 6), berapa menit? <span class="trans">10 servers need 15 mins. 4 servers broken (6 left), how many minutes?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec5-10" placeholder="Jawaban (menit)">
+                        <button class="btn-check" onclick="checkAnswer('sec5-10', 25)">Check</button>
+                    </div>
+                    <div id="feedback-sec5-10"></div>
+                    <div class="collapsible" id="collapse-sec5-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec5-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$10 \\times 15 = 6 \\times x_2 \\Rightarrow 150 = 6x_2 \\Rightarrow x_2 = 25$ menit.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec5-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec5-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec5-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:30px;">
+                    <h3>Seksi 5 Selesai! <span class="trans">Section 5 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('sec6')">Lanjut ke Independent Practice <span class="trans">Next to Independent Practice</span></button>
+                </div>
+            `
+        };
+
+        // --- FUNCTION OVERRIDES FOR ASSIGNMENT TRACKING & PRINTING ---
+        let assignmentData = {};
+
+        function checkAnswer(exId, correctAnswer, assignGroup = null) {
+            const input = document.getElementById(`input-${exId}`);
+            const userAns = input.value.trim();
+            const feedback = document.getElementById(`feedback-${exId}`);
+            const collapsible = document.getElementById(`collapse-${exId}`);
+            
+            if (!userAns) {
+                alert("Silakan masukkan jawaban. (Please enter your answer.)");
+                return;
+            }
+
+            const isCorrect = parseFloat(userAns) === parseFloat(correctAnswer);
+            const groupMatch = exId.match(/(assign\d+)/);
+            const currentGroup = assignGroup || (groupMatch ? groupMatch[1] : null);
+            
+            if (currentGroup) {
+                if (!assignmentData[currentGroup]) assignmentData[currentGroup] = { score: 0, answers: {} };
+                const wasCorrect = assignmentData[currentGroup].answers[exId];
+                if (isCorrect && !wasCorrect) {
+                    assignmentData[currentGroup].score++;
+                } else if (!isCorrect && wasCorrect) {
+                    assignmentData[currentGroup].score--;
+                }
+                assignmentData[currentGroup].answers[exId] = isCorrect;
+            }
+            
+            if (isCorrect) {
+                feedback.innerHTML = "<span class='correct-feedback'>Benar! (Correct!)</span>";
+                input.style.borderColor = "var(--success)";
+                input.style.backgroundColor = "#E8F8F5";
+                
+                if (!currentGroup) {
+                    const sectionId = exId.split('-')[0] + '-' + exId.split('-')[1];
+                    userProgress[sectionId] = true;
+                    saveProgress();
+                    renderPath();
+                }
+            } else {
+                feedback.innerHTML = "<span class='wrong-feedback'>Belum tepat. Coba lagi atau lihat penjelasan. (Not quite right. Try again or see explanation.)</span>";
+                input.style.borderColor = "var(--danger)";
+            }
+            collapsible.classList.add('active');
+        }
+
+        function resetExercise(exId) {
+            const input = document.getElementById(`input-${exId}`);
+            input.value = "";
+            input.style.borderColor = "var(--light)";
+            input.style.backgroundColor = "white";
+            document.getElementById(`feedback-${exId}`).innerHTML = "";
+            document.getElementById(`collapse-${exId}`).classList.remove('active');
+
+            const groupMatch = exId.match(/(assign\d+)/);
+            if (groupMatch) {
+                const assignGroup = groupMatch[1];
+                if (assignmentData[assignGroup] && assignmentData[assignGroup].answers[exId]) {
+                    if (assignmentData[assignGroup].answers[exId] === true) {
+                        assignmentData[assignGroup].score--;
+                    }
+                    delete assignmentData[assignGroup].answers[exId];
+                }
+            }
+        }
+
+        function preparePrint(groupId, score, total) {
+            document.getElementById('printGroupName').innerText = groupId.toUpperCase();
+            document.getElementById('printScore').innerText = `${score}/${total}`;
+            
+            const tbody = document.getElementById('printTableBody');
+            tbody.innerHTML = '';
+            
+            const exercises = document.querySelectorAll(`.exercise-block[id^="ex-${groupId}"]`);
+            
+            exercises.forEach((ex, index) => {
+                const exId = ex.id.replace('ex-', '');
+                const questionEl = ex.querySelector('.exercise-question');
+                let questionText = questionEl ? questionEl.textContent.replace(/\s+/g, ' ').trim() : 'N/A';
+                
+                const input = document.getElementById(`input-${exId}`);
+                const studentAns = input.value || '-';
+                
+                const btn = ex.querySelector('.btn-check');
+                const onclickStr = btn.getAttribute('onclick');
+                const match = onclickStr.match(/checkAnswer\('([^']+)',\s*([^)]+)\)/);
+                const correctAns = match ? match[2] : '-';
+                
+                const isCorrect = parseFloat(studentAns) === parseFloat(correctAns);
+                
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${questionText}</td>
+                        <td>${studentAns}</td>
+                        <td>${correctAns}</td>
+                        <td style="text-align: center;">${isCorrect ? '✓' : '✗'}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+            
+            window.print();
+        }
+
+        // --- CONTENT DATA PART 5: SECTION 6, ASSIGNMENT 1 & 2 ---
+        CONTENT_DATA['sec6'] = {
+            html: `
+                <h2 class="section-title">Independent Practice (00:50-01:00)</h2>
+                <p>Sekarang tantangan untukmu! Skenario 1: Deployment aplikasi oleh 6 engineer butuh 12 hari. Perusahaan ingin selesai dalam 4 hari. Berapa TAMBAHAN engineer yang diperlukan? Hati-hati dengan kata 'tambahan'.
+                <span class="trans">Now a challenge for you! Scenario 1: App deployment by 6 engineers takes 12 days. The company wants to finish in 4 days. How many ADDITIONAL engineers are needed? Be careful with the word 'additional'.</span></p>
+                
+                <!-- THEORY 1 -->
+                <div class="theory-block">
+                    <h3>Analisis Kebutuhan Engineer <span class="trans">Engineer Requirement Analysis</span></h3>
+                    <p>Langkah 1: Cari total konstanta pekerjaan. $k = 6 \\times 12 = 72$. Langkah 2: Cari total engineer untuk 4 hari. $x_2 = \\frac{72}{4} = 18$. Langkah 3: Hitung tambahan. $18 - 6 = 12$ engineer tambahan.</p>
+                </div>
+
+                <!-- EX 1, 2, 3 -->
+                <div class="exercise-block" id="ex-sec6-1">
+                    <div class="exercise-question">1. 6 engineer butuh 12 hari. Berapa hari untuk 8 engineer? <span class="trans">6 engineers need 12 days. How many days for 8 engineers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-1" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-1', 9)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-1"></div>
+                    <div class="collapsible" id="collapse-sec6-1">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-1')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$6 \\times 12 = 8 \\times y_2 \\Rightarrow 72 = 8y_2 \\Rightarrow y_2 = 9$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-1')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-1', 'sec6-2')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-2">
+                    <div class="exercise-question">2. 6 engineer butuh 12 hari. Jika ingin selesai 4 hari, berapa total engineer? <span class="trans">6 engineers need 12 days. If want to finish in 4 days, how many total engineers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-2" placeholder="Jawaban (engineer)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-2', 18)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-2"></div>
+                    <div class="collapsible" id="collapse-sec6-2">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-2')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$6 \\times 12 = x_2 \\times 4 \\Rightarrow 72 = 4x_2 \\Rightarrow x_2 = 18$ engineer.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-1')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-2')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-2', 'sec6-3')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-3">
+                    <div class="exercise-question">3. Dari 6 engineer awal, berapa TAMBAHAN engineer agar selesai dalam 4 hari? <span class="trans">From the initial 6 engineers, how many ADDITIONAL engineers to finish in 4 days?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-3" placeholder="Jawaban (tambahan)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-3', 12)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-3"></div>
+                    <div class="collapsible" id="collapse-sec6-3">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-3')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>Total butuh 18, awalnya 6. Tambahan = $18 - 6 = 12$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-2')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-3')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-3', 'sec6-4')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 2 -->
+                <div class="theory-block">
+                    <h3>Bandwidth dan Waktu Buffering <span class="trans">Bandwidth and Buffering Time</span></h3>
+                    <p>Streaming 1080p butuh 5Mbps dengan durasi buffer 2s. Jika bandwidth turun ke 2Mbps, berapa durasi buffer? $5 \\times 2 = 2 \\times t_2$.</p>
+                </div>
+
+                <!-- EX 4, 5, 6 -->
+                <div class="exercise-block" id="ex-sec6-4">
+                    <div class="exercise-question">4. 5 Mbps butuh buffer 2s. Berapa konstanta $k$? <span class="trans">5 Mbps needs buffer 2s. What is the constant $k$?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-4" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('sec6-4', 10)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-4"></div>
+                    <div class="collapsible" id="collapse-sec6-4">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-4')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$k = 5 \\times 2 = 10$.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-3')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-4')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-4', 'sec6-5')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-5">
+                    <div class="exercise-question">5. Jika bandwidth turun menjadi 2 Mbps, berapa durasi buffer? <span class="trans">If bandwidth drops to 2 Mbps, what is the buffer duration?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-5" placeholder="Jawaban (s)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-5', 5)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-5"></div>
+                    <div class="collapsible" id="collapse-sec6-5">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-5')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$10 = 2 \\times y_2 \\Rightarrow y_2 = 5$ detik.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-4')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-5')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-5', 'sec6-6')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-6">
+                    <div class="exercise-question">6. Jika bandwidth 1 Mbps, berapa durasi buffer? <span class="trans">If bandwidth is 1 Mbps, what is the buffer duration?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-6" placeholder="Jawaban (s)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-6', 10)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-6"></div>
+                    <div class="collapsible" id="collapse-sec6-6">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-6')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$10 = 1 \\times y_2 \\Rightarrow y_2 = 10$ detik.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-5')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-6')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-6', 'sec6-7')">Next</button>
+                    </div>
+                </div>
+
+                <!-- THEORY 3 -->
+                <div class="theory-block">
+                    <h3>Alokasi Sumber Daya Campuran <span class="trans">Mixed Resource Allocation</span></h3>
+                    <p>Dalam dunia nyata, sumber daya sering berubah. Kita harus mampu menghitung dampak perubahan jumlah server, mesin, atau truck terhadap waktu.</p>
+                </div>
+
+                <!-- EX 7, 8, 9, 10 -->
+                <div class="exercise-block" id="ex-sec6-7">
+                    <div class="exercise-question">7. 8 server butuh 5 jam. 10 server butuh berapa jam? <span class="trans">8 servers need 5 hours. How many hours for 10 servers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-7" placeholder="Jawaban (jam)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-7', 4)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-7"></div>
+                    <div class="collapsible" id="collapse-sec6-7">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-7')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$8 \\times 5 = 10 \\times y_2 \\Rightarrow 40 = 10y_2 \\Rightarrow y_2 = 4$ jam.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-6')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-7')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-7', 'sec6-8')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-8">
+                    <div class="exercise-question">8. 12 server butuh 20 menit. 8 server butuh berapa menit? <span class="trans">12 servers need 20 mins. How many mins for 8 servers?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-8" placeholder="Jawaban (menit)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-8', 30)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-8"></div>
+                    <div class="collapsible" id="collapse-sec6-8">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-8')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$12 \\times 20 = 8 \\times y_2 \\Rightarrow 240 = 8y_2 \\Rightarrow y_2 = 30$ menit.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-7')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-8')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-8', 'sec6-9')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-9">
+                    <div class="exercise-question">9. 4 truck butuh 15 trip. 3 truck butuh berapa trip? <span class="trans">4 trucks need 15 trips. How many trips for 3 trucks?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-9" placeholder="Jawaban (trip)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-9', 20)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-9"></div>
+                    <div class="collapsible" id="collapse-sec6-9">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-9')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$4 \\times 15 = 3 \\times y_2 \\Rightarrow 60 = 3y_2 \\Rightarrow y_2 = 20$ trip.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-8')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-9')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-9', 'sec6-10')">Next</button>
+                    </div>
+                </div>
+
+                <div class="exercise-block" id="ex-sec6-10">
+                    <div class="exercise-question">10. 15 mesin butuh 4 hari. 12 mesin butuh berapa hari? <span class="trans">15 machines need 4 days. How many days for 12 machines?</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" id="input-sec6-10" placeholder="Jawaban (hari)">
+                        <button class="btn-check" onclick="checkAnswer('sec6-10', 5)">Check</button>
+                    </div>
+                    <div id="feedback-sec6-10"></div>
+                    <div class="collapsible" id="collapse-sec6-10">
+                        <div class="collapsible-header" onclick="toggleCollapse('sec6-10')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>$15 \\times 4 = 12 \\times y_2 \\Rightarrow 60 = 12y_2 \\Rightarrow y_2 = 5$ hari.</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('sec6-9')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('sec6-10')">Reset</button>
+                        <button class="btn-nav next" onclick="nextExercise('sec6-10', '')">Finish Section</button>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:30px;">
+                    <h3>Seksi 6 Selesai! <span class="trans">Section 6 Completed!</span></h3>
+                    <button class="btn-check" onclick="showSection('assign1')">Lanjut ke Assignment 1 <span class="trans">Next to Assignment 1</span></button>
+                </div>
+            `
+        };
+
+        // Helper to generate assignment HTML
+        function generateAssignmentHTML(groupId, questions) {
+            let html = `
+                <h2 class="section-title">${groupId.toUpperCase()}</h2>
+                <p>Kerjakan 10 soal berikut. Jika sudah selesai, klik tombol Submit untuk melihat skor dan print hasilnya.
+                <span class="trans">Do the following 10 questions. When finished, click the Submit button to see the score and print the result.</span></p>
+            `;
+            
+            questions.forEach((q, i) => {
+                const exId = `${groupId}-${i+1}`;
+                const prevId = i > 0 ? `${groupId}-${i}` : '';
+                const nextId = i < 9 ? `${groupId}-${i+2}` : '';
+                const styleAttr = i > 0 ? 'style="display:none;"' : '';
+                
+                html += `
+                <div class="exercise-block" id="ex-${exId}" ${styleAttr}>
+                    <div class="exercise-question">${i+1}. ${q.q} <span class="trans">${q.t}</span></div>
+                    <div class="exercise-input-group">
+                        <input type="number" step="any" id="input-${exId}" placeholder="Jawaban">
+                        <button class="btn-check" onclick="checkAnswer('${exId}', ${q.a})">Check</button>
+                    </div>
+                    <div id="feedback-${exId}"></div>
+                    <div class="collapsible" id="collapse-${exId}">
+                        <div class="collapsible-header" onclick="toggleCollapse('${exId}')">Lihat Penjelasan <span>▼</span></div>
+                        <div class="collapsible-body"><p>${q.exp}</p></div>
+                    </div>
+                    <div style="overflow:hidden; margin-top:20px;">
+                        <button class="btn-nav prev" onclick="prevExercise('${prevId}')">Previous</button>
+                        <button class="btn-nav reset" onclick="resetExercise('${exId}')">Reset</button>
+                        ${i < 9 ? `<button class="btn-nav next" onclick="nextExercise('${exId}', '${nextId}')">Next</button>` : ''}
+                    </div>
+                </div>`;
+            });
+
+            html += `
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn-check" style="background: var(--primary); box-shadow: 0 4px 0 #5849BE; font-size: 1.1rem; padding: 15px 30px;" onclick="submitAssignment('${groupId}')">Submit ${groupId.toUpperCase()}</button>
+                </div>
+            `;
+            return html;
+        }
+
+        const ASSIGNMENT_1_QUESTIONS = [
+            { q: "1GB file diunduh dengan 2 Mbps dalam 500 detik. Berapa lama waktu yang dibutuhkan jika kecepatannya ditingkatkan menjadi 5 Mbps?", t: "1GB file downloaded at 2 Mbps in 500 seconds. How long if speed increased to 5 Mbps?", a: 200, exp: "$(2 \\times 500) / 5 = 200$ detik." },
+            { q: "Proyek pengkodean diselesaikan 8 programmer dalam 15 hari. Jika hanya 6 programmer, berapa hari waktu yang dibutuhkan?", t: "Coding project finished by 8 programmers in 15 days. If only 6 programmers, how many days?", a: 20, exp: "$(8 \\times 15) / 6 = 20$ hari." },
+            { q: "UPS data center bertahan 12 jam untuk 20 server. Jika ditambah 4 server (total 24), berapa lama UPS bertahan?", t: "Data center UPS lasts 12 hours for 20 servers. If added 4 servers (total 24), how long?", a: 10, exp: "$(20 \\times 12) / 24 = 10$ jam." },
+            { q: "Printer 3D butuh 4 jam pada kecepatan 30mm/s. Jika kecepatan 40mm/s, berapa jam waktu cetak?", t: "3D printer needs 4 hours at 30mm/s. If 40mm/s, how many hours?", a: 3, exp: "$(30 \\times 4) / 40 = 3$ jam." },
+            { q: "10 Mbps download 10s. 5 Mbps butuh berapa detik?", t: "10 Mbps download 10s. 5 Mbps needs how many seconds?", a: 20, exp: "$(10 \\times 10) / 5 = 20$ detik." },
+            { q: "4 worker 12 hari. 6 worker butuh berapa hari?", t: "4 workers 12 days. 6 workers need how many days?", a: 8, exp: "$(4 \\times 12) / 6 = 8$ hari." },
+            { q: "2 truck 15 trip. 3 truck butuh berapa trip?", t: "2 trucks 15 trips. 3 trucks need how many trips?", a: 10, exp: "$(2 \\times 15) / 3 = 10$ trip." },
+            { q: "5 pompa 6 jam. 3 pompa butuh berapa jam?", t: "5 pumps 6 hours. 3 pumps need how many hours?", a: 10, exp: "$(5 \\times 6) / 3 = 10$ jam." },
+            { q: "8 core 10 menit. 4 core butuh berapa menit?", t: "8 cores 10 mins. 4 cores need how many mins?", a: 20, exp: "$(8 \\times 10) / 4 = 20$ menit." },
+            { q: "12 mesin 9 hari. 18 mesin butuh berapa hari?", t: "12 machines 9 days. 18 machines need how many days?", a: 6, exp: "$(12 \\times 9) / 18 = 6$ hari." }
+        ];
+
+        const ASSIGNMENT_2_QUESTIONS = [
+            { q: "Aplikasi dideploy ke 15 server selesai 40 menit. Jika 1/3 server mati (sisa 10), berapa menit waktu yang dibutuhkan?", t: "App deployed to 15 servers finishes in 40 mins. If 1/3 servers die (10 left), how many mins?", a: 60, exp: "Sisa server = 10. $(15 \\times 40) / 10 = 60$ menit." },
+            { q: "12 user mendapat 256 kbps. Jika masing-masing hanya mendapat 192 kbps, berapa total user sekarang?", t: "12 users get 256 kbps. If each gets only 192 kbps, how many total users now?", a: 16, exp: "$(12 \\times 256) / 192 = 16$ user." },
+            { q: "Pembangunan fiber optik 25 pekerja 60 hari. Setelah 10 hari, libur 10 hari. Berapa tambahan pekerja agar selesai tepat waktu (sisa 40 hari)?", t: "Fiber optic construction 25 workers 60 days. After 10 days, rest 10 days. How many additional workers to finish on time (40 days left)?", a: 7, exp: "Sisa hari seharusnya 50, menjadi 40. $(25 \\times 50) / 40 = 31.25 \\Rightarrow 32$. Tambahan = $32 - 25 = 7$." },
+            { q: "Loading website 4G 1.2s throughput 10 Mbps. Koneksi 128 Kbps butuh berapa detik? (1 Mbps = 1000 Kbps)", t: "Website loading 4G 1.2s throughput 10 Mbps. 128 Kbps connection needs how many seconds?", a: 93.75, exp: "$10 \\text{ Mbps} = 10000 \\text{ Kbps}$. $(10000 \\times 1.2) / 128 = 93.75$ detik." },
+            { q: "6 mesin selesai 18 jam. Setelah 4 jam 1 mesin rusak (sisa 5). Berapa total waktu sejak awal?", t: "6 machines finish 18 hours. After 4 hours 1 breaks (5 left). What is total time from start?", a: 20.8, exp: "Sisa pekerjaan 14 jam. $(6 \\times 14) / 5 = 16.8$. Total $= 4 + 16.8 = 20.8$ jam." },
+            { q: "Database indexing 3 jam (180 menit) menggunakan 12 thread. Ingin turun 45 menit (135 menit). Berapa minimum thread?", t: "Database indexing 3 hours (180 mins) using 12 threads. Want to reduce 45 mins (135 mins). Minimum threads?", a: 16, exp: "$(12 \\times 180) / 135 = 16$ thread." },
+            { q: "10 core butuh 15 menit. 6 core butuh berapa menit?", t: "10 cores need 15 mins. 6 cores need how many mins?", a: 25, exp: "$(10 \\times 15) / 6 = 25$ menit." },
+            { q: "4G loading 8s. 3G (1/4 kecepatan 4G) butuh berapa detik?", t: "4G loading 8s. 3G (1/4 speed of 4G) needs how many seconds?", a: 32, exp: "Kecepatan 1/4, waktu 4x. $8 \\times 4 = 32$ detik." },
+            { q: "8 worker 10 hari. 5 worker butuh berapa hari?", t: "8 workers 10 days. 5 workers need how many days?", a: 16, exp: "$(8 \\times 10) / 5 = 16$ hari." },
+            { q: "5 server 12 jam. 8 server butuh berapa jam?", t: "5 servers 12 hours. 8 servers need how many hours?", a: 7.5, exp: "$(5 \\times 12) / 8 = 7.5$ jam." }
+        ];
+
+        CONTENT_DATA['assign1'] = { html: generateAssignmentHTML('assign1', ASSIGNMENT_1_QUESTIONS) };
+        CONTENT_DATA['assign2'] = { html: generateAssignmentHTML('assign2', ASSIGNMENT_2_QUESTIONS) };
+
+        // --- CONTENT DATA PART 6: ASSIGNMENT 3, 4 & 5 ---
+        const ASSIGNMENT_3_QUESTIONS = [
+            { q: "8 core CPU butuh 12 menit untuk rendering. Jika menggunakan 16 core, berapa menit waktu yang dibutuhkan?", t: "8 CPU cores need 12 mins for rendering. If using 16 cores, how many minutes?", a: 6, exp: "$(8 \\times 12) / 16 = 6$ menit." },
+            { q: "Kecepatan download 25 Mbps butuh 40 detik. Jika kecepatan 20 Mbps, berapa detik waktu download?", t: "Download speed 25 Mbps takes 40 secs. If speed is 20 Mbps, how many seconds?", a: 50, exp: "$(25 \\times 40) / 20 = 50$ detik." },
+            { q: "5 pekerja bisa menyelesaikan instalasi jaringan dalam 12 hari. Jika dikerjakan 15 pekerja, berapa hari waktu yang dibutuhkan?", t: "5 workers can finish network installation in 12 days. If done by 15 workers, how many days?", a: 4, exp: "$(5 \\times 12) / 15 = 4$ hari." },
+            { q: "Sebuah proyek coding butuh 120 jam jika dikerjakan 3 developer. Jika dikerjakan 8 developer, berapa jam waktu yang dibutuhkan?", t: "A coding project takes 120 hours if done by 3 developers. If done by 8 developers, how many hours?", a: 45, exp: "$(3 \\times 120) / 8 = 45$ jam." },
+            { q: "4 mesin cetak 3D butuh 20 jam untuk mencetak batch. Jika menggunakan 5 mesin, berapa jam waktu cetak?", t: "4 3D printers need 20 hours to print a batch. If using 5 machines, how many hours?", a: 16, exp: "$(4 \\times 20) / 5 = 16$ jam." },
+            { q: "Bandwidth 100 Mbps dibagi rata. Jika ada 5 user, tiap user dapat 20 Mbps. Jika ada 8 user, tiap user dapat berapa Mbps?", t: "100 Mbps bandwidth divided equally. If 5 users, each gets 20 Mbps. If 8 users, how many Mbps per user?", a: 12.5, exp: "$(5 \\times 20) / 8 = 12.5$ Mbps." },
+            { q: "Data center pendinginnya bertahan 6 jam jika 2 AC mati. Jika 3 AC mati, bertahan 4 jam. Berapa jam bertahan jika hanya 1 AC mati?", t: "Data center cooling lasts 6 hours if 2 ACs fail. If 3 ACs fail, lasts 4 hours. How long if only 1 AC fails?", a: 12, exp: "Konstanta $= 2 \\times 6 = 12$. Jika 1 AC mati $= 12 / 1 = 12$ jam." },
+            { q: "6 truck mengangkut pasir dalam 20 trip. Jika ditambah 2 truck (total 8), berapa trip yang dibutuhkan?", t: "6 trucks transport sand in 20 trips. If added 2 trucks (total 8), how many trips needed?", a: 15, exp: "$(6 \\times 20) / 8 = 15$ trip." },
+            { q: "10 server memproses data dalam 45 menit. Jika ditambah 5 server (total 15), berapa menit waktu proses?", t: "10 servers process data in 45 mins. If added 5 servers (total 15), how many minutes?", a: 30, exp: "$(10 \\times 45) / 15 = 30$ menit." },
+            { q: "2 robot perakit butuh 30 menit. Jika menggunakan 5 robot, berapa menit waktu yang dibutuhkan?", t: "2 assembly robots need 30 mins. If using 5 robots, how many minutes?", a: 12, exp: "$(2 \\times 30) / 5 = 12$ menit." }
+        ];
+
+        const ASSIGNMENT_4_QUESTIONS = [
+            { q: "12 pekerja membangun server room dalam 15 hari. Jika 3 pekerja cuti (sisa 9), berapa hari waktu penyelesaian?", t: "12 workers build server room in 15 days. If 3 workers on leave (9 left), how many days?", a: 20, exp: "$(12 \\times 15) / 9 = 20$ hari." },
+            { q: "Kecepatan 5 Mbps butuh 60 detik. Jika kecepatan 4 Mbps, berapa detik waktu yang dibutuhkan?", t: "Speed 5 Mbps takes 60 secs. If speed is 4 Mbps, how many seconds?", a: 75, exp: "$(5 \\times 60) / 4 = 75$ detik." },
+            { q: "4 komputer rendering butuh 10 jam. 8 komputer butuh berapa jam?", t: "4 rendering computers need 10 hours. 8 computers need how many hours?", a: 5, exp: "$(4 \\times 10) / 8 = 5$ jam." },
+            { q: "15 user sharing bandwidth 300 Mbps. Tiap user dapat 20 Mbps. Jika total bandwidth 400 Mbps dan tiap user butuh 25 Mbps, berapa user maksimal yang bisa dilayani?", t: "15 users sharing 300 Mbps. Each gets 20 Mbps. If total bandwidth 400 Mbps and each needs 25 Mbps, max users?", a: 16, exp: "User maks = $400 / 25 = 16$ user." },
+            { q: "3 mesin packaging butuh 18 jam. 9 mesin butuh berapa jam?", t: "3 packaging machines need 18 hours. 9 machines need how many hours?", a: 6, exp: "$(3 \\times 18) / 9 = 6$ jam." },
+            { q: "8 core CPU butuh 6 jam untuk compile. 12 core butuh berapa jam?", t: "8 CPU cores need 6 hours to compile. 12 cores need how many hours?", a: 4, exp: "$(8 \\times 6) / 12 = 4$ jam." },
+            { q: "5 painter butuh 8 hari. 4 painter butuh berapa hari?", t: "5 painters need 8 days. 4 painters need how many days?", a: 10, exp: "$(5 \\times 8) / 4 = 10$ hari." },
+            { q: "6 pompa air menguras kolam dalam 14 jam. 7 pompa butuh berapa jam?", t: "6 water pumps drain pool in 14 hours. 7 pumps need how many hours?", a: 12, exp: "$(6 \\times 14) / 7 = 12$ jam." },
+            { q: "Download file 500 MB butuh 25 detik pada 20 MBps. Berapa detik pada 10 MBps?", t: "Download 500 MB file takes 25 secs at 20 MBps. How many secs at 10 MBps?", a: 50, exp: "$(20 \\times 25) / 10 = 50$ detik." },
+            { q: "9 robot butuh 10 jam merakit mobil. 6 robot butuh berapa jam?", t: "9 robots need 10 hours to assemble car. 6 robots need how many hours?", a: 15, exp: "$(9 \\times 10) / 6 = 15$ jam." }
+        ];
+
+        const ASSIGNMENT_5_QUESTIONS = [
+            { q: "6 developer butuh 24 hari. 8 developer butuh berapa hari?", t: "6 developers need 24 days. 8 developers need how many days?", a: 18, exp: "$(6 \\times 24) / 8 = 18$ hari." },
+            { q: "4 core CPU butuh 36 menit. 9 core butuh berapa menit?", t: "4 CPU cores need 36 mins. 9 cores need how many mins?", a: 16, exp: "$(4 \\times 36) / 9 = 16$ menit." },
+            { q: "Kecepatan 30 Mbps butuh 12 detik. 45 Mbps butuh berapa detik?", t: "Speed 30 Mbps takes 12 secs. 45 Mbps takes how many secs?", a: 8, exp: "$(30 \\times 12) / 45 = 8$ detik." },
+            { q: "12 truck butuh 10 trip. 15 truck butuh berapa trip?", t: "12 trucks need 10 trips. 15 trucks need how many trips?", a: 8, exp: "$(12 \\times 10) / 15 = 8$ trip." },
+            { q: "5 mesin butuh 15 jam. 6 mesin butuh berapa jam?", t: "5 machines need 15 hours. 6 machines need how many hours?", a: 12.5, exp: "$(5 \\times 15) / 6 = 12.5$ jam." },
+            { q: "Bandwidth 50 Mbps, 5 user dapat 10 Mbps. Jika 10 user, tiap dapat berapa Mbps?", t: "Bandwidth 50 Mbps, 5 users get 10 Mbps. If 10 users, how many Mbps each?", a: 5, exp: "$(5 \\times 10) / 10 = 5$ Mbps." },
+            { q: "8 pekerja butuh 20 hari. 10 pekerja butuh berapa hari?", t: "8 workers need 20 days. 10 workers need how many days?", a: 16, exp: "$(8 \\times 20) / 10 = 16$ hari." },
+            { q: "3 AC butuh 16 jam. 4 AC butuh berapa jam?", t: "3 ACs need 16 hours. 4 ACs need how many hours?", a: 12, exp: "$(3 \\times 16) / 4 = 12$ jam." },
+            { q: "Download 2 GB butuh 80 detik pada 25 MBps. Berapa detik pada 40 MBps?", t: "Download 2 GB takes 80 secs at 25 MBps. How many secs at 40 MBps?", a: 50, exp: "$(25 \\times 80) / 40 = 50$ detik." },
+            { q: "15 server butuh 30 menit. 10 server butuh berapa menit?", t: "15 servers need 30 mins. 10 servers need how many mins?", a: 45, exp: "$(15 \\times 30) / 10 = 45$ menit." }
+        ];
+
+        CONTENT_DATA['assign3'] = { html: generateAssignmentHTML('assign3', ASSIGNMENT_3_QUESTIONS) };
+        CONTENT_DATA['assign4'] = { html: generateAssignmentHTML('assign4', ASSIGNMENT_4_QUESTIONS) };
+        CONTENT_DATA['assign5'] = { html: generateAssignmentHTML('assign5', ASSIGNMENT_5_QUESTIONS) };
+
+        // --- CONTENT DATA PART 7: CONSOLIDATION & REFLECTION ---
+        CONTENT_DATA['consolidation'] = {
+            html: `
+                <h2 class="section-title">Consolidation & Reflection (01:00-01:05)</h2>
+                <p>Luar biasa! Kamu sudah bisa membedakan kapan menggunakan perbandingan senilai dan kapan menggunakan berbalik nilai. Ingat, kuncinya adalah hasil kali mendatar yang konstan: $x_1 \\times y_1 = x_2 \\times y_2$. 
+                <span class="trans">Incredible! You can now differentiate when to use direct vs inverse proportion. Remember, the key is the constant cross-product: $x_1 \\times y_1 = x_2 \\times y_2$.</span></p>
+                
+                <div class="theory-block">
+                    <h3>Ringkasan Rumus <span class="trans">Formula Summary</span></h3>
+                    <p><strong>1. Perbandingan Senilai (Direct Proportion):</strong> Naik-Naik, Turun-Turun.</p>
+                    <p style="text-align: center; font-size: 1.2rem; margin: 10px 0;">$\\frac{x_1}{y_1} = \\frac{x_2}{y_2}$</p>
+                    <p><strong>2. Perbandingan Berbalik Nilai (Inverse Proportion):</strong> Naik-Turun.</p>
+                    <p style="text-align: center; font-size: 1.2rem; margin: 10px 0;">$x_1 \\times y_1 = x_2 \\times y_2$</p>
+                </div>
+
+                <p>Apa satu hal paling menantang hari ini? <span class="trans">What was the most challenging thing today?</span></p>
+                <textarea style="width: 100%; max-width: 600px; padding: 15px; border-radius: 10px; border: 2px solid var(--light); font-family: 'Poppins', sans-serif; margin-bottom: 20px; resize: vertical;" rows="4" placeholder="Tulis refleksimu di sini... (Write your reflection here...)"></textarea>
+                
+                <div style="text-align: center; margin-top: 40px; border-top: 2px dashed var(--light); padding-top: 30px;">
+                    <h3>Pelajaran Selesai! <span class="trans">Lesson Completed!</span></h3>
+                    <p>Jangan lupa login untuk mengulang materi ini. <span class="trans">Don't forget to log in to review this material.</span></p>
+                    <a href="https://learn.algonova.id/login" target="_blank" class="btn-check" style="display: inline-block; text-decoration: none; margin-top: 15px; background: var(--primary); box-shadow: 0 4px 0 #5849BE; font-size: 1.1rem; padding: 15px 40px;">
+                        Login to Algonova
+                    </a>
+                </div>
+            `
+        };
+
+        // --- ASSIGNMENT SUBMIT LOGIC ---
+        function submitAssignment(groupId) {
+            const score = assignmentData[groupId] ? assignmentData[groupId].score : 0;
+            const total = 10;
+            
+            if (score < total) {
+                // OK untuk Print, Cancel untuk mencoba lagi
+                const printResult = confirm(`Kamu mendapat ${score}/${total}. Apakah kamu ingin mencetak hasil ini?\n(Klik OK untuk Print, Cancel untuk mencoba lagi)`);
+                if (printResult) {
+                    preparePrint(groupId, score, total);
+                }
+            } else {
+                alert(`Sempurna! Kamu mendapat ${score}/${total}. (Perfect! You got ${score}/${total}.)`);
+                preparePrint(groupId, score, total);
+            }
+        }
+
+        // --- FINAL INITIALIZATION ---
+        window.onload = () => {
+            renderPath();
+            showSection('rules'); // Start at rules
+        };
+    </script>
+</body>
+</html>
